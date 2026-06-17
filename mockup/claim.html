@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Katana Token Claim Center</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@700&amp;family=DM+Serif+Display&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#F4FF1A",
+                        "dark-blue": "#14357A",
+                        "light-blue": "#4FA3E3",
+                        "dark-navy": "#0B1E3A",
+                        "muted-blue": "#6B86A5",
+                    },
+                    fontFamily: {
+                        "sans": ["Plus Jakarta Sans", "sans-serif"],
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "header": ["DM Serif Display", "serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply font-sans text-white;
+                background: linear-gradient(to bottom, #14357A 0%, #4FA3E3 100%);
+                background-attachment: fixed;
+            }
+        }
+        .ui-container {
+            background-color: #0B1E3A;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-header { font-family: 'DM Serif Display', serif; }
+        .text-display { font-family: 'Space Grotesk', sans-serif; }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 flex-shrink-0 border-r border-white/10 bg-dark-navy flex flex-col justify-between p-6">
+            <div class="flex flex-col gap-8">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary p-2 rounded">
+                        <span class="material-symbols-outlined text-dark-navy" style="font-size: 28px;">swords</span>
+                    </div>
+                    <h2 class="text-2xl font-header tracking-tight text-white uppercase">Katana</h2>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div
+                        class="flex items-center gap-3 px-4 py-3 rounded text-muted-blue hover:bg-white/5 hover:text-white transition-all cursor-pointer">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <p class="text-sm font-medium">Dashboard</p>
+                    </div>
+                    <div class="flex items-center gap-3 px-4 py-3 rounded bg-primary text-dark-navy cursor-pointer">
+                        <span class="material-symbols-outlined">redeem</span>
+                        <p class="text-sm font-bold uppercase tracking-wider">Claim</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-3 px-4 py-3 rounded text-muted-blue hover:bg-white/5 hover:text-white transition-all cursor-pointer">
+                        <span class="material-symbols-outlined">confirmation_number</span>
+                        <p class="text-sm font-medium">Raffles</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-3 px-4 py-3 rounded text-muted-blue hover:bg-white/5 hover:text-white transition-all cursor-pointer">
+                        <span class="material-symbols-outlined">token</span>
+                        <p class="text-sm font-medium">Staking</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-3 px-4 py-3 rounded text-muted-blue hover:bg-white/5 hover:text-white transition-all cursor-pointer">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        <p class="text-sm font-medium">Inventory</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-3 p-3 bg-white/5 rounded border border-white/10">
+                    <div
+                        class="h-10 w-10 rounded bg-primary flex items-center justify-center text-dark-navy text-xs font-bold">
+                        K</div>
+                    <div class="flex flex-col overflow-hidden">
+                        <p class="text-sm font-bold text-white truncate">Katana User</p>
+                        <p class="text-xs text-muted-blue truncate">0x71C...3a21</p>
+                    </div>
+                </div>
+                <button
+                    class="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 text-white text-sm font-bold rounded transition-colors uppercase tracking-widest">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Disconnect
+                </button>
+            </div>
+        </aside>
+        <main class="flex-1 overflow-y-auto">
+            <header
+                class="sticky top-0 z-10 bg-dark-navy/80 backdrop-blur-md border-b border-white/10 px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <h1 class="text-2xl font-header text-white">Token Claim Center</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="px-4 py-2 bg-white/5 border border-white/10 rounded-full flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                        <span class="text-xs font-bold uppercase tracking-widest">Katana Mainnet</span>
+                    </div>
+                    <button
+                        class="p-2 bg-white/10 rounded text-white hover:bg-primary hover:text-dark-navy transition-all">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                </div>
+            </header>
+            <div class="max-w-6xl mx-auto p-8 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="ui-container p-8 rounded border-t-2 border-primary">
+                        <p class="text-muted-blue font-bold uppercase tracking-wider text-xs mb-4">Claimable Hollow</p>
+                        <div class="flex items-end gap-2">
+                            <p class="text-4xl font-display font-bold tracking-tight">24,500.00</p>
+                            <p class="text-primary font-bold pb-1">HLW</p>
+                        </div>
+                    </div>
+                    <div class="ui-container p-8 rounded border-t-2 border-white/20">
+                        <p class="text-muted-blue font-bold uppercase tracking-wider text-xs mb-4">Total Claimed</p>
+                        <div class="flex items-end gap-2">
+                            <p class="text-4xl font-display font-bold tracking-tight">112,000</p>
+                            <p class="text-muted-blue font-bold pb-1">HLW</p>
+                        </div>
+                    </div>
+                    <div class="ui-container p-8 rounded border-t-2 border-white/20">
+                        <p class="text-muted-blue font-bold uppercase tracking-wider text-xs mb-4">Active Multiplier</p>
+                        <div class="flex items-center gap-2">
+                            <p class="text-4xl font-display font-bold tracking-tight text-primary">2.45x</p>
+                            <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded">MAX
+                                BOOST</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-container rounded overflow-hidden flex flex-col lg:flex-row min-h-[500px]">
+                    <div
+                        class="lg:w-1/2 p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/10 relative overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full -mr-20 -mt-20">
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div
+                                    class="w-16 h-16 bg-primary flex items-center justify-center rounded-xl shadow-[0_0_30px_rgba(244,255,26,0.2)]">
+                                    <span class="material-symbols-outlined text-dark-navy"
+                                        style="font-size: 40px;">grain</span>
+                                </div>
+                                <div>
+                                    <h2 class="text-4xl font-header leading-tight">Claim Hollow Token</h2>
+                                    <p class="text-primary font-display font-bold tracking-widest text-sm uppercase">
+                                        Utility Token Tier 1</p>
+                                </div>
+                            </div>
+                            <div class="space-y-6">
+                                <p class="text-muted-blue leading-relaxed font-sans max-w-md">
+                                    Hollow ($HLW) is the lifeblood of the Katana Network ecosystem. It fuels every
+                                    interaction, from raffle entries to governance votes and deep liquidity provision.
+                                </p>
+                                <div class="pt-8">
+                                    <h3 class="text-2xl font-header mb-4 text-white">Utility Benefits</h3>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-center gap-3">
+                                            <div
+                                                class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <span
+                                                    class="material-symbols-outlined text-primary text-sm">check</span>
+                                            </div>
+                                            <span class="font-sans text-white/90">Exclusive Raffle Discounts (Up to
+                                                40%)</span>
+                                        </li>
+                                        <li class="flex items-center gap-3">
+                                            <div
+                                                class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <span
+                                                    class="material-symbols-outlined text-primary text-sm">check</span>
+                                            </div>
+                                            <span class="font-sans text-white/90">Staking Multiplier Boosts</span>
+                                        </li>
+                                        <li class="flex items-center gap-3">
+                                            <div
+                                                class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <span
+                                                    class="material-symbols-outlined text-primary text-sm">check</span>
+                                            </div>
+                                            <span class="font-sans text-white/90">DAO Governance Voting Rights</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 p-12 bg-white/5 flex flex-col items-center justify-center text-center">
+                        <div class="mb-10">
+                            <p class="text-muted-blue uppercase font-bold tracking-[0.2em] text-xs mb-2">Available for
+                                Withdrawal</p>
+                            <h4 class="text-6xl font-display font-bold">24,500.00</h4>
+                            <p class="text-primary font-bold mt-2">≈ $12,450.00 USD</p>
+                        </div>
+                        <div class="w-full max-w-sm space-y-6">
+                            <div class="flex flex-col gap-2 p-6 bg-dark-navy rounded border border-white/10">
+                                <div
+                                    class="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-blue">
+                                    <span>Network Fee</span>
+                                    <span class="text-white">0.005 KAT</span>
+                                </div>
+                                <div class="h-[1px] bg-white/10 my-1"></div>
+                                <div
+                                    class="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-blue">
+                                    <span>Processing Time</span>
+                                    <span class="text-white">~30 Seconds</span>
+                                </div>
+                            </div>
+                            <button
+                                class="w-full py-5 bg-primary hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.2em] text-sm transition-all shadow-[0_0_30px_rgba(244,255,26,0.15)] flex flex-col items-center gap-1 group">
+                                <span>Claim Tokens</span>
+                                <span class="text-[10px] opacity-70 group-hover:opacity-100">24,500 HLW Available</span>
+                            </button>
+                            <p class="text-[10px] text-muted-blue uppercase tracking-widest leading-relaxed">
+                                Tokens are distributed immediately to your connected wallet. <br /> Please ensure you
+                                have sufficient KAT for gas fees.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-header mb-6">Claim History</h3>
+                    <div class="overflow-hidden rounded ui-container">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-white/5 border-b border-white/10">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">
+                                        Timestamp</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">
+                                        Amount</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">
+                                        Source</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue text-right">
+                                        Transaction</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/10 font-sans">
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-5">
+                                        <p class="text-sm font-bold text-white">Oct 24, 2023</p>
+                                        <p class="text-[10px] text-muted-blue uppercase">14:22 PM</p>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <p class="text-sm font-display font-bold text-primary">12,000.00 HLW</p>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span class="text-xs text-white">Staking Rewards Pool B</span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span
+                                            class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-widest rounded border border-emerald-500/20">Success</span>
+                                    </td>
+                                    <td class="px-6 py-5 text-right">
+                                        <a class="text-muted-blue hover:text-primary transition-colors" href="#">
+                                            <span class="material-symbols-outlined text-xl">open_in_new</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-5">
+                                        <p class="text-sm font-bold text-white">Oct 18, 2023</p>
+                                        <p class="text-[10px] text-muted-blue uppercase">09:15 AM</p>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <p class="text-sm font-display font-bold text-primary">8,500.00 HLW</p>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span class="text-xs text-white">Early Adopter Airdrop</span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span
+                                            class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-widest rounded border border-emerald-500/20">Success</span>
+                                    </td>
+                                    <td class="px-6 py-5 text-right">
+                                        <a class="text-muted-blue hover:text-primary transition-colors" href="#">
+                                            <span class="material-symbols-outlined text-xl">open_in_new</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>
