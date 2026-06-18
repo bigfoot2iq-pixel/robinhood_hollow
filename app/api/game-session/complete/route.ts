@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import supabase from '@/lib/supabase/game-client';
 import type { ScoreUpdateResponse } from '@/lib/supabase/types';
+import { verifyScoreSignature, isScorePlausible } from '@/lib/utils/scoreAuth';
 
 // POST - Complete game session and update high score (merged endpoint)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, walletAddress, score } = body;
+    const { sessionId, walletAddress, score, signature } = body;
 
     // Validate input
     if (!sessionId || typeof sessionId !== 'string') {
@@ -23,9 +24,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (typeof score !== 'number' || score < 0) {
+    if (typeof score !== 'number' || score < 0 || !Number.isFinite(score)) {
       return NextResponse.json(
         { error: 'Valid score is required (must be non-negative number)' },
+        { status: 400 }
+      );
+    }
+
+    if (!signature || typeof signature !== 'string') {
+      return NextResponse.json(
+        { error: 'Score signature is required' },
+        { status: 400 }
+      );
+    }
+
+    // Auth: the score submission must be signed by the wallet that owns it.
+    // Stops anyone replaying a (publicly readable) sessionId to post a score
+    // for another player.
+    const sigValid = await verifyScoreSignature({ walletAddress, sessionId, score, signature });
+    if (!sigValid) {
+      return NextResponse.json(
+        { error: 'Invalid score signature' },
+        { status: 401 }
+      );
+    }
+
+    // Plausibility: reject scores impossible for the session's elapsed time.
+    // Reads the immutable created_at of THIS session (not client-supplied).
+    const { data: sessionRow, error: sessionErr } = await supabase
+      .from('litvm_raffle_game_sessions')
+      .select('created_at')
+      .eq('id', sessionId)
+      .single();
+
+    if (sessionErr || !sessionRow) {
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    if (!isScorePlausible(score, sessionRow.created_at)) {
+      return NextResponse.json(
+        { error: 'Score failed plausibility check' },
         { status: 400 }
       );
     }

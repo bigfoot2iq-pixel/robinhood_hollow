@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
+import { useSignMessage } from "wagmi"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, ANIMATIONS, type Controls } from "@/game-v2/types"
 import { createInitialState, updateGame, resetGame } from "@/game-v2/engine"
 import { renderGame } from "@/game-v2/renderer"
 import { useHighScore } from "@/lib/hooks/useHighScore"
 import { useGameSession } from "@/lib/hooks/useGameSession"
+import { buildScoreMessage } from "@/lib/utils/scoreAuth"
 
 interface LastStandGameProps {
   onScoreUpdate?: (score: number) => void
@@ -49,6 +51,9 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
     isCompleting: isCompletingSession
   } = useGameSession({ walletAddress })
 
+  // Wallet signing - proves the score submission was authorized by the player
+  const { signMessageAsync } = useSignMessage()
+
   // Sync high score with game state
   useEffect(() => {
     if (highScore > 0 && gameStateRef.current) {
@@ -63,10 +68,14 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
       
       const submitScore = async () => {
         try {
-          if (sessionId) {
-            // Pay-to-play mode: complete session and update score atomically
-            const result = await completeSession(score)
-            
+          if (sessionId && walletAddress) {
+            // Pay-to-play mode: sign the score to prove ownership, then
+            // complete session and update score atomically
+            const signature = await signMessageAsync({
+              message: buildScoreMessage({ walletAddress, sessionId, score }),
+            })
+            const result = await completeSession(score, signature)
+
             if (result) {
               setIsNewHighScore(result.updated)
               setSessionEnded(true)
@@ -92,7 +101,7 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
       
       submitScore()
     }
-  }, [gameOver, score, sessionId, completeSession, updateHighScore])
+  }, [gameOver, score, sessionId, walletAddress, completeSession, updateHighScore, signMessageAsync])
 
   // Reset submission flag when game restarts
   useEffect(() => {

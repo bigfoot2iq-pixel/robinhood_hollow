@@ -107,7 +107,7 @@ export function useGameSession(options: UseGameSessionOptions = {}) {
   }, [walletAddress])
 
   // Complete session and submit score
-  const completeSession = useCallback(async (score: number): Promise<CompleteSessionResponse | null> => {
+  const completeSession = useCallback(async (score: number, signature: string): Promise<CompleteSessionResponse | null> => {
     if (!walletAddress || !session) {
       setError('No active session')
       return null
@@ -123,7 +123,8 @@ export function useGameSession(options: UseGameSessionOptions = {}) {
         body: JSON.stringify({
           sessionId: session.sessionId,
           walletAddress,
-          score
+          score,
+          signature
         })
       })
 

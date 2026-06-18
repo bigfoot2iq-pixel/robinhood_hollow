@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import supabase from '@/lib/supabase/game-client';
+import { verifyPayment } from '@/lib/utils/verifyPayment';
 
 // POST - Create a new game session after payment verification
 export async function POST(request: NextRequest) {
@@ -22,17 +23,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Add on-chain verification here
-    // Verify the transaction:
-    // 1. Check tx exists on-chain
-    // 2. Verify it's to your contract address
-    // 3. Verify the amount is correct
-    // 4. Verify the sender matches walletAddress
-    // Example:
-    // const isValidTx = await verifyPaymentTransaction(txHash, walletAddress);
-    // if (!isValidTx) {
-    //   return NextResponse.json({ error: 'Invalid transaction' }, { status: 400 });
-    // }
+    // On-chain verification: confirm the tx is a real, successful payToPlay
+    // payment from this wallet to the game contract before granting a session.
+    const verification = await verifyPayment(txHash, walletAddress);
+    if (!verification.ok) {
+      return NextResponse.json(
+        { error: verification.error || 'Payment verification failed' },
+        { status: 400 }
+      );
+    }
 
     // Create game session
     const { data, error } = await supabase.rpc('litvm_raffle_create_game_session', {

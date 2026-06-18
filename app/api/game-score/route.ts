@@ -4,6 +4,17 @@ import type { ScoreUpdateResponse } from '@/lib/supabase/types';
 
 export async function POST(request: NextRequest) {
   try {
+    // Pay-to-play backdoor guard: this endpoint writes the leaderboard high
+    // score directly with no payment, session, or signature. Disabled by
+    // default so the only path to the leaderboard is a verified paid session
+    // (/api/game-session/complete). Set ALLOW_FREE_SCORE=true to re-enable.
+    if (process.env.ALLOW_FREE_SCORE !== 'true') {
+      return NextResponse.json(
+        { error: 'Direct score submission is disabled; play a paid session' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const { walletAddress, score } = body;
 
