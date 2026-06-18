@@ -302,8 +302,8 @@ export default function RaffleDetailPage() {
                 <p className="text-lg font-display font-bold text-[#33C5D9]">{raffle.tokens_required} {entryTokenSymbol}</p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase text-muted-blue tracking-widest mb-1">Max per User</p>
-                <p className="text-lg font-display font-bold text-white">{raffle.max_tokens_per_user} {entryTokenSymbol}</p>
+                <p className="text-[10px] font-bold uppercase text-muted-blue tracking-widest mb-1">Max Entries / User</p>
+                <p className="text-lg font-display font-bold text-white">{raffle.max_entries_per_user}</p>
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase text-muted-blue tracking-widest mb-1">Participants</p>

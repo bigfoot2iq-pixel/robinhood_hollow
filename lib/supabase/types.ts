@@ -9,7 +9,7 @@ export interface RaffleRow {
   description: string;
   image_url: string | null;
   tokens_required: number;
-  max_tokens_per_user: number;
+  max_entries_per_user: number;
   max_participants: number;
   start_date: string;
   end_date: string;

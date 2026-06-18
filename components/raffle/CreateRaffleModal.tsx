@@ -94,7 +94,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [tokensRequired, setTokensRequired] = useState("10");
-  const [maxTokensPerUser, setMaxTokensPerUser] = useState("100");
+  const [maxEntriesPerUser, setMaxEntriesPerUser] = useState("10");
   const [maxParticipants, setMaxParticipants] = useState("100");
   const [prizeKind, setPrizeKind] = useState<PrizeKind>("erc20");
   const [prizeToken, setPrizeToken] = useState("");
@@ -132,7 +132,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
 
     if (s === 1) {
       if (!(Number(tokensRequired) > 0)) return "Entry cost must be positive";
-      if (!(Number(maxTokensPerUser) > 0)) return "Max tokens per user must be positive";
+      if (!(Number(maxEntriesPerUser) > 0)) return "Max entries per user must be positive";
       if (!(Number(maxParticipants) > 0)) return "Max participants must be positive";
     }
 
@@ -327,7 +327,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
             description: description.trim(),
             image_url: imageUrl.trim() || null,
             tokens_required: Number(tokensRequired),
-            max_tokens_per_user: Number(maxTokensPerUser),
+            max_entries_per_user: Number(maxEntriesPerUser),
             max_participants: Number(maxParticipants),
             start_date: new Date().toISOString(),
             end_date: new Date(endDate).toISOString(),
@@ -530,14 +530,14 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                       <p className="mt-1.5 text-[11px] text-muted-blue/70">HOLLOW per entry.</p>
                     </div>
                     <div>
-                      <label className={labelClass}>Max / User</label>
+                      <label className={labelClass}>Max Entries / User</label>
                       <input
                         type="number"
                         className={inputClass}
-                        value={maxTokensPerUser}
-                        onChange={(e) => setMaxTokensPerUser(e.target.value)}
+                        value={maxEntriesPerUser}
+                        onChange={(e) => setMaxEntriesPerUser(e.target.value)}
                       />
-                      <p className="mt-1.5 text-[11px] text-muted-blue/70">Cap per wallet.</p>
+                      <p className="mt-1.5 text-[11px] text-muted-blue/70">Entries per wallet.</p>
                     </div>
                     <div>
                       <label className={labelClass}>Max Participants</label>

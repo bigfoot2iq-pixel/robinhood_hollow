@@ -25,7 +25,7 @@ const createRaffleSchema = z
   description: z.string().min(1, "Description is required"),
   image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   tokens_required: z.number().positive("Must be positive"),
-  max_tokens_per_user: z.number().positive("Must be positive"),
+  max_entries_per_user: z.number().positive("Must be positive"),
   max_participants: z.number().positive("Must be positive"),
   start_date: z.string().min(1, "Start date is required"),
   end_date: z.string().min(1, "End date is required"),
@@ -134,7 +134,7 @@ export default function CreateRafflePage() {
     resolver: zodResolver(createRaffleSchema),
     defaultValues: {
       tokens_required: 10,
-      max_tokens_per_user: 100,
+      max_entries_per_user: 100,
       max_participants: 100,
       prize_type: "erc20",
       prize_amounts: [{ value: "" }],
@@ -366,7 +366,7 @@ export default function CreateRafflePage() {
         description: data.description,
         image_url: data.image_url || null,
         tokens_required: data.tokens_required,
-        max_tokens_per_user: data.max_tokens_per_user,
+        max_entries_per_user: data.max_entries_per_user,
         max_participants: data.max_participants,
         start_date: new Date(data.start_date).toISOString(),
         end_date: new Date(data.end_date).toISOString(),
@@ -627,13 +627,13 @@ export default function CreateRafflePage() {
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2">Max Tokens Per User</label>
+              <label className="text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2">Max Entries Per User</label>
               <input
                 type="number"
-                {...register("max_tokens_per_user", { valueAsNumber: true })}
+                {...register("max_entries_per_user", { valueAsNumber: true })}
                 className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
-              {errors.max_tokens_per_user && <p className="text-red-400 text-xs mt-1">{errors.max_tokens_per_user.message}</p>}
+              {errors.max_entries_per_user && <p className="text-red-400 text-xs mt-1">{errors.max_entries_per_user.message}</p>}
             </div>
 
             <div>

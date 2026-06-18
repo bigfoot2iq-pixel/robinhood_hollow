@@ -352,8 +352,8 @@ export default function RaffleDetailPage() {
             <span className="text-white ml-2">{raffle.tokens_required}</span>
           </div>
           <div>
-            <span className="text-muted-blue">Max Tokens Per User:</span>
-            <span className="text-white ml-2">{raffle.max_tokens_per_user}</span>
+            <span className="text-muted-blue">Max Entries Per User:</span>
+            <span className="text-white ml-2">{raffle.max_entries_per_user}</span>
           </div>
         </div>
       </div>

@@ -28,7 +28,7 @@ export function RaffleEntryForm({
   const queryClient = useQueryClient();
   const { writeContractAsync } = useWriteContract();
   const [entryCount, setEntryCount] = useState(1);
-  const [tokensSpent, setTokensSpent] = useState<number | null>(null);
+  const [enteredCount, setEnteredCount] = useState<number | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [status, setStatus] = useState<EntryStatus>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -71,37 +71,37 @@ export function RaffleEntryForm({
 
   useEffect(() => {
     if (!address || !raffle.id) {
-      setTokensSpent(null);
+      setEnteredCount(null);
       return;
     }
 
     const controller = new AbortController();
-    const loadTokensSpent = async () => {
+    const loadEnteredCount = async () => {
       try {
         const response = await fetch(
           `/api/entries?raffleId=${raffle.id}&walletAddress=${address}`,
           { signal: controller.signal }
         );
         if (!response.ok) {
-          setTokensSpent(0);
+          setEnteredCount(0);
           return;
         }
         const payload = await response.json();
-        setTokensSpent(typeof payload?.tokensSpent === "number" ? payload.tokensSpent : 0);
+        setEnteredCount(typeof payload?.entryCount === "number" ? payload.entryCount : 0);
       } catch {
-        setTokensSpent(0);
+        setEnteredCount(0);
       }
     };
 
-    loadTokensSpent();
+    loadEnteredCount();
     return () => controller.abort();
   }, [address, raffle.id, refreshKey]);
 
   const needsApproval = allowance !== undefined && allowance < tokensNeeded;
   const isLoading = status === "approving" || status === "joining" || status === "recording";
 
-  const currentTokensSpent = tokensSpent ?? 0;
-  const maxEntries = Math.floor((raffle.max_tokens_per_user - currentTokensSpent) / raffle.tokens_required);
+  const currentEnteredCount = enteredCount ?? 0;
+  const maxEntries = raffle.max_entries_per_user - currentEnteredCount;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

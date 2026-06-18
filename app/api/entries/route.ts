@@ -144,10 +144,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const nextTotalTokens = (existingUserEntry?.tokens_spent || 0) + tokensSpent;
-    if (nextTotalTokens > raffle.max_tokens_per_user) {
-      return NextResponse.json({ error: "Exceeded max tokens per user" }, { status: 400 });
+    const nextEntryCount = (existingUserEntry?.entry_count || 0) + entryCount;
+    if (nextEntryCount > raffle.max_entries_per_user) {
+      return NextResponse.json({ error: "Exceeded max entries per user" }, { status: 400 });
     }
+
+    const nextTotalTokens = (existingUserEntry?.tokens_spent || 0) + tokensSpent;
 
     if (existingUserEntry) {
       // Update existing entry

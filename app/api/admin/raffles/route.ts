@@ -82,7 +82,7 @@ const createRaffleSchema = z.object({
   description: z.string().min(1),
   image_url: z.string().url().optional().nullable(),
   tokens_required: z.number().positive(),
-  max_tokens_per_user: z.number().positive(),
+  max_entries_per_user: z.number().int().positive(),
   max_participants: z.number().positive(),
   start_date: dateStringSchema,
   end_date: dateStringSchema,

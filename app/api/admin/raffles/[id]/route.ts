@@ -9,7 +9,7 @@ const updateRaffleSchema = z.object({
   description: z.string().min(1).optional(),
   image_url: z.string().url().optional().nullable(),
   tokens_required: z.number().positive().optional(),
-  max_tokens_per_user: z.number().positive().optional(),
+  max_entries_per_user: z.number().positive().optional(),
   max_participants: z.number().positive().optional(),
   start_date: z
     .string()
@@ -28,7 +28,7 @@ type UpdateRaffleData = {
   description?: string;
   image_url?: string | null;
   tokens_required?: number;
-  max_tokens_per_user?: number;
+  max_entries_per_user?: number;
   max_participants?: number;
   start_date?: string;
   end_date?: string;
