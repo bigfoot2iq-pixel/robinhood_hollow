@@ -265,10 +265,12 @@ export default function RaffleDetailPage() {
                 </div>
               ) : (
                 <Image
-                  alt="Katana Token"
-                  width={96}
+                  alt="LITVM"
+                  width={153}
                   height={96}
-                  src="https://katana.network/meta/favicon.svg"
+                  unoptimized
+                  className="object-contain"
+                  src="/litvm/logo-letter.svg"
                 />
               )}
               <div className="absolute top-4 left-4 flex gap-2">

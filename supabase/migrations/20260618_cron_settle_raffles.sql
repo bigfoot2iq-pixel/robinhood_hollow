@@ -1,11 +1,18 @@
 -- Settle expired raffles on a schedule using Supabase Cron (pg_cron + pg_net).
--- A Postgres cron job POSTs to the Next.js endpoint every 30 minutes; the
--- endpoint activates due raffles and ends raffles past their end_date on-chain.
+-- A Postgres cron job POSTs to the Next.js endpoint; the endpoint activates due
+-- raffles and ends raffles past their end_date on-chain.
 --
--- Both extensions are included free on all Supabase plans. Edit the two
--- placeholders below (or use the Vault variant at the bottom) before running.
---   <APP_URL>      deployed app origin, no trailing slash, e.g. https://your-app.vercel.app
---   <CRON_SECRET>  must match the CRON_SECRET env var set in the app
+-- Both extensions are included free on all Supabase plans. The app URL is filled
+-- in below; replace the one remaining placeholder before running:
+--   <CRON_SECRET>  must match the CRON_SECRET env var set in the app (Vercel).
+--                  Do NOT commit the real secret here -- cron.job is readable by
+--                  the postgres role and this file is tracked in git. Paste the
+--                  filled statement into the Supabase SQL editor instead, or use
+--                  the Vault variant at the bottom.
+--
+-- NOTE: schedule is '*/15 * * * *' (every 15 min). For load testing you can
+--       drop to e.g. '10 seconds', but short intervals risk run overlap ->
+--       watchdog nonce collisions and faster gas burn.
 
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
@@ -16,10 +23,10 @@ where exists (select 1 from cron.job where jobname = 'settle-expired-raffles');
 
 select cron.schedule(
   'settle-expired-raffles',
-  '*/30 * * * *',
+  '*/15 * * * *',
   $$
   select net.http_post(
-    url     := '<APP_URL>/api/cron/settle-raffles',
+    url     := 'https://litvm-raffle.vercel.app/api/cron/settle-raffles',
     headers := jsonb_build_object(
       'Content-Type',  'application/json',
       'Authorization', 'Bearer <CRON_SECRET>'
@@ -41,7 +48,7 @@ select cron.schedule(
 -- ALTERNATIVE (recommended for production): keep the URL and secret out of the
 -- job definition (cron.job is world-readable to the postgres role) via Vault.
 --
---   select vault.create_secret('https://your-app.vercel.app', 'app_url');
+--   select vault.create_secret('https://litvm-raffle.vercel.app', 'app_url');
 --   select vault.create_secret('your-cron-secret', 'cron_secret');
 --
 --   select cron.schedule(

@@ -67,11 +67,12 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
             </div>
           ) : (
             <Image
-              alt="Katana Token"
-              width={56}
+              alt="LITVM"
+              width={90}
               height={56}
-              className="group-hover:scale-110 transition-transform duration-700"
-              src="https://katana.network/meta/favicon.svg"
+              unoptimized
+              className="object-contain group-hover:scale-110 transition-transform duration-700"
+              src="/litvm/logo-letter.svg"
             />
           )}
           <div className="absolute top-3 left-3 flex gap-1.5">
