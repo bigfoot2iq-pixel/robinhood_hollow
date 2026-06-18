@@ -1,17 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { formatUnits } from 'viem';
+import { litvmTestnet } from '@/lib/contracts/config';
 
-const ETHERSCAN_V2_API = 'https://api.etherscan.io/v2/api';
-const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
-const CHAIN_ID = '747474';
+// LitVM explorer is Caldera-hosted Blockscout, which exposes a native token
+// holders endpoint — no need to replay transfer events like the old Etherscan
+// flow. Blockscout v2 REST is keyless.
+const EXPLORER_BASE =
+  process.env.NEXT_PUBLIC_EXPLORER_URL ||
+  litvmTestnet.blockExplorers?.default?.url ||
+  'https://liteforge.explorer.caldera.xyz';
+
 const HOLLOW_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS as string;
-const TOKEN_DECIMALS = 18;
 const HOLDERS_PER_PAGE = 50;
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const MAX_CURSOR_PAGES = 100; // safety cap on the cursor walk
 const CACHE_TTL_MS = 60_000; // 60 seconds
 
+interface CachedHolders {
+  sorted: { address: string; nameTag: string; balance: bigint }[];
+  totalSupply: bigint;
+  decimals: number;
+}
+
 // In-memory cache keyed by contract address
-const cache = new Map<string, { data: { sorted: [string, bigint][]; totalSupplyBig: bigint }; timestamp: number }>();
+const cache = new Map<string, { data: CachedHolders; timestamp: number }>();
 
 interface Holder {
   rank: number;
@@ -30,72 +41,74 @@ interface TokenHoldersResponse {
   hasMore: boolean;
 }
 
-interface EtherscanTransfer {
-  from: string;
-  to: string;
-  value: string;
-  tokenDecimal: string;
+// ── Blockscout v2 response shapes ───────────────────────────────────────────
+interface BlockscoutHolder {
+  address: { hash: string; name: string | null };
+  value: string; // raw balance
+  token_id: string | null;
 }
 
-async function fetchAllTransfers(contractAddress: string): Promise<EtherscanTransfer[]> {
-  const allTransfers: EtherscanTransfer[] = [];
-  let page = 1;
-  const offset = 10000;
+interface BlockscoutHoldersResponse {
+  items: BlockscoutHolder[];
+  next_page_params: Record<string, string | number> | null;
+}
 
-  while (true) {
-    const url = `${ETHERSCAN_V2_API}?chainid=${CHAIN_ID}&module=account&action=tokentx&contractaddress=${contractAddress}&page=${page}&offset=${offset}&sort=asc&apikey=${ETHERSCAN_API_KEY}`;
+interface BlockscoutTokenInfo {
+  decimals: string | null;
+  total_supply: string | null;
+  holders_count: string | null;
+}
+
+// Walk every holders page via the cursor (next_page_params) until exhausted.
+// Blockscout already returns holders sorted by balance descending.
+async function fetchAllHolders(contractAddress: string): Promise<BlockscoutHolder[]> {
+  const all: BlockscoutHolder[] = [];
+  let params: Record<string, string | number> | null = null;
+
+  for (let i = 0; i < MAX_CURSOR_PAGES; i++) {
+    const qs = params
+      ? '?' +
+        new URLSearchParams(
+          Object.entries(params).map(([k, v]) => [k, String(v)])
+        ).toString()
+      : '';
+    const url = `${EXPLORER_BASE}/api/v2/tokens/${contractAddress}/holders${qs}`;
 
     const response = await fetch(url);
-    const data = await response.json();
+    if (!response.ok) break;
 
-    if (data.status !== '1' || !Array.isArray(data.result)) {
-      break;
-    }
+    const data: BlockscoutHoldersResponse = await response.json();
+    if (!Array.isArray(data.items)) break;
 
-    allTransfers.push(...data.result);
+    all.push(...data.items);
 
-    if (data.result.length < offset) {
-      break;
-    }
-
-    page++;
+    if (!data.next_page_params) break;
+    params = data.next_page_params;
   }
 
-  return allTransfers;
+  return all;
 }
 
-function buildHolderMap(transfers: EtherscanTransfer[]): Map<string, bigint> {
-  const balances = new Map<string, bigint>();
-
-  for (const tx of transfers) {
-    const from = tx.from.toLowerCase();
-    const to = tx.to.toLowerCase();
-    const value = BigInt(tx.value);
-
-    // Subtract from sender (skip zero address = mint)
-    if (from !== ZERO_ADDRESS) {
-      const prev = balances.get(from) ?? 0n;
-      balances.set(from, prev - value);
-    }
-
-    // Add to receiver (skip zero address = burn)
-    if (to !== ZERO_ADDRESS) {
-      const prev = balances.get(to) ?? 0n;
-      balances.set(to, prev + value);
-    }
+// Token metadata gives the authoritative total supply + decimals for % math.
+async function fetchTokenInfo(
+  contractAddress: string
+): Promise<{ totalSupply: bigint; decimals: number }> {
+  try {
+    const response = await fetch(`${EXPLORER_BASE}/api/v2/tokens/${contractAddress}`);
+    if (!response.ok) return { totalSupply: 0n, decimals: 18 };
+    const data: BlockscoutTokenInfo = await response.json();
+    return {
+      totalSupply: data.total_supply ? BigInt(data.total_supply) : 0n,
+      decimals: data.decimals ? parseInt(data.decimals, 10) : 18,
+    };
+  } catch {
+    return { totalSupply: 0n, decimals: 18 };
   }
-
-  // Remove zero balances
-  for (const [addr, bal] of balances) {
-    if (bal <= 0n) {
-      balances.delete(addr);
-    }
-  }
-
-  return balances;
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse<TokenHoldersResponse | { error: string }>> {
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<TokenHoldersResponse | { error: string }>> {
   try {
     const { searchParams } = new URL(request.url);
     const contractAddress = searchParams.get('address') || HOLLOW_TOKEN_ADDRESS;
@@ -105,13 +118,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<TokenHolde
       return NextResponse.json(
         { error: 'Missing token address (and NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS env var is not set)' },
         { status: 400 }
-      );
-    }
-
-    if (!ETHERSCAN_API_KEY) {
-      return NextResponse.json(
-        { error: 'ETHERSCAN_API_KEY is not configured' },
-        { status: 500 }
       );
     }
 
@@ -126,49 +132,62 @@ export async function GET(request: NextRequest): Promise<NextResponse<TokenHolde
     // Check cache first
     const cacheKey = contractAddress.toLowerCase();
     const cached = cache.get(cacheKey);
-    let sorted: [string, bigint][];
-    let totalSupplyBig: bigint;
+    let data: CachedHolders;
 
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-      sorted = cached.data.sorted;
-      totalSupplyBig = cached.data.totalSupplyBig;
+      data = cached.data;
     } else {
-      // Fetch all transfer events and build holder balances
-      const transfers = await fetchAllTransfers(contractAddress);
-      const balanceMap = buildHolderMap(transfers);
+      const [rawHolders, tokenInfo] = await Promise.all([
+        fetchAllHolders(contractAddress),
+        fetchTokenInfo(contractAddress),
+      ]);
 
-      // Calculate total supply from balances
-      totalSupplyBig = 0n;
-      for (const bal of balanceMap.values()) {
-        totalSupplyBig += bal;
+      const sorted = rawHolders
+        .map((h) => ({
+          address: h.address.hash,
+          nameTag: h.address.name ?? '',
+          balance: BigInt(h.value),
+        }))
+        .filter((h) => h.balance > 0n)
+        .sort((a, b) => {
+          if (b.balance > a.balance) return 1;
+          if (b.balance < a.balance) return -1;
+          return 0;
+        });
+
+      // Prefer the explorer's reported total supply; fall back to summing
+      // balances if the token-info call failed.
+      let totalSupply = tokenInfo.totalSupply;
+      if (totalSupply <= 0n) {
+        for (const h of sorted) totalSupply += h.balance;
       }
 
-      // Sort by balance descending
-      sorted = [...balanceMap.entries()].sort((a, b) => {
-        if (b[1] > a[1]) return 1;
-        if (b[1] < a[1]) return -1;
-        return 0;
-      });
-
-      cache.set(cacheKey, { data: { sorted, totalSupplyBig }, timestamp: Date.now() });
+      data = { sorted, totalSupply, decimals: tokenInfo.decimals };
+      cache.set(cacheKey, { data, timestamp: Date.now() });
     }
 
+    const { sorted, totalSupply, decimals } = data;
     const totalHolders = sorted.length;
     const totalPages = Math.ceil(totalHolders / HOLDERS_PER_PAGE);
     const startIdx = (page - 1) * HOLDERS_PER_PAGE;
     const pageEntries = sorted.slice(startIdx, startIdx + HOLDERS_PER_PAGE);
 
-    const holders: Holder[] = pageEntries.map(([address, balance], index) => {
-      const formatted = formatUnits(balance, TOKEN_DECIMALS);
-      const percentage = totalSupplyBig > 0n
-        ? ((Number(balance) / Number(totalSupplyBig)) * 100).toFixed(4) + '%'
-        : '0%';
+    const holders: Holder[] = pageEntries.map((entry, index) => {
+      const formatted = formatUnits(entry.balance, decimals);
+      // bigint-safe percentage to 4 decimals (parts-per-million / 10000)
+      const percentage =
+        totalSupply > 0n
+          ? (Number((entry.balance * 1_000_000n) / totalSupply) / 10000).toFixed(4) + '%'
+          : '0%';
 
       return {
         rank: startIdx + index + 1,
-        address,
-        nameTag: '',
-        quantity: parseFloat(formatted).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        address: entry.address,
+        nameTag: entry.nameTag,
+        quantity: parseFloat(formatted).toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
         quantityRaw: formatted,
         percentage,
       };
@@ -183,9 +202,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<TokenHolde
     });
   } catch (error) {
     console.error('Error in token holders API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
