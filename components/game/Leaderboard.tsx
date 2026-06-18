@@ -114,7 +114,7 @@ export default function Leaderboard() {
           onClick={() => handleTabChange('game')}
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
             activeTab === 'game' 
-              ? 'bg-[#F4FF1A] text-dark-navy' 
+              ? 'bg-[#33C5D9] text-dark-navy' 
               : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
           }`}
         >
@@ -124,7 +124,7 @@ export default function Leaderboard() {
           onClick={() => handleTabChange('hollow')}
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
             activeTab === 'hollow' 
-              ? 'bg-[#F4FF1A] text-dark-navy' 
+              ? 'bg-[#33C5D9] text-dark-navy' 
               : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
           }`}
         >
@@ -179,7 +179,7 @@ export default function Leaderboard() {
         {/* Loading State - Only show when no existing data */}
         {isLoading && (
           <div className="p-12 text-center">
-            <div className="inline-block w-8 h-8 border-4 border-[#F4FF1A] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="inline-block w-8 h-8 border-4 border-[#33C5D9] border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-muted-blue">
               {activeTab === 'game' ? 'Loading warriors...' : 'Loading holders...'}
             </p>
@@ -220,7 +220,7 @@ export default function Leaderboard() {
                   <div
                     key={player.wallet_address}
                     className={`hover:bg-white/5 transition-colors ${
-                      isCurrentUser ? 'bg-[#F4FF1A]/10 border-l-4 border-[#F4FF1A]' : ''
+                      isCurrentUser ? 'bg-[#33C5D9]/10 border-l-4 border-[#33C5D9]' : ''
                     }`}
                   >
                     {/* Desktop Layout */}
@@ -246,7 +246,7 @@ export default function Leaderboard() {
 
                       {/* Score */}
                       <div className="col-span-3 flex items-center justify-end">
-                        <p className={`text-lg lg:text-xl font-display font-bold ${isCurrentUser ? 'text-[#F4FF1A]' : 'text-white'}`}>
+                        <p className={`text-lg lg:text-xl font-display font-bold ${isCurrentUser ? 'text-[#33C5D9]' : 'text-white'}`}>
                           {player.game_score.toLocaleString()}
                         </p>
                       </div>
@@ -266,7 +266,7 @@ export default function Leaderboard() {
 
                       {/* Score */}
                       <div className="col-span-4 flex items-center justify-end">
-                        <p className={`text-base font-display font-bold ${isCurrentUser ? 'text-[#F4FF1A]' : 'text-white'}`}>
+                        <p className={`text-base font-display font-bold ${isCurrentUser ? 'text-[#33C5D9]' : 'text-white'}`}>
                           {player.game_score.toLocaleString()}
                         </p>
                       </div>
@@ -317,7 +317,7 @@ export default function Leaderboard() {
                       <p className="text-sm font-bold text-white mb-1">{holder.percentage}</p>
                       <div className="w-full h-1.5 bg-white/10 rounded overflow-hidden">
                         <div 
-                          className="h-full bg-[#F4FF1A] rounded" 
+                          className="h-full bg-[#33C5D9] rounded" 
                           style={{ width: holder.percentage }}
                         ></div>
                       </div>
@@ -375,7 +375,7 @@ export default function Leaderboard() {
         <p className="text-muted-blue text-sm lg:text-base mb-4">Ready to claim your place among the legends?</p>
         <button
           onClick={() => router.push('/game')}
-          className="px-6 lg:px-8 py-2.5 lg:py-3 bg-[#F4FF1A] hover:bg-[#F4FF1A]/90 text-dark-navy font-bold rounded uppercase tracking-widest text-xs lg:text-sm transition-all"
+          className="px-6 lg:px-8 py-2.5 lg:py-3 bg-[#33C5D9] hover:bg-[#33C5D9]/90 text-dark-navy font-bold rounded uppercase tracking-widest text-xs lg:text-sm transition-all"
         >
           Play Now
         </button>

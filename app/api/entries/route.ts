@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const walletLower = walletAddress.toLowerCase();
 
     const { data, error } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("tokens_spent, entry_count")
       .eq("raffle_id", raffleId)
       .eq("wallet_address", walletLower)
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     // Check if entry already exists
     const { data: existingEntry } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("id")
       .eq("tx_hash", txHash)
       .single();
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
     // Check if raffle exists and is active
     const { data: raffle, error: raffleError } = await supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*")
       .eq("id", raffleId)
       .single();
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
 
     // Check if user already has an entry (to update) or create new
     const { data: existingUserEntry } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("*")
       .eq("raffle_id", raffleId)
       .eq("wallet_address", walletLower)
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
 
     if (!existingUserEntry) {
       const { count: participantsCount } = await supabase
-        .from("hollow_raffles_entries")
+        .from("litvm_raffle_entries")
         .select("id", { count: "exact", head: true })
         .eq("raffle_id", raffleId);
 
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
     if (existingUserEntry) {
       // Update existing entry
       const { error: updateError } = await supabase
-        .from("hollow_raffles_entries")
+        .from("litvm_raffle_entries")
         .update({
           tokens_spent: nextTotalTokens,
           entry_count: existingUserEntry.entry_count + entryCount,
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Create new entry
       const { error: insertError } = await supabase
-        .from("hollow_raffles_entries")
+        .from("litvm_raffle_entries")
         .insert({
           raffle_id: raffleId,
           wallet_address: walletLower,
@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Record transaction
-    await supabase.from("hollow_raffles_transactions").insert({
+    await supabase.from("litvm_raffle_transactions").insert({
       wallet_address: walletLower,
       type: "raffle_entry",
       amount: tokensSpent.toString(),
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Update user stats
-    await supabase.rpc("hollow_raffles_increment_user_entries", {
+    await supabase.rpc("litvm_raffle_increment_user_entries", {
       p_wallet: walletLower,
       p_count: entryCount,
     });

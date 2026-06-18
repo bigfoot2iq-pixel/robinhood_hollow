@@ -8,7 +8,7 @@ import { useConfig } from "@/lib/hooks/useConfig";
 import { formatTokenBalance } from "@/lib/hooks";
 
 const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
-const WAITLIST_ENDED = true;
+const WAITLIST_OPEN_SOON = true;
 const ONE_TOKEN = BigInt(1e18);
 const X_FOLLOW_USERNAME = "TheHollow_NFT";
 const X_POST_ID = "2021439605271335122";
@@ -111,7 +111,7 @@ function TaskCard({
     : isError
       ? "border-l-red-500"
       : isLoading
-        ? "border-l-[#F4FF1A]"
+        ? "border-l-[#33C5D9]"
         : "border-l-white/20";
 
   return (
@@ -125,7 +125,7 @@ function TaskCard({
               : isError
                 ? "bg-red-500/20 text-red-400"
                 : isLoading
-                  ? "bg-[#F4FF1A]/20 text-[#F4FF1A]"
+                  ? "bg-[#33C5D9]/20 text-[#33C5D9]"
                   : "bg-white/5 text-white/60"
             }
           `}
@@ -157,7 +157,7 @@ function TaskCard({
             <p className="text-xs text-red-400 mt-1">{state.message}</p>
           )}
           {showTimer && isLoading && state.timer !== undefined && (
-            <p className="text-xs text-[#F4FF1A] mt-1">
+            <p className="text-xs text-[#33C5D9] mt-1">
               Waiting... {state.timer}s remaining
             </p>
           )}
@@ -167,12 +167,12 @@ function TaskCard({
           {isCompleted ? (
             <span className="text-green-400 text-xs font-bold uppercase tracking-widest">Done</span>
           ) : isLoading ? (
-            <span className="text-[#F4FF1A] text-xs font-bold uppercase tracking-widest animate-pulse">Processing...</span>
+            <span className="text-[#33C5D9] text-xs font-bold uppercase tracking-widest animate-pulse">Processing...</span>
           ) : (
             <button
               onClick={onClick}
               disabled={!onClick || !isEnabled}
-              className="px-4 py-2 bg-[#F4FF1A] hover:brightness-110 text-[#0B1E3A] font-bold text-xs rounded uppercase tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-[#33C5D9] hover:brightness-110 text-[#0A1622] font-bold text-xs rounded uppercase tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             >
               {buttonText || "Start"}
             </button>
@@ -181,7 +181,7 @@ function TaskCard({
       </div>
 
       {isLoading && showTimer && (
-        <div className="h-1 bg-[#F4FF1A] transition-all duration-1000 ease-linear"
+        <div className="h-1 bg-[#33C5D9] transition-all duration-1000 ease-linear"
           style={{ width: `${((20 - (state.timer || 0)) / 20) * 100}%` }}
         />
       )}
@@ -459,14 +459,14 @@ export default function WaitlistPage() {
       <div className="flex items-center justify-center min-h-[60vh] py-12">
         <div className="ui-container p-8 sm:p-12 rounded text-center w-full max-w-[500px]">
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#F4FF1A]/5 via-[#F4FF1A]/10 to-[#F4FF1A]/5 rounded-full blur-2xl"></div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#33C5D9]/5 via-[#33C5D9]/10 to-[#33C5D9]/5 rounded-full blur-2xl"></div>
             <div className="relative">
               <h1 className="text-3xl sm:text-4xl font-header mb-2">Coming Soon</h1>
               <p className="text-muted-blue text-xs uppercase tracking-widest mb-8">Waitlist Opening In</p>
             </div>
           </div>
           <div className="flex items-center justify-center gap-2 text-muted-blue">
-            <div className="w-4 h-4 border-2 border-[#F4FF1A] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-4 h-4 border-2 border-[#33C5D9] border-t-transparent rounded-full animate-spin"></div>
             Loading...
           </div>
         </div>
@@ -474,19 +474,23 @@ export default function WaitlistPage() {
     );
   }
 
-  if (WAITLIST_ENDED) {
+  if (WAITLIST_OPEN_SOON) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] py-12">
         <div className="ui-container p-8 sm:p-12 rounded text-center w-full max-w-[500px]">
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#F4FF1A]/5 via-[#F4FF1A]/10 to-[#F4FF1A]/5 rounded-full blur-2xl"></div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#33C5D9]/5 via-[#33C5D9]/10 to-[#33C5D9]/5 rounded-full blur-2xl"></div>
             <div className="relative py-4">
-              <h1 className="text-3xl sm:text-4xl font-header mb-3 text-white">Waitlist Closed</h1>
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 bg-[#33C5D9]/10 rounded border border-[#33C5D9]/20">
+                <div className="w-2 h-2 bg-[#33C5D9] rounded-full animate-pulse"></div>
+                <span className="text-xs text-[#33C5D9] uppercase tracking-widest font-bold">Coming Soon</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-header mb-3 text-white">Waitlist Opening Soon</h1>
               <p className="text-muted-blue text-sm mb-6">
-                The waitlist has ended. Thank you to everyone who participated!
+                The waitlist isn't open yet. Stay ready — spots are limited.
               </p>
               <p className="text-muted-blue text-xs">
-                Stay tuned for what's coming next.
+                Follow us to be first to know when it goes live.
               </p>
             </div>
           </div>
@@ -500,7 +504,7 @@ export default function WaitlistPage() {
       <div className="flex items-center justify-center min-h-[60vh] py-12">
         <div className="ui-container p-8 sm:p-12 rounded text-center w-full max-w-[500px]">
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#F4FF1A]/5 via-[#F4FF1A]/10 to-[#F4FF1A]/5 rounded-full blur-2xl"></div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#33C5D9]/5 via-[#33C5D9]/10 to-[#33C5D9]/5 rounded-full blur-2xl"></div>
             <div className="relative">
               <h1 className="text-3xl sm:text-4xl font-header mb-2">Coming Soon</h1>
               <p className="text-muted-blue text-xs uppercase tracking-widest mb-8">Waitlist Opening In</p>
@@ -519,12 +523,12 @@ export default function WaitlistPage() {
             ].map((item, i) =>
               "sep" in item ? (
                 <div key={i} className="flex items-center h-[50px] sm:h-[70px] mx-1 sm:mx-2">
-                  <span className="text-xl sm:text-3xl text-[#F4FF1A] font-display animate-pulse">:</span>
+                  <span className="text-xl sm:text-3xl text-[#33C5D9] font-display animate-pulse">:</span>
                 </div>
               ) : (
                 <div key={item.label} className="flex flex-col items-center">
-                  <div className="bg-gradient-to-b from-[#14357A] to-[#0B1E3A] rounded-lg p-3 sm:p-4 min-w-[55px] sm:min-w-[75px] border border-white/10 shadow-[0_0_20px_rgba(244,255,26,0.1)]">
-                    <span className="text-2xl sm:text-4xl font-bold text-[#F4FF1A] font-display block drop-shadow-[0_0_10px_rgba(244,255,26,0.5)]">
+                  <div className="bg-gradient-to-b from-[#0E2230] to-[#0A1622] rounded-lg p-3 sm:p-4 min-w-[55px] sm:min-w-[75px] border border-white/10 shadow-[0_0_20px_rgba(51,197,217,0.1)]">
+                    <span className="text-2xl sm:text-4xl font-bold text-[#33C5D9] font-display block drop-shadow-[0_0_10px_rgba(51,197,217,0.5)]">
                       {String(item.value).padStart(2, "0")}
                     </span>
                   </div>
@@ -554,7 +558,7 @@ export default function WaitlistPage() {
       <div className="flex items-center justify-center min-h-[60vh] py-12">
         <div className="ui-container p-8 rounded text-center w-full max-w-[500px]">
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#F4FF1A]/5 via-transparent to-transparent rounded-full blur-xl"></div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#33C5D9]/5 via-transparent to-transparent rounded-full blur-xl"></div>
             <div className="relative">
               <h1 className="text-3xl sm:text-4xl font-header mb-3">Join the Waitlist</h1>
             </div>
@@ -563,7 +567,7 @@ export default function WaitlistPage() {
             Connect your wallet to secure your spot.
           </p>
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded border border-white/10">
-            <div className="w-2 h-2 bg-[#F4FF1A] rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-[#33C5D9] rounded-full animate-pulse"></div>
             <span className="text-xs text-muted-blue uppercase tracking-widest">Waiting for wallet</span>
           </div>
         </div>
@@ -575,7 +579,7 @@ export default function WaitlistPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh] py-12">
         <div className="ui-container p-8 rounded text-center w-full max-w-[500px]">
-          <div className="animate-spin w-10 h-10 border-2 border-[#F4FF1A] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin w-10 h-10 border-2 border-[#33C5D9] border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-muted-blue text-sm uppercase tracking-widest">Verifying...</p>
         </div>
       </div>
@@ -599,7 +603,7 @@ export default function WaitlistPage() {
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("LFG! You're officially on the list! 📝\n\nYou just secured a WL spot for the upcoming @TheHollow_NFT mint on @katana. You saw the vision early, and now you're part of the inner circle.\n\nDon't fade the silence. Stay active and stay engaged. 🌑⚔️")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#F4FF1A] text-black font-bold rounded hover:bg-[#E6EB00] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#33C5D9] text-black font-bold rounded hover:bg-[#E6EB00] transition-colors"
                 >
                   Share on
                   <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -624,18 +628,18 @@ export default function WaitlistPage() {
             <div className="mb-4">
               <div className="text-center mb-4">
                 <div className="relative inline-block">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-[#F4FF1A]/10 via-[#F4FF1A]/5 to-transparent rounded-full blur-xl"></div>
+                  <div className="absolute -inset-2 bg-gradient-to-r from-[#33C5D9]/10 via-[#33C5D9]/5 to-transparent rounded-full blur-xl"></div>
                   <h2 className="relative text-2xl sm:text-3xl font-header text-white mb-1">Join the Waitlist</h2>
                 </div>
                 <p className="text-muted-blue text-xs uppercase tracking-widest">Complete all tasks to secure your spot</p>
               </div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-blue">Progress</span>
-                <span className="text-[10px] font-bold text-[#F4FF1A]">{completedCount}/5</span>
+                <span className="text-[10px] font-bold text-[#33C5D9]">{completedCount}/5</span>
               </div>
               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#F4FF1A] to-[#CCDD00] transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-[#33C5D9] to-[#CCDD00] transition-all duration-500"
                   style={{ width: `${(completedCount / 5) * 100}%` }}
                 />
               </div>
@@ -728,11 +732,11 @@ export default function WaitlistPage() {
                 <button
                   onClick={submitToWaitlist}
                   disabled={submitStep === "submitting"}
-                  className="w-full py-4 bg-gradient-to-r from-[#F4FF1A] to-[#CCDD00] hover:brightness-110 text-[#0B1E3A] font-bold rounded-lg uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(244,255,26,0.3)]"
+                  className="w-full py-4 bg-gradient-to-r from-[#33C5D9] to-[#CCDD00] hover:brightness-110 text-[#0A1622] font-bold rounded-lg uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(51,197,217,0.3)]"
                 >
                   {submitStep === "submitting" ? (
                     <span className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-[#0B1E3A] border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-[#0A1622] border-t-transparent rounded-full animate-spin" />
                       Joining...
                     </span>
                   ) : (

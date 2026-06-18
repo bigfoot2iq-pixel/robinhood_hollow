@@ -1,6 +1,6 @@
-# Katana Raffles
+# LitVM Raffles
 
-A decentralized raffles platform on **Katana Network** (Chain ID: 747474).
+A decentralized raffles platform on **LitVM LiteForge testnet** (Chain ID: 4441) — Litecoin's Virtual Machine.
 
 ## Features
 
@@ -23,7 +23,7 @@ A decentralized raffles platform on **Katana Network** (Chain ID: 747474).
 
 - Node.js 20+
 - Supabase account
-- Wallet with funds on Katana Network
+- Wallet with zkLTC test funds on LitVM LiteForge testnet
 
 ### Installation
 
@@ -122,14 +122,14 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 
-# Blockchain
-NEXT_PUBLIC_CHAIN_ID=747474
-NEXT_PUBLIC_RPC_URL=https://rpc.katana.network
+# Blockchain — LitVM LiteForge testnet
+NEXT_PUBLIC_CHAIN_ID=4441
+NEXT_PUBLIC_RPC_URL=https://liteforge.rpc.caldera.xyz/http
 NEXT_PUBLIC_RAFFLE_TOKEN_ADDRESS=0x...
 NEXT_PUBLIC_RAFFLES_CONTRACT_ADDRESS=0x...
 
 # Admin
-# Admin wallets are stored in the hollow_raffles_admin table (case-insensitive)
+# Admin wallets are stored in the litvm_raffle_admin table (case-insensitive)
 
 # Watchdog
 WATCHDOG_PRIVATE_KEY=

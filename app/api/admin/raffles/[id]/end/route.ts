@@ -24,7 +24,7 @@ export async function POST(
     const isUuid = uuidRegex.test(id);
 
     let raffleQuery = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*");
 
     if (isUuid) {
@@ -45,7 +45,7 @@ export async function POST(
 
     // Get all entries for this raffle
     const { data: entries, error: entriesError } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("wallet_address, tokens_spent")
       .eq("raffle_id", raffle.id);
 
@@ -61,7 +61,7 @@ export async function POST(
       participantMap.set(normalized, current + BigInt(entry.tokens_spent));
     });
 
-    const participants = Array.from(participantMap.keys());
+    const participants = Array.from(participantMap.keys()) as `0x${string}`[];
     const ticketCounts = Array.from(participantMap.values());
 
     // Setup blockchain clients
@@ -128,7 +128,7 @@ export async function POST(
     // Store winners in database
     if (winners.length > 0) {
       const { data: prizes } = await supabase
-        .from("hollow_raffles_prizes")
+        .from("litvm_raffle_prizes")
         .select("*")
         .eq("raffle_id", raffle.id)
         .order("created_at", { ascending: true });
@@ -143,7 +143,7 @@ export async function POST(
 
       console.log("Inserting winners:", winnerInserts);
 
-      const { error: winnerError } = await supabase.from("hollow_raffles_winners").insert(winnerInserts);
+      const { error: winnerError } = await supabase.from("litvm_raffle_winners").insert(winnerInserts);
       if (winnerError) {
         console.error("Error inserting winners:", winnerError);
       }
@@ -151,7 +151,7 @@ export async function POST(
 
     // Log admin action
     const adminWallet = request.headers.get("x-admin-wallet") || "unknown";
-    await supabase.from("hollow_raffles_admin_logs").insert({
+    await supabase.from("litvm_raffle_admin_logs").insert({
       admin_wallet: adminWallet,
       action: "end_raffle",
       details: { 

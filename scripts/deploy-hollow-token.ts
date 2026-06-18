@@ -4,22 +4,20 @@ const { ethers, run } = pkg;
 // ── Constructor arguments ──────────────────────────────────────────
 const HOLLOW_TOKEN_NAME = "Hollow Token";
 const HOLLOW_TOKEN_SYMBOL = "HOLLOW";
-const KAT_TOKEN_ADDRESS = "0x7F1f4b4b29f5058fA32CC7a97141b8D7e5ABDC2d";
-// Initial claim price in wei (0 = free). Update before deploying.
-const INITIAL_CLAIM_PRICE = ethers.parseEther("0");
-// Initial claim cooldown in seconds (3600 = 1 hour)
+// Tokens minted per free claim (whole HOLLOW, scaled to 18 decimals below).
+const INITIAL_CLAIM_AMOUNT = ethers.parseEther("100");
+// Cooldown between claims in seconds (3600 = 1 hour). Owner can change later.
 const INITIAL_CLAIM_COOLDOWN = 3600;
 
 async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("═══════════════════════════════════════════════════");
-  console.log("  HollowToken Deployment");
+  console.log("  HollowToken Deployment (LitVM testnet)");
   console.log("═══════════════════════════════════════════════════");
   console.log("Deployer:", deployer.address);
-  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "KAT");
-  console.log("KAT Token:", KAT_TOKEN_ADDRESS);
-  console.log("Initial Claim Price:", ethers.formatEther(INITIAL_CLAIM_PRICE), "KAT");
-  console.log("Initial Claim Cooldown:", INITIAL_CLAIM_COOLDOWN, "seconds");
+  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "zkLTC");
+  console.log("Claim Amount:", ethers.formatEther(INITIAL_CLAIM_AMOUNT), "HOLLOW");
+  console.log("Claim Cooldown:", INITIAL_CLAIM_COOLDOWN, "seconds");
   console.log("");
 
   // ── Deploy HollowToken ───────────────────────────────────────────
@@ -28,8 +26,7 @@ async function main() {
   const hollowToken = await HollowToken.deploy(
     HOLLOW_TOKEN_NAME,
     HOLLOW_TOKEN_SYMBOL,
-    KAT_TOKEN_ADDRESS,
-    INITIAL_CLAIM_PRICE,
+    INITIAL_CLAIM_AMOUNT,
     INITIAL_CLAIM_COOLDOWN,
   );
   await hollowToken.waitForDeployment();
@@ -41,15 +38,14 @@ async function main() {
   await new Promise((resolve) => setTimeout(resolve, 30_000));
 
   // ── Verify HollowToken ──────────────────────────────────────────
-  console.log(`\nVerifying ${hollowAddress} on Katanascan...`);
+  console.log(`\nVerifying ${hollowAddress} on Liteforge Explorer...`);
   try {
     await run("verify:verify", {
       address: hollowAddress,
       constructorArguments: [
         HOLLOW_TOKEN_NAME,
         HOLLOW_TOKEN_SYMBOL,
-        KAT_TOKEN_ADDRESS,
-        INITIAL_CLAIM_PRICE,
+        INITIAL_CLAIM_AMOUNT,
         INITIAL_CLAIM_COOLDOWN,
       ],
     });
@@ -70,8 +66,8 @@ async function main() {
   console.log(`HollowToken: ${hollowAddress}`);
   console.log(`\nUpdate your .env.local:`);
   console.log(`NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS=${hollowAddress}`);
-  console.log(`\nKatanascan:`);
-  console.log(`https://katanascan.com/address/${hollowAddress}#code`);
+  console.log(`\nLiteforge Explorer:`);
+  console.log(`https://liteforge.explorer.caldera.xyz/address/${hollowAddress}#code`);
 }
 
 main().catch((error) => {

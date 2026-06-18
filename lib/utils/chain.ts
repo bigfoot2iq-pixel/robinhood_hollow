@@ -1,5 +1,5 @@
 import { createPublicClient, http, type Abi } from "viem";
-import { contracts, katanaNetwork, KatanaRafflesABI } from "@/lib/contracts";
+import { contracts, litvmTestnet, KatanaRafflesABI } from "@/lib/contracts";
 import type { RaffleStatus } from "@/lib/supabase";
 
 // On-chain RaffleState enum: CREATED=0, ACTIVE=1, COMPLETED=2, CANCELLED=3
@@ -13,9 +13,9 @@ const CHAIN_STATE_MAP: Record<number, RaffleStatus> = {
 const abi = KatanaRafflesABI as Abi;
 
 function getPublicClient() {
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
   return createPublicClient({
-    chain: katanaNetwork,
+    chain: litvmTestnet,
     transport: http(rpcUrl),
   });
 }
@@ -28,7 +28,7 @@ export async function getOnChainRaffleState(chainRaffleId: number): Promise<Raff
     abi,
     functionName: "raffles",
     args: [BigInt(chainRaffleId)],
-  }) as [number, string, number, bigint, boolean, boolean];
+  }) as [number, string, number, bigint, boolean, boolean, string, bigint];
 
   const state = Number(result[2]);
   return CHAIN_STATE_MAP[state] ?? "pending";
@@ -57,7 +57,7 @@ export async function getOnChainRaffleStates(
   for (let i = 0; i < chainRaffleIds.length; i++) {
     const response = responses[i];
     if (response.status === "fulfilled") {
-      const data = response.value as [number, string, number, bigint, boolean, boolean];
+      const data = response.value as [number, string, number, bigint, boolean, boolean, string, bigint];
       const state = Number(data[2]);
       result.set(chainRaffleIds[i].dbId, CHAIN_STATE_MAP[state] ?? "pending");
     }

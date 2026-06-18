@@ -1,0 +1,285 @@
+
+> katana-raffles@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.110.197:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 8s
+○ Compiling /claim ...
+ GET /claim 200 in 11.4s (compile: 10.9s, render: 528ms)
+ GET /claim 200 in 253ms (compile: 189ms, render: 64ms)
+ GET /claim 200 in 227ms (compile: 176ms, render: 52ms)
+⨯ ./lib/contracts/index.ts:5:1
+Module not found: Can't resolve './StakingRewardsABI'
+[0m [90m 3 |[39m [36mexport[39m { [33mKatanaRafflesABI[39m } [36mfrom[39m [32m"./KatanaRafflesABI"[39m[33m;[39m
+ [90m 4 |[39m [36mexport[39m { [33mTHE_HOLLOW_GAME_ADDRESS[39m[33m,[39m [33mTHE_HOLLOW_GAME_ABI[39m } [36mfrom[39m [32m"./theHollowGame"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mexport[39m { [33mStakingRewardsABI[39m } [36mfrom[39m [32m"./StakingRewardsABI"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./lib/contracts/index.ts [Client Component Browser]
+    ./lib/hooks/useHollow.ts [Client Component Browser]
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/contracts/index.ts [Client Component SSR]
+    ./lib/hooks/useHollow.ts [Client Component SSR]
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/contracts/index.ts:5:1
+Module not found: Can't resolve './StakingRewardsABI'
+[0m [90m 3 |[39m [36mexport[39m { [33mKatanaRafflesABI[39m } [36mfrom[39m [32m"./KatanaRafflesABI"[39m[33m;[39m
+ [90m 4 |[39m [36mexport[39m { [33mTHE_HOLLOW_GAME_ADDRESS[39m[33m,[39m [33mTHE_HOLLOW_GAME_ABI[39m } [36mfrom[39m [32m"./theHollowGame"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mexport[39m { [33mStakingRewardsABI[39m } [36mfrom[39m [32m"./StakingRewardsABI"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./lib/contracts/index.ts [Client Component Browser]
+    ./lib/hooks/useHollow.ts [Client Component Browser]
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/contracts/index.ts [Client Component SSR]
+    ./lib/hooks/useHollow.ts [Client Component SSR]
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/hooks/index.ts:11:1
+Module not found: Can't resolve './useStakingRewards'
+[0m [90m  9 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useMultiUser"[39m[33m;[39m
+ [90m 10 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useConfig"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 11 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useStakingRewards"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 12 |[39m[0m
+
+
+
+Import traces:
+  #1 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #2 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #3 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  #4 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/hooks/index.ts:11:1
+Module not found: Can't resolve './useStakingRewards'
+[0m [90m  9 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useMultiUser"[39m[33m;[39m
+ [90m 10 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useConfig"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 11 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useStakingRewards"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 12 |[39m[0m
+
+
+
+Import traces:
+  #1 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #2 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #3 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  #4 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/hooks/index.ts:11:1
+Module not found: Can't resolve './useStakingRewards'
+[0m [90m  9 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useMultiUser"[39m[33m;[39m
+ [90m 10 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useConfig"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 11 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useStakingRewards"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 12 |[39m[0m
+
+
+
+Import traces:
+  #1 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #2 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #3 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  #4 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/hooks/index.ts:11:1
+Module not found: Can't resolve './useStakingRewards'
+[0m [90m  9 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useMultiUser"[39m[33m;[39m
+ [90m 10 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useConfig"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 11 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m"./useStakingRewards"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 12 |[39m[0m
+
+
+
+Import traces:
+  #1 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Client Component Browser]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #2 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Client Component SSR]
+    ./app/(public)/claim/page.tsx [Server Component]
+
+  #3 [Client Component Browser]:
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  #4 [Client Component SSR]:
+    ./lib/hooks/index.ts [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Client Component SSR]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/contracts/index.ts:5:1
+Module not found: Can't resolve './StakingRewardsABI'
+[0m [90m 3 |[39m [36mexport[39m { [33mKatanaRafflesABI[39m } [36mfrom[39m [32m"./KatanaRafflesABI"[39m[33m;[39m
+ [90m 4 |[39m [36mexport[39m { [33mTHE_HOLLOW_GAME_ADDRESS[39m[33m,[39m [33mTHE_HOLLOW_GAME_ABI[39m } [36mfrom[39m [32m"./theHollowGame"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mexport[39m { [33mStakingRewardsABI[39m } [36mfrom[39m [32m"./StakingRewardsABI"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m[0m
+
+
+
+Import traces:
+  Client Component SSR:
+    ./lib/contracts/index.ts [Client Component SSR]
+    ./lib/hooks/useToken.ts [Client Component SSR]
+    ./components/layout/Header.tsx [Client Component SSR]
+    ./components/layout/Header.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  Client Component Browser:
+    ./lib/contracts/index.ts [Client Component Browser]
+    ./lib/hooks/useHollow.ts [Client Component Browser]
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/contracts/index.ts:5:1
+Module not found: Can't resolve './StakingRewardsABI'
+[0m [90m 3 |[39m [36mexport[39m { [33mKatanaRafflesABI[39m } [36mfrom[39m [32m"./KatanaRafflesABI"[39m[33m;[39m
+ [90m 4 |[39m [36mexport[39m { [33mTHE_HOLLOW_GAME_ADDRESS[39m[33m,[39m [33mTHE_HOLLOW_GAME_ABI[39m } [36mfrom[39m [32m"./theHollowGame"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mexport[39m { [33mStakingRewardsABI[39m } [36mfrom[39m [32m"./StakingRewardsABI"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m[0m
+
+
+
+Import traces:
+  Client Component SSR:
+    ./lib/contracts/index.ts [Client Component SSR]
+    ./lib/hooks/useToken.ts [Client Component SSR]
+    ./components/layout/Header.tsx [Client Component SSR]
+    ./components/layout/Header.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+  Client Component Browser:
+    ./lib/contracts/index.ts [Client Component Browser]
+    ./lib/hooks/useHollow.ts [Client Component Browser]
+    ./lib/hooks/index.ts [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Client Component Browser]
+    ./components/layout/Sidebar.tsx [Server Component]
+    ./app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+✓ Compiled in 160ms
+○ Compiling /dashboard ...
+ GET /dashboard 200 in 4.8s (compile: 4.5s, render: 330ms)
+○ Compiling /admin ...
+ GET /admin 200 in 5.1s (compile: 5.0s, render: 68ms)
+ GET /claim 200 in 871ms (compile: 454ms, render: 417ms)
+ GET /raffles 200 in 2.9s (compile: 2.9s, render: 66ms)
+[?25h

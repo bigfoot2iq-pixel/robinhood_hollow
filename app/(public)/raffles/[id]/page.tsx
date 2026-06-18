@@ -237,7 +237,7 @@ export default function RaffleDetailPage() {
     <div className="space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
-        <Link href="/raffles" className="text-muted-blue hover:text-[#F4FF1A] transition-colors">
+        <Link href="/raffles" className="text-muted-blue hover:text-[#33C5D9] transition-colors">
           Raffles
         </Link>
         <span className="text-muted-blue">/</span>
@@ -272,7 +272,7 @@ export default function RaffleDetailPage() {
                 />
               )}
               <div className="absolute top-4 left-4 flex gap-2">
-                <span className="bg-[#F4FF1A] text-dark-navy text-[10px] font-bold px-3 py-1 rounded uppercase tracking-widest">
+                <span className="bg-[#33C5D9] text-dark-navy text-[10px] font-bold px-3 py-1 rounded uppercase tracking-widest">
                   {prizeLabel}
                 </span>
                 <span className={`text-[10px] font-bold px-3 py-1 rounded uppercase tracking-widest ${raffle.status === "active"
@@ -297,7 +297,7 @@ export default function RaffleDetailPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
                 <p className="text-[10px] font-bold uppercase text-muted-blue tracking-widest mb-1">Entry Cost</p>
-                <p className="text-lg font-display font-bold text-[#F4FF1A]">{raffle.tokens_required} {entryTokenSymbol}</p>
+                <p className="text-lg font-display font-bold text-[#33C5D9]">{raffle.tokens_required} {entryTokenSymbol}</p>
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase text-muted-blue tracking-widest mb-1">Max per User</p>
@@ -329,7 +329,7 @@ export default function RaffleDetailPage() {
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase text-muted-blue tracking-widest mb-1">Prize</p>
-                <p className="text-sm font-bold text-[#F4FF1A]">{prizeInfoLabel}</p>
+                <p className="text-sm font-bold text-[#33C5D9]">{prizeInfoLabel}</p>
               </div>
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function RaffleDetailPage() {
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
                       placeholder="Search by wallet address..."
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded text-white placeholder-muted-blue focus:outline-none focus:border-[#F4FF1A]/50 transition-colors"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded text-white placeholder-muted-blue focus:outline-none focus:border-[#33C5D9]/50 transition-colors"
                     />
                     {searchInput && (
                       <button
@@ -366,7 +366,7 @@ export default function RaffleDetailPage() {
                   <button
                     type="submit"
                     disabled={entriesLoading}
-                    className="px-4 py-2 bg-[#F4FF1A] text-dark-navy font-bold rounded hover:bg-[#F4FF1A]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-4 py-2 bg-[#33C5D9] text-dark-navy font-bold rounded hover:bg-[#33C5D9]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined text-lg">search</span>
                     Search
@@ -375,13 +375,13 @@ export default function RaffleDetailPage() {
                 {walletSearch && (
                   <div className="mt-2 flex items-center gap-2 text-sm">
                     <span className="text-muted-blue">Filtering by:</span>
-                    <span className="px-2 py-1 bg-[#F4FF1A]/10 text-[#F4FF1A] rounded font-mono text-xs">
+                    <span className="px-2 py-1 bg-[#33C5D9]/10 text-[#33C5D9] rounded font-mono text-xs">
                       {walletSearch}
                     </span>
                     <button
                       type="button"
                       onClick={handleClearSearch}
-                      className="text-muted-blue hover:text-[#F4FF1A] transition-colors text-xs underline"
+                      className="text-muted-blue hover:text-[#33C5D9] transition-colors text-xs underline"
                     >
                       Clear filter
                     </button>
@@ -401,14 +401,14 @@ export default function RaffleDetailPage() {
                             href={`https://katanascan.com/tx/${entry.tx_hash}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-between p-4 bg-white/5 rounded border border-white/5 hover:bg-white/10 hover:border-[#F4FF1A]/30 transition-all group"
+                            className="flex items-center justify-between p-4 bg-white/5 rounded border border-white/5 hover:bg-white/10 hover:border-[#33C5D9]/30 transition-all group"
                           >
                             <div className="flex items-center gap-4">
-                              <div className="w-8 h-8 rounded-full bg-[#F4FF1A] flex items-center justify-center text-dark-navy text-sm font-bold">
+                              <div className="w-8 h-8 rounded-full bg-[#33C5D9] flex items-center justify-center text-dark-navy text-sm font-bold">
                                 {index + 1}
                               </div>
                               <div>
-                                <p className="font-mono text-white text-sm group-hover:text-[#F4FF1A] transition-colors">
+                                <p className="font-mono text-white text-sm group-hover:text-[#33C5D9] transition-colors">
                                   {entry.wallet_address.slice(0, 10)}...{entry.wallet_address.slice(-8)}
                                 </p>
                                 <p className="text-[10px] text-muted-blue mt-0.5">
@@ -417,10 +417,10 @@ export default function RaffleDetailPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-sm font-display font-bold text-[#F4FF1A]">
+                              <span className="text-sm font-display font-bold text-[#33C5D9]">
                                 {entry.entry_count} {entry.entry_count === 1 ? 'entry' : 'entries'}
                               </span>
-                              <span className="material-symbols-outlined text-muted-blue group-hover:text-[#F4FF1A] transition-colors text-lg">
+                              <span className="material-symbols-outlined text-muted-blue group-hover:text-[#33C5D9] transition-colors text-lg">
                                 open_in_new
                               </span>
                             </div>
@@ -435,7 +435,7 @@ export default function RaffleDetailPage() {
                         <button
                           onClick={handleLoadMore}
                           disabled={entriesLoading}
-                          className="px-6 py-3 bg-[#F4FF1A] text-dark-navy font-bold rounded hover:bg-[#F4FF1A]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-6 py-3 bg-[#33C5D9] text-dark-navy font-bold rounded hover:bg-[#33C5D9]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {entriesLoading ? "Loading..." : "Load More"}
                         </button>
@@ -476,16 +476,16 @@ export default function RaffleDetailPage() {
                             target={winner.distribution_tx_hash ? "_blank" : undefined}
                             rel={winner.distribution_tx_hash ? "noopener noreferrer" : undefined}
                             className={`flex items-center justify-between p-4 bg-white/5 rounded border border-white/5 ${winner.distribution_tx_hash
-                              ? "hover:bg-white/10 hover:border-[#F4FF1A]/30 transition-all group cursor-pointer"
+                              ? "hover:bg-white/10 hover:border-[#33C5D9]/30 transition-all group cursor-pointer"
                               : ""
                               }`}
                           >
                             <div className="flex items-center gap-4">
-                              <div className="w-8 h-8 rounded-full bg-[#F4FF1A] flex items-center justify-center text-dark-navy text-sm font-bold">
+                              <div className="w-8 h-8 rounded-full bg-[#33C5D9] flex items-center justify-center text-dark-navy text-sm font-bold">
                                 {index + 1}
                               </div>
                               <div>
-                                <p className={`font-mono text-white text-sm ${winner.distribution_tx_hash ? "group-hover:text-[#F4FF1A] transition-colors" : ""}`}>
+                                <p className={`font-mono text-white text-sm ${winner.distribution_tx_hash ? "group-hover:text-[#33C5D9] transition-colors" : ""}`}>
                                   {winner.wallet_address.slice(0, 10)}...{winner.wallet_address.slice(-8)}
                                 </p>
                                 {winner.distribution_tx_hash && (
@@ -496,7 +496,7 @@ export default function RaffleDetailPage() {
                               </div>
                             </div>
                             {winner.distribution_tx_hash && (
-                              <span className="material-symbols-outlined text-muted-blue group-hover:text-[#F4FF1A] transition-colors text-lg">
+                              <span className="material-symbols-outlined text-muted-blue group-hover:text-[#33C5D9] transition-colors text-lg">
                                 open_in_new
                               </span>
                             )}

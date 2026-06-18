@@ -19,14 +19,14 @@ export async function GET(
 
     // Get or create user
     let { data: user } = await supabase
-      .from("hollow_raffles_users")
+      .from("litvm_raffle_users")
       .select("*")
       .eq("wallet_address", walletLower)
       .single();
 
     if (!user) {
       const { data: newUser, error: createError } = await supabase
-        .from("hollow_raffles_users")
+        .from("litvm_raffle_users")
         .insert({ wallet_address: walletLower })
         .select()
         .single();
@@ -40,10 +40,10 @@ export async function GET(
 
     // Get user entries with chain_raffle_id for on-chain status
     const { data: entries } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select(`
         *,
-        raffle:hollow_raffles_raffles(id, slug, title, start_date, end_date, chain_raffle_id)
+        raffle:litvm_raffle_raffles(id, slug, title, start_date, end_date, chain_raffle_id)
       `)
       .eq("wallet_address", walletLower)
       .order("created_at", { ascending: false })
@@ -51,10 +51,10 @@ export async function GET(
 
     // Get user wins
     const { data: wins } = await supabase
-      .from("hollow_raffles_winners")
+      .from("litvm_raffle_winners")
       .select(`
         *,
-        raffle:hollow_raffles_raffles(id, slug, title)
+        raffle:litvm_raffle_raffles(id, slug, title)
       `)
       .eq("wallet_address", walletLower)
       .order("created_at", { ascending: false })
@@ -62,7 +62,7 @@ export async function GET(
 
     // Get recent transactions
     const { data: transactions } = await supabase
-      .from("hollow_raffles_transactions")
+      .from("litvm_raffle_transactions")
       .select("*")
       .eq("wallet_address", walletLower)
       .order("created_at", { ascending: false })

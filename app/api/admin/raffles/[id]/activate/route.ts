@@ -23,7 +23,7 @@ export async function POST(
     const isUuid = uuidRegex.test(id);
 
     let raffleQuery = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*");
 
     if (isUuid) {
@@ -80,7 +80,7 @@ export async function POST(
 
     // Log admin action
     const adminWallet = request.headers.get("x-admin-wallet") || "unknown";
-    await supabase.from("hollow_raffles_admin_logs").insert({
+    await supabase.from("litvm_raffle_admin_logs").insert({
       admin_wallet: adminWallet,
       action: "activate_raffle",
       details: { raffle_id: id, tx_hash: txHash },

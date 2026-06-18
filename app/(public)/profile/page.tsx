@@ -71,13 +71,13 @@ export default function ProfilePage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        <div className="ui-container p-4 lg:p-6 rounded border-l-4 border-[#F4FF1A]">
+        <div className="ui-container p-4 lg:p-6 rounded border-l-4 border-[#33C5D9]">
           <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-2">Token Balance</p>
           <div className="flex items-end gap-2">
             <p className="text-2xl lg:text-3xl font-display font-bold text-white">
               {balance !== undefined ? formatTokenBalance(balance) : "0.00"}
             </p>
-            <p className="text-[#F4FF1A] font-bold pb-0.5 text-sm lg:text-base">HOLLOW</p>
+            <p className="text-[#33C5D9] font-bold pb-0.5 text-sm lg:text-base">HOLLOW</p>
           </div>
           <Link href="/claim">
             <button className="mt-3 lg:mt-4 px-3 lg:px-4 py-1.5 lg:py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] lg:text-xs font-bold rounded uppercase tracking-widest transition-all border border-white/10">
@@ -110,7 +110,7 @@ export default function ProfilePage() {
                 {data.entries.map((entry) => (
                   <li key={entry.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 p-3 lg:p-4 bg-white/5 rounded border border-white/5">
                     <div className="min-w-0">
-                      <Link href={`/raffles/${entry.raffle.slug || entry.raffle.id}`} className="font-bold text-sm lg:text-base text-white hover:text-[#F4FF1A] transition-colors block truncate">
+                      <Link href={`/raffles/${entry.raffle.slug || entry.raffle.id}`} className="font-bold text-sm lg:text-base text-white hover:text-[#33C5D9] transition-colors block truncate">
                         {entry.raffle.title}
                       </Link>
                       <p className="text-[10px] lg:text-xs text-muted-blue mt-1">
@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 {data.wins.map((win) => (
                   <li key={win.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 p-3 lg:p-4 bg-white/5 rounded border border-white/5">
                     <div className="min-w-0">
-                      <Link href={`/raffles/${win.raffle.slug || win.raffle.id}`} className="font-bold text-sm lg:text-base text-white hover:text-[#F4FF1A] transition-colors block truncate">
+                      <Link href={`/raffles/${win.raffle.slug || win.raffle.id}`} className="font-bold text-sm lg:text-base text-white hover:text-[#33C5D9] transition-colors block truncate">
                         {win.raffle.title}
                       </Link>
                       <p className="text-[10px] lg:text-xs text-muted-blue mt-1">
@@ -203,10 +203,10 @@ export default function ProfilePage() {
                       <span className="text-[10px] lg:text-xs text-white capitalize">{tx.type.replace("_", " ")}</span>
                     </td>
                     <td className="px-4 lg:px-6 py-4 lg:py-5">
-                      <p className="text-xs lg:text-sm font-display font-bold text-[#F4FF1A]">{tx.amount} HOLLOW</p>
+                      <p className="text-xs lg:text-sm font-display font-bold text-[#33C5D9]">{tx.amount} HOLLOW</p>
                     </td>
                     <td className="px-4 lg:px-6 py-4 lg:py-5 text-right">
-                      <a className="text-muted-blue hover:text-[#F4FF1A] transition-colors" href="#" target="_blank">
+                      <a className="text-muted-blue hover:text-[#33C5D9] transition-colors" href="#" target="_blank">
                         <span className="material-symbols-outlined text-lg lg:text-xl">open_in_new</span>
                       </a>
                     </td>

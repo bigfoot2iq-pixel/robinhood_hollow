@@ -1,12 +1,12 @@
--- Add game_score column to the_hollow_users table
-ALTER TABLE the_hollow_users 
+-- Add game_score column to litvm_raffle_game_users table
+ALTER TABLE litvm_raffle_game_users 
 ADD COLUMN IF NOT EXISTS game_score INTEGER DEFAULT 0;
 
 -- Add index for leaderboard queries (performance optimization)
-CREATE INDEX IF NOT EXISTS idx_the_hollow_users_game_score ON the_hollow_users(game_score DESC);
+CREATE INDEX IF NOT EXISTS idx_litvm_raffle_game_users_game_score ON litvm_raffle_game_users(game_score DESC);
 
 -- Create function to update game score (only if score is higher)
-CREATE OR REPLACE FUNCTION update_game_score(
+CREATE OR REPLACE FUNCTION litvm_raffle_update_game_score(
   user_wallet TEXT,
   new_score INTEGER
 )
@@ -15,11 +15,11 @@ DECLARE
   current_score INTEGER;
   updated BOOLEAN := false;
   user_rank INTEGER;
-  user_record the_hollow_users;
+  user_record litvm_raffle_game_users;
 BEGIN
   -- Get current user and score
   SELECT * INTO user_record 
-  FROM the_hollow_users 
+  FROM litvm_raffle_game_users 
   WHERE wallet_address = user_wallet;
   
   -- If user doesn't exist, return error
@@ -37,7 +37,7 @@ BEGIN
   
   -- Only update if new score is higher
   IF new_score > current_score THEN
-    UPDATE the_hollow_users 
+    UPDATE litvm_raffle_game_users 
     SET game_score = new_score, updated_at = NOW()
     WHERE wallet_address = user_wallet;
     updated := true;
@@ -46,7 +46,7 @@ BEGIN
   
   -- Get user's current rank
   SELECT COUNT(*) + 1 INTO user_rank
-  FROM the_hollow_users 
+  FROM litvm_raffle_game_users 
   WHERE game_score > current_score;
   
   RETURN json_build_object(
@@ -63,7 +63,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create function to get leaderboard with pagination
-CREATE OR REPLACE FUNCTION get_leaderboard(
+CREATE OR REPLACE FUNCTION litvm_raffle_get_leaderboard(
   limit_count INTEGER DEFAULT 10,
   offset_count INTEGER DEFAULT 0
 )
@@ -89,7 +89,7 @@ BEGIN
       u.game_score,
       u.is_registered,
       COUNT(*) OVER() as total_users
-    FROM the_hollow_users u
+    FROM litvm_raffle_game_users u
     WHERE u.game_score > 0
     ORDER BY u.game_score DESC, u.updated_at ASC
   )
@@ -108,6 +108,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Update RLS policies to allow reading game scores
-CREATE POLICY IF NOT EXISTS "Anyone can read game scores" 
-  ON the_hollow_users FOR SELECT 
-  USING (true); 
+-- (CREATE POLICY has no IF NOT EXISTS; drop-then-create is the idempotent form)
+DROP POLICY IF EXISTS "Anyone can read game scores" ON litvm_raffle_game_users;
+CREATE POLICY "Anyone can read game scores"
+  ON litvm_raffle_game_users FOR SELECT
+  USING (true);

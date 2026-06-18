@@ -2,10 +2,10 @@
 -- Run this in Supabase SQL Editor
 
 -- Add slug column (nullable first to allow existing data to be migrated)
-ALTER TABLE hollow_raffles_raffles ADD COLUMN slug VARCHAR(255) UNIQUE;
+ALTER TABLE litvm_raffle_raffles ADD COLUMN slug VARCHAR(255) UNIQUE;
 
 -- Create a function to generate slug from title
-CREATE OR REPLACE FUNCTION generate_raffle_slug(title TEXT)
+CREATE OR REPLACE FUNCTION litvm_raffle_generate_raffle_slug(title TEXT)
 RETURNS TEXT AS $$
 BEGIN
   -- Convert to lowercase, replace spaces with underscores, remove special characters
@@ -21,22 +21,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Update existing raffles with generated slugs
-UPDATE hollow_raffles_raffles
-SET slug = generate_raffle_slug(title)
+UPDATE litvm_raffle_raffles
+SET slug = litvm_raffle_generate_raffle_slug(title)
 WHERE slug IS NULL;
 
 -- Make slug NOT NULL after populating existing data
-ALTER TABLE hollow_raffles_raffles ALTER COLUMN slug SET NOT NULL;
+ALTER TABLE litvm_raffle_raffles ALTER COLUMN slug SET NOT NULL;
 
 -- Create index for slug lookups
-CREATE INDEX idx_raffles_slug ON hollow_raffles_raffles(slug);
+CREATE INDEX idx_litvm_raffle_raffles_slug ON litvm_raffle_raffles(slug);
 
 -- Create a trigger to auto-generate slug on insert if not provided
-CREATE OR REPLACE FUNCTION set_raffle_slug()
+CREATE OR REPLACE FUNCTION litvm_raffle_set_raffle_slug()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.slug IS NULL OR NEW.slug = '' THEN
-    NEW.slug = generate_raffle_slug(COALESCE(NEW.title, NEW.id::TEXT));
+    NEW.slug = litvm_raffle_generate_raffle_slug(COALESCE(NEW.title, NEW.id::TEXT));
   ELSE
     -- Ensure provided slug is properly formatted
     NEW.slug = lower(
@@ -52,8 +52,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS trigger_set_raffle_slug ON hollow_raffles_raffles;
-CREATE TRIGGER trigger_set_raffle_slug
-  BEFORE INSERT ON hollow_raffles_raffles
+DROP TRIGGER IF EXISTS litvm_raffle_trigger_set_raffle_slug ON litvm_raffle_raffles;
+CREATE TRIGGER litvm_raffle_trigger_set_raffle_slug
+  BEFORE INSERT ON litvm_raffle_raffles
   FOR EACH ROW
-  EXECUTE FUNCTION set_raffle_slug();
+  EXECUTE FUNCTION litvm_raffle_set_raffle_slug();

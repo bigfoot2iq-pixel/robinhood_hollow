@@ -54,7 +54,7 @@ export async function GET(
     const isUuid = uuidRegex.test(id);
 
     let query = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*");
 
     if (isUuid) {
@@ -71,19 +71,19 @@ export async function GET(
 
     // Get entries
     const { data: entries } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("*")
       .eq("raffle_id", raffle.id)
       .order("created_at", { ascending: false });
 
     // Get winners
     const { data: winners } = await supabase
-      .from("hollow_raffles_winners")
+      .from("litvm_raffle_winners")
       .select("*")
       .eq("raffle_id", raffle.id);
 
     const { data: prizes } = await supabase
-      .from("hollow_raffles_prizes")
+      .from("litvm_raffle_prizes")
       .select("*")
       .eq("raffle_id", raffle.id)
       .order("created_at", { ascending: true });
@@ -130,7 +130,7 @@ export async function PUT(
     const updateData: UpdateRaffleData = validation.data;
 
     const { data: raffle, error } = await supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .update(updateData)
       .eq("id", id)
       .select()
@@ -143,7 +143,7 @@ export async function PUT(
 
     // Log admin action
     const adminWallet = request.headers.get("x-admin-wallet") || "unknown";
-    await supabase.from("hollow_raffles_admin_logs").insert({
+    await supabase.from("litvm_raffle_admin_logs").insert({
       admin_wallet: adminWallet,
       action: "update_raffle",
       details: { raffle_id: id, updates: validation.data },
@@ -171,7 +171,7 @@ export async function DELETE(
 
     // Only allow deletion of raffles that have not started
     const { data: raffle } = await supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("start_date")
       .eq("id", id)
       .single();
@@ -188,7 +188,7 @@ export async function DELETE(
     }
 
     const { error } = await supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .delete()
       .eq("id", id);
 
@@ -199,7 +199,7 @@ export async function DELETE(
 
     // Log admin action
     const adminWallet = request.headers.get("x-admin-wallet") || "unknown";
-    await supabase.from("hollow_raffles_admin_logs").insert({
+    await supabase.from("litvm_raffle_admin_logs").insert({
       admin_wallet: adminWallet,
       action: "delete_raffle",
       details: { raffle_id: id },

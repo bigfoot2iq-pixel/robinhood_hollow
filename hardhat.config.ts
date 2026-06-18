@@ -17,13 +17,13 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      chainId: 747474,
+      chainId: 4441,
       hardfork: "london",
       initialBaseFeePerGas: 0,
     },
-    katana: {
-      url: process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network",
-      chainId: 747474,
+    litvm: {
+      url: process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http",
+      chainId: 4441,
       accounts: process.env.DEPLOYER_PRIVATE_KEY
         ? [process.env.DEPLOYER_PRIVATE_KEY]
         : process.env.WATCHDOG_PRIVATE_KEY
@@ -32,14 +32,18 @@ const config: HardhatUserConfig = {
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || "abc",
+    // Keyed by network name so hardhat-verify uses the custom Caldera explorer
+    // below instead of falling back to api.etherscan.io.
+    apiKey: {
+      litvm: process.env.ETHERSCAN_API_KEY || "abc",
+    },
     customChains: [
       {
-        network: "katana",
-        chainId: 747474,
+        network: "litvm",
+        chainId: 4441,
         urls: {
-          apiURL: "https://api.etherscan.io/v2/api?chainid=747474",
-          browserURL: "https://katanascan.com",
+          apiURL: "https://liteforge.explorer.caldera.xyz/api",
+          browserURL: "https://liteforge.explorer.caldera.xyz",
         },
       },
     ],

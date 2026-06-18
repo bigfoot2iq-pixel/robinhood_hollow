@@ -1,13 +1,13 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { katanaNetwork } from '@/lib/contracts/config';
+import { litvmTestnet } from '@/lib/contracts/config';
 import { http, cookieStorage, createStorage } from 'wagmi';
 
 export const wagmiConfig = getDefaultConfig({
-  appName: 'The Hollow',
+  appName: 'LitVM Raffles',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '2f05ae7f1116030fde2d36508f472bfb',
-  chains: [katanaNetwork],
+  chains: [litvmTestnet],
   transports: {
-    [katanaNetwork.id]: http(process.env.NEXT_PUBLIC_RPC_URL || 'https://rpc.katana.network'),
+    [litvmTestnet.id]: http(process.env.NEXT_PUBLIC_RPC_URL || 'https://liteforge.rpc.caldera.xyz/http'),
   },
   ssr: true,
   storage: createStorage({

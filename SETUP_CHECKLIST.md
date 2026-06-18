@@ -21,8 +21,8 @@ Use this checklist to ensure everything is properly configured.
 - [ ] Run `supabase/migrations/20241223_add_game_score.sql`
 - [ ] Run `supabase/migrations/20241226_add_game_sessions.sql`
 - [ ] Verify tables created:
-  - [ ] `hollow_raffles_users` has `game_score` column
-  - [ ] `the_hollow_game_sessions` table exists
+  - [ ] `litvm_raffle_users` has `game_score` column
+  - [ ] `litvm_raffle_game_sessions` table exists
 - [ ] Verify functions created:
   - [ ] `update_game_score()`
   - [ ] `get_leaderboard()`
@@ -101,9 +101,9 @@ Visit http://localhost:3000/leaderboard
 
 ### Step 9: Verify Database
 Check Supabase Table Editor:
-- [ ] `hollow_raffles_users` table has entries
+- [ ] `litvm_raffle_users` table has entries
 - [ ] `game_score` column populated
-- [ ] `the_hollow_game_sessions` table has entries
+- [ ] `litvm_raffle_game_sessions` table has entries
 - [ ] Session status updates correctly
 
 ### Step 10: Test Pay-to-Play Flow
@@ -133,7 +133,7 @@ Check Supabase Table Editor:
 ### Issue: Database errors
 **Solution:**
 - Ensure migrations are run
-- Check table name is `hollow_raffles_users`
+- Check table name is `litvm_raffle_users`
 - Verify RLS policies exist
 
 ### Issue: Contract errors

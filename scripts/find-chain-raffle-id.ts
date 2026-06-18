@@ -23,7 +23,7 @@ async function findChainRaffleId(searchTerm: string) {
     const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(searchTerm);
     
     let query = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("id, title, chain_raffle_id, start_date, end_date, created_at");
 
     if (isId) {

@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Complete session and update score atomically
-    const { data, error } = await supabase.rpc('complete_game_session', {
+    const { data, error } = await supabase.rpc('litvm_raffle_complete_game_session', {
       p_session_id: sessionId,
       p_user_wallet: walletAddress,
       p_final_score: score

@@ -56,7 +56,7 @@ export default function WaitlistWalletsPage() {
         </div>
         <div className="ui-container rounded overflow-hidden">
           <div className="p-12 text-center">
-            <div className="inline-block w-8 h-8 border-4 border-[#F4FF1A] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="inline-block w-8 h-8 border-4 border-[#33C5D9] border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-muted-blue">Loading wallets...</p>
           </div>
         </div>
@@ -91,20 +91,20 @@ export default function WaitlistWalletsPage() {
       </div>
 
       {/* Total Counter */}
-      <div className="ui-container rounded-lg p-6 border border-[#F4FF1A]/20">
+      <div className="ui-container rounded-lg p-6 border border-[#33C5D9]/20">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-muted-blue text-xs uppercase tracking-widest font-bold mb-1">
               Total Waitlisted
             </p>
-            <p className="text-4xl font-bold text-[#F4FF1A]">
+            <p className="text-4xl font-bold text-[#33C5D9]">
               {total.toLocaleString()}
             </p>
           </div>
           <a
             href="/api/waitlist/wallets/export"
             download
-            className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg border border-[#F4FF1A]/30 text-[#F4FF1A] hover:bg-[#F4FF1A]/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg border border-[#33C5D9]/30 text-[#33C5D9] hover:bg-[#33C5D9]/10 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -138,7 +138,7 @@ export default function WaitlistWalletsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={2} className="px-5 py-8 text-center">
-                    <div className="inline-block w-5 h-5 border-2 border-[#F4FF1A] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="inline-block w-5 h-5 border-2 border-[#33C5D9] border-t-transparent rounded-full animate-spin"></div>
                   </td>
                 </tr>
               ) : wallets.length === 0 && !error ? (

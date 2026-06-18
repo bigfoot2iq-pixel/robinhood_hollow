@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // Call the database function to update score
     const { data, error } = await supabase
-      .rpc('update_game_score', {
+      .rpc('litvm_raffle_update_game_score', {
         user_wallet: walletAddress,
         new_score: score
       });
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { data, error } = await supabase
-      .from('the_hollow_users')
+      .from('litvm_raffle_game_users')
       .select('game_score')
       .eq('wallet_address', walletAddress)
       .single();

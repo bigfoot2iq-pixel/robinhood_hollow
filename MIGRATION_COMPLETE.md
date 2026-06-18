@@ -134,7 +134,7 @@ npm install
 
 ### If database errors occur:
 - Ensure migrations are run in Supabase
-- Check table name is `hollow_raffles_users` (not `the_hollow_users`)
+- Check table name is `litvm_raffle_users` (not `litvm_raffle_game_users`)
 - Verify RLS policies are created
 
 ### If contract errors occur:

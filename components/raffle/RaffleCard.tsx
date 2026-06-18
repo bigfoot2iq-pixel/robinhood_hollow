@@ -75,7 +75,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
             />
           )}
           <div className="absolute top-3 left-3 flex gap-1.5">
-            <span className="bg-[#F4FF1A] text-dark-navy text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
+            <span className="bg-[#33C5D9] text-dark-navy text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
               Type: {prizeLabel}
             </span>
             <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest ${
@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </p>
 
           {(isActive || isEnded || backupRafflesThatAreEnded) && raffle.end_date && (
-            <div className={`mb-2.5 p-2.5 rounded border ${isActive ? "bg-gradient-to-r from-[#F4FF1A]/10 to-transparent border-[#F4FF1A]/20" : "bg-white/5 border-white/10"}`}>
+            <div className={`mb-2.5 p-2.5 rounded border ${isActive ? "bg-gradient-to-r from-[#33C5D9]/10 to-transparent border-[#33C5D9]/20" : "bg-white/5 border-white/10"}`}>
               <CountdownTimer endDate={raffle.end_date} />
             </div>
           )}
@@ -115,11 +115,11 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           <div className="mt-auto pt-3 border-t border-white/5 flex items-center justify-between">
             <div>
               <p className="text-[8px] font-bold uppercase text-muted-blue tracking-widest">Price</p>
-              <p className="text-sm font-display font-bold text-[#F4FF1A]">
+              <p className="text-sm font-display font-bold text-[#33C5D9]">
                 {raffle.tokens_required.toFixed(2)} {tokenSymbol}
               </p>
             </div>
-            <button className="px-3 py-1.5 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-[9px] transition-all shadow-[0_0_15px_rgba(244,255,26,0.15)]">
+            <button className="px-3 py-1.5 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-[9px] transition-all shadow-[0_0_15px_rgba(51,197,217,0.15)]">
               {isActive ? "Enter" : "View"}
             </button>
           </div>

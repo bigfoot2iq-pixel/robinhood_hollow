@@ -33,7 +33,7 @@ export class Database {
   async getRafflesNeedingStart(): Promise<Raffle[]> {
     const now = new Date().toISOString();
     const { data, error } = await this.client
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*")
       .lte("start_date", now)
       .gt("end_date", now)
@@ -49,7 +49,7 @@ export class Database {
   async getRafflesNeedingEnd(): Promise<Raffle[]> {
     const now = new Date().toISOString();
     const { data, error } = await this.client
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*")
       .lte("start_date", now)
       .not("chain_raffle_id", "is", null);
@@ -63,7 +63,7 @@ export class Database {
 
   async getRaffleEntries(raffleId: string): Promise<Entry[]> {
     const { data, error } = await this.client
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("*")
       .eq("raffle_id", raffleId)
       .order("created_at", { ascending: true });
@@ -77,7 +77,7 @@ export class Database {
 
   async getRafflePrizes(raffleId: string): Promise<Prize[]> {
     const { data, error } = await this.client
-      .from("hollow_raffles_prizes")
+      .from("litvm_raffle_prizes")
       .select("prize_type, prize_amount, prize_token_id")
       .eq("raffle_id", raffleId)
       .order("created_at", { ascending: true });
@@ -92,7 +92,7 @@ export class Database {
 
   async getPrizeCount(raffleId: string): Promise<number> {
     const { count, error } = await this.client
-      .from("hollow_raffles_prizes")
+      .from("litvm_raffle_prizes")
       .select("id", { count: "exact", head: true })
       .eq("raffle_id", raffleId);
 
@@ -106,7 +106,7 @@ export class Database {
 
   async getParticipantCount(raffleId: string): Promise<number> {
     const { count, error } = await this.client
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("id", { count: "exact", head: true })
       .eq("raffle_id", raffleId);
 
@@ -128,7 +128,7 @@ export class Database {
     }>
   ): Promise<void> {
     const { error } = await this.client
-      .from("hollow_raffles_winners")
+      .from("litvm_raffle_winners")
       .insert(winners.map((w) => ({ raffle_id: raffleId, ...w })));
 
     if (error) {
@@ -138,7 +138,7 @@ export class Database {
 
   async updateWinnerDistribution(raffleId: string, walletAddress: string, txHash: string): Promise<void> {
     const { error } = await this.client
-      .from("hollow_raffles_winners")
+      .from("litvm_raffle_winners")
       .update({ distribution_tx_hash: txHash })
       .eq("raffle_id", raffleId)
       .eq("wallet_address", walletAddress);
@@ -149,7 +149,7 @@ export class Database {
   }
 
   async incrementUserWins(walletAddress: string): Promise<void> {
-    const { error } = await this.client.rpc("hollow_raffles_increment_user_wins", {
+    const { error } = await this.client.rpc("litvm_raffle_increment_user_wins", {
       p_wallet: walletAddress.toLowerCase(),
     });
 

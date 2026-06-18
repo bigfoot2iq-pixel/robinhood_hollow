@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccount, useSignMessage, useReadContract, usePublicClient, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { privateKeyToAccount } from "viem/accounts";
 import { ERC20_DECIMALS_ABI, toTokenUnits } from "@/lib/utils/erc20";
 import { KatanaRafflesABI, contracts } from "@/lib/contracts";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 const normalizePrizeValues = (values: Array<{ value: string }>) =>
   values.map((item) => item.value.trim()).filter((value) => value.length > 0);
@@ -582,7 +583,7 @@ export default function CreateRafflePage() {
               <label className="text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2">Title</label>
               <input
                 {...register("title")}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
               {errors.title && <p className="text-red-400 text-xs mt-1">{errors.title.message}</p>}
             </div>
@@ -592,7 +593,7 @@ export default function CreateRafflePage() {
               <textarea
                 {...register("description")}
                 rows={4}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A] resize-none"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9] resize-none"
               />
               {errors.description && <p className="text-red-400 text-xs mt-1">{errors.description.message}</p>}
             </div>
@@ -602,7 +603,7 @@ export default function CreateRafflePage() {
               <input
                 {...register("image_url")}
                 placeholder="https://..."
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
               {errors.image_url && <p className="text-red-400 text-xs mt-1">{errors.image_url.message}</p>}
             </div>
@@ -620,7 +621,7 @@ export default function CreateRafflePage() {
               <input
                 type="number"
                 {...register("tokens_required", { valueAsNumber: true })}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
               {errors.tokens_required && <p className="text-red-400 text-xs mt-1">{errors.tokens_required.message}</p>}
             </div>
@@ -630,7 +631,7 @@ export default function CreateRafflePage() {
               <input
                 type="number"
                 {...register("max_tokens_per_user", { valueAsNumber: true })}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
               {errors.max_tokens_per_user && <p className="text-red-400 text-xs mt-1">{errors.max_tokens_per_user.message}</p>}
             </div>
@@ -640,7 +641,7 @@ export default function CreateRafflePage() {
               <input
                 type="number"
                 {...register("max_participants", { valueAsNumber: true })}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
               {errors.max_participants && <p className="text-red-400 text-xs mt-1">{errors.max_participants.message}</p>}
             </div>
@@ -655,20 +656,32 @@ export default function CreateRafflePage() {
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2">Start Date</label>
-              <input
-                type="datetime-local"
-                {...register("start_date")}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+              <Controller
+                control={control}
+                name="start_date"
+                render={({ field }) => (
+                  <DateTimePicker
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    placeholder="Select start date & time"
+                  />
+                )}
               />
               {errors.start_date && <p className="text-red-400 text-xs mt-1">{errors.start_date.message}</p>}
             </div>
 
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2">End Date</label>
-              <input
-                type="datetime-local"
-                {...register("end_date")}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+              <Controller
+                control={control}
+                name="end_date"
+                render={({ field }) => (
+                  <DateTimePicker
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    placeholder="Select end date & time"
+                  />
+                )}
               />
               {errors.end_date && <p className="text-red-400 text-xs mt-1">{errors.end_date.message}</p>}
             </div>
@@ -685,7 +698,7 @@ export default function CreateRafflePage() {
               <label className="text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2">Prize Type</label>
               <select
                 {...register("prize_type")}
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               >
                 <option value="erc20">ERC20 Token</option>
                 <option value="erc721">NFT (ERC721)</option>
@@ -698,7 +711,7 @@ export default function CreateRafflePage() {
               <input
                 {...register("prize_token_address")}
                 placeholder="0x..."
-                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white font-mono placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white font-mono placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
               />
               {errors.prize_token_address && <p className="text-red-400 text-xs mt-1">{errors.prize_token_address.message}</p>}
             </div>
@@ -730,7 +743,7 @@ export default function CreateRafflePage() {
                       <input
                         {...register(`prize_amounts.${index}.value`)}
                         placeholder={tokenSymbol ? `100 ${tokenSymbol}` : "100"}
-                        className="flex-1 bg-dark-navy border border-white/10 rounded px-4 py-3 text-white placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                        className="flex-1 bg-dark-navy border border-white/10 rounded px-4 py-3 text-white placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
                       />
                       {prizeAmountFields.length > 1 && (
                         <button
@@ -767,7 +780,7 @@ export default function CreateRafflePage() {
                       <input
                         {...register(`prize_token_ids.${index}.value`)}
                         placeholder="1"
-                        className="flex-1 bg-dark-navy border border-white/10 rounded px-4 py-3 text-white font-mono placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#F4FF1A]"
+                        className="flex-1 bg-dark-navy border border-white/10 rounded px-4 py-3 text-white font-mono placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
                       />
                       {prizeTokenIdFields.length > 1 && (
                         <button
@@ -827,7 +840,7 @@ export default function CreateRafflePage() {
                     (prizeType === "erc20" && (!prizeAmountsWatch || prizeAmountsWatch.every((f) => !f.value?.trim()))) ||
                     (prizeType !== "erc20" && (!prizeTokenIdsWatch || prizeTokenIdsWatch.every((f) => !f.value?.trim())))
                   }
-                  className="px-4 py-2 bg-[#F4FF1A]/10 hover:bg-[#F4FF1A]/20 text-[#F4FF1A] text-[10px] font-bold uppercase tracking-widest rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-4 py-2 bg-[#33C5D9]/10 hover:bg-[#33C5D9]/20 text-[#33C5D9] text-[10px] font-bold uppercase tracking-widest rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {verificationStatus === "verifying" && (
                     <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -916,7 +929,7 @@ export default function CreateRafflePage() {
         <button
           type="submit"
           disabled={isSubmitting || step !== "form"}
-          className="w-full py-4 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.15em] text-sm transition-all shadow-[0_0_20px_rgba(244,255,26,0.15)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-4 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.15em] text-sm transition-all shadow-[0_0_20px_rgba(51,197,217,0.15)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSubmitting && (
             <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

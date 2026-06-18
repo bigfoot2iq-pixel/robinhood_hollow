@@ -1,16 +1,25 @@
 import pkg from "hardhat";
 const { ethers, run } = pkg;
 
-const HOLLOW_TOKEN_ADDRESS = "0x26492D9f1acf9fa1aEf71B00A4B84d49fbAFdAc2";
-const WATCHDOG_ADDRESS = "0xD6Ded4c01dF14E71DBd5168b46e6CeA015aAB89a";
+// Pulled from .env.local. HOLLOW_TOKEN_ADDRESS must be a deployed HollowToken
+// on the target network; WATCHDOG_ADDRESS is the address allowed to end raffles.
+const HOLLOW_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS;
+const WATCHDOG_ADDRESS = process.env.WATCHDOG_ADDRESS;
 
 async function main() {
+  if (!HOLLOW_TOKEN_ADDRESS || !ethers.isAddress(HOLLOW_TOKEN_ADDRESS)) {
+    throw new Error("Set NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS in .env.local to the deployed HollowToken address");
+  }
+  if (!WATCHDOG_ADDRESS || !ethers.isAddress(WATCHDOG_ADDRESS)) {
+    throw new Error("Set WATCHDOG_ADDRESS in .env.local to the watchdog wallet address");
+  }
+
   const [deployer] = await ethers.getSigners();
   console.log("═══════════════════════════════════════════════════");
-  console.log("  KatanaRaffles Deployment");
+  console.log("  KatanaRaffles Deployment (LitVM testnet)");
   console.log("═══════════════════════════════════════════════════");
   console.log("Deployer:", deployer.address);
-  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "ETH");
+  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "zkLTC");
   console.log("HollowToken:", HOLLOW_TOKEN_ADDRESS);
   console.log("Watchdog:", WATCHDOG_ADDRESS);
   console.log("");
@@ -31,7 +40,7 @@ async function main() {
   await new Promise((resolve) => setTimeout(resolve, 30_000));
 
   // Verify
-  console.log(`\nVerifying ${rafflesAddress} on Katanascan...`);
+  console.log(`\nVerifying ${rafflesAddress} on Liteforge Explorer...`);
   try {
     await run("verify:verify", {
       address: rafflesAddress,
@@ -54,8 +63,8 @@ async function main() {
   console.log(`KatanaRaffles: ${rafflesAddress}`);
   console.log(`\nUpdate your .env.local:`);
   console.log(`NEXT_PUBLIC_RAFFLES_CONTRACT_ADDRESS=${rafflesAddress}`);
-  console.log(`\nKatanascan:`);
-  console.log(`https://katanascan.com/address/${rafflesAddress}#code`);
+  console.log(`\nLiteforge Explorer:`);
+  console.log(`https://liteforge.explorer.caldera.xyz/address/${rafflesAddress}#code`);
 }
 
 main().catch((error) => {

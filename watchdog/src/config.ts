@@ -7,8 +7,8 @@ export const config = {
     serviceKey: process.env.SUPABASE_SERVICE_KEY!,
   },
   blockchain: {
-    rpcUrl: process.env.RPC_URL || "https://rpc.katana.network",
-    chainId: parseInt(process.env.CHAIN_ID || "747474"),
+    rpcUrl: process.env.RPC_URL || "https://liteforge.rpc.caldera.xyz/http",
+    chainId: parseInt(process.env.CHAIN_ID || "4441"),
     privateKey: process.env.WATCHDOG_PRIVATE_KEY!,
   },
   contracts: {

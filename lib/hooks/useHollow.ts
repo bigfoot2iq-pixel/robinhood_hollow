@@ -15,23 +15,11 @@ export function useCanClaim(address: `0x${string}` | undefined) {
   });
 }
 
-export function useGetClaimAmount(address: `0x${string}` | undefined) {
+export function useClaimAmount() {
   return useReadContract({
     address: contracts.hollowToken.address,
     abi: HollowTokenABI,
-    functionName: "getClaimAmount",
-    args: address ? [address] : undefined,
-    query: {
-      enabled: !!address,
-    },
-  });
-}
-
-export function useClaimPrice() {
-  return useReadContract({
-    address: contracts.hollowToken.address,
-    abi: HollowTokenABI,
-    functionName: "claimPrice",
+    functionName: "claimAmount",
   });
 }
 
@@ -50,12 +38,11 @@ export function useClaimTokens() {
     hash,
   });
 
-  const claimTokens = (claimPrice: bigint) => {
+  const claimTokens = () => {
     writeContract({
       address: contracts.hollowToken.address,
       abi: HollowTokenABI,
       functionName: "claimTokens",
-      value: claimPrice,
       gas: 500000n,
     });
   };

@@ -25,6 +25,8 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
         uint256 prizeCount;
         bool isNFT;
         bool hasWinners;
+        address creator;  // address(0) = owner/platform raffle; otherwise the user who created it
+        uint256 endTime;  // 0 = owner-managed (no schedule); else unix time after which it may be ended
     }
 
     IERC20 public raffleToken;
@@ -37,6 +39,8 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
     mapping(uint256 => address[]) private raffleWinners;
 
     event RaffleCreated(uint256 indexed raffleId, address indexed prizeToken, uint256 prizeCount, bool isNFT);
+    event UserRaffleCreated(uint256 indexed raffleId, address indexed creator, uint256 endTime);
+    event CreatorRefunded(uint256 indexed raffleId, address indexed creator, uint256 amount);
     event RaffleStateChanged(uint256 indexed raffleId, RaffleState oldState, RaffleState newState);
     event RaffleEnded(uint256 indexed raffleId, address[] winners, uint256 totalParticipants, uint256 totalTickets);
     event EntrySubmitted(uint256 indexed raffleId, address indexed participant, uint256 tokensSpent);
@@ -94,6 +98,62 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
         return _createTokenRaffle(prizeToken_, prizeAmounts_, RaffleState.ACTIVE);
     }
 
+    /**
+     * @notice Permissionless raffle creation for regular users.
+     * @dev Caller escrows the ERC20 prize and sets a close time. The raffle goes ACTIVE
+     *      immediately. It can only be ended (by owner/watchdog cron) once `endTime_` passes,
+     *      so the owner cannot rug a user raffle early. Entry proceeds go to the creator.
+     *      NFT prizes are intentionally not supported here yet — token prizes only.
+     * @param prizeToken_   ERC20 token used as the prize (escrowed from msg.sender).
+     * @param prizeAmounts_ One entry per prize slot; sum is pulled from msg.sender.
+     * @param endTime_      Unix timestamp after which the raffle may be ended.
+     */
+    function createRaffleByUser(
+        address prizeToken_,
+        uint256[] calldata prizeAmounts_,
+        uint256 endTime_
+    ) external whenNotPaused nonReentrant returns (uint256) {
+        require(endTime_ > block.timestamp, "End time must be in the future");
+
+        uint256 raffleId = _createTokenRaffle(prizeToken_, prizeAmounts_, RaffleState.ACTIVE);
+
+        Raffle storage raffle = raffles[raffleId];
+        raffle.creator = msg.sender;
+        raffle.endTime = endTime_;
+
+        emit UserRaffleCreated(raffleId, msg.sender, endTime_);
+        return raffleId;
+    }
+
+    /**
+     * @notice Permissionless NFT raffle creation for regular users.
+     * @dev Mirrors {createRaffleByUser} but escrows ERC721/ERC6220 prizes. The caller
+     *      must have approved this contract for the token ids (approve per token or
+     *      setApprovalForAll). The raffle goes ACTIVE immediately and can only be ended
+     *      (by owner/watchdog cron) once `endTime_` passes, so the owner cannot rug it.
+     * @param prizeType_     ERC721 or ERC6220 (ERC20 is rejected).
+     * @param prizeToken_    NFT collection address; the token ids are escrowed from msg.sender.
+     * @param prizeTokenIds_ One token id per prize slot.
+     * @param endTime_       Unix timestamp after which the raffle may be ended.
+     */
+    function createRaffleByUserWithNFT(
+        PrizeType prizeType_,
+        address prizeToken_,
+        uint256[] calldata prizeTokenIds_,
+        uint256 endTime_
+    ) external whenNotPaused nonReentrant returns (uint256) {
+        require(endTime_ > block.timestamp, "End time must be in the future");
+
+        uint256 raffleId = _createNftRaffle(prizeType_, prizeToken_, prizeTokenIds_, RaffleState.ACTIVE);
+
+        Raffle storage raffle = raffles[raffleId];
+        raffle.creator = msg.sender;
+        raffle.endTime = endTime_;
+
+        emit UserRaffleCreated(raffleId, msg.sender, endTime_);
+        return raffleId;
+    }
+
     function createRaffleWithNFT(
         PrizeType prizeType_,
         address prizeToken_,
@@ -128,7 +188,9 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
         nonReentrant
     {
         require(tokenAmount_ > 0, "Invalid token amount");
-        raffleToken.safeTransferFrom(msg.sender, owner(), tokenAmount_);
+        address beneficiary = raffles[raffleId_].creator;
+        if (beneficiary == address(0)) beneficiary = owner();
+        raffleToken.safeTransferFrom(msg.sender, beneficiary, tokenAmount_);
         emit EntrySubmitted(raffleId_, msg.sender, tokenAmount_);
     }
 
@@ -151,8 +213,35 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
         uint256 prizeCount = raffle.prizeCount;
         require(prizeCount > 0, "No prizes");
 
+        // User raffles can only be ended once their scheduled time passes (anti-rug).
+        if (raffle.endTime != 0) {
+            require(block.timestamp >= raffle.endTime, "Raffle not yet ended");
+        }
+
         if (participants_.length == 0) {
             raffle.state = RaffleState.COMPLETED;
+
+            // No entrants: return the escrowed prize to the creator of a user raffle.
+            if (raffle.creator != address(0)) {
+                if (raffle.isNFT) {
+                    uint256[] storage tokenIds = rafflePrizeTokenIds[raffleId_];
+                    for (uint256 i = 0; i < tokenIds.length; i++) {
+                        IERC721(raffle.prizeToken).transferFrom(address(this), raffle.creator, tokenIds[i]);
+                    }
+                    emit CreatorRefunded(raffleId_, raffle.creator, 0);
+                } else {
+                    uint256[] storage amounts = rafflePrizeAmounts[raffleId_];
+                    uint256 totalAmount = 0;
+                    for (uint256 i = 0; i < amounts.length; i++) {
+                        totalAmount += amounts[i];
+                    }
+                    if (totalAmount > 0) {
+                        IERC20(raffle.prizeToken).safeTransfer(raffle.creator, totalAmount);
+                        emit CreatorRefunded(raffleId_, raffle.creator, totalAmount);
+                    }
+                }
+            }
+
             emit RaffleStateChanged(raffleId_, RaffleState.ACTIVE, RaffleState.COMPLETED);
             emit RaffleEnded(raffleId_, new address[](0), 0, 0);
             return;
@@ -291,6 +380,27 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
         return raffles[raffleId_].state;
     }
 
+    /**
+     * @notice Read the creator and scheduled close time of a raffle.
+     * @return creator address(0) for owner/platform raffles, else the user who created it.
+     * @return endTime 0 for owner-managed raffles, else the unix time after which it may end.
+     */
+    function getRaffleSchedule(uint256 raffleId_) external view returns (address creator, uint256 endTime) {
+        Raffle memory raffle = raffles[raffleId_];
+        return (raffle.creator, raffle.endTime);
+    }
+
+    /**
+     * @notice True once a scheduled (user) raffle has passed its close time and is still active.
+     * @dev Off-chain cron pulls ACTIVE raffles and ends those where this returns true.
+     */
+    function isRaffleEndable(uint256 raffleId_) external view returns (bool) {
+        Raffle memory raffle = raffles[raffleId_];
+        if (raffle.state != RaffleState.ACTIVE) return false;
+        if (raffle.endTime == 0) return false;
+        return block.timestamp >= raffle.endTime;
+    }
+
     function isRaffleActive(uint256 raffleId_) external view returns (bool) {
         return raffles[raffleId_].state == RaffleState.ACTIVE;
     }
@@ -329,7 +439,9 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
             state: initialState_,
             prizeCount: prizeAmounts_.length,
             isNFT: false,
-            hasWinners: false
+            hasWinners: false,
+            creator: address(0),
+            endTime: 0
         });
 
         emit RaffleCreated(raffleId, prizeToken_, prizeAmounts_.length, false);
@@ -363,7 +475,9 @@ contract KatanaRaffles is Ownable, ReentrancyGuard, Pausable {
             state: initialState_,
             prizeCount: prizeTokenIds_.length,
             isNFT: true,
-            hasWinners: false
+            hasWinners: false,
+            creator: address(0),
+            endTime: 0
         });
 
         emit RaffleCreated(raffleId, prizeToken_, prizeTokenIds_.length, true);

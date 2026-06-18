@@ -7,7 +7,7 @@ function LeaderboardLoading() {
   return (
     <div className="ui-container rounded overflow-hidden">
       <div className="p-12 text-center">
-        <div className="inline-block w-8 h-8 border-4 border-[#F4FF1A] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="inline-block w-8 h-8 border-4 border-[#33C5D9] border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-muted-blue">Loading leaderboard...</p>
       </div>
     </div>

@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useAccount, useSignMessage, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useSignMessage, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther, formatEther } from "viem";
 import { format } from "date-fns";
 import type { Raffle } from "@/lib/supabase";
-import { useClaimPrice, useClaimCooldown } from "@/lib/hooks";
-import { contracts, HollowTokenABI } from "@/lib/contracts";
+import { useClaimAmount, useClaimCooldown } from "@/lib/hooks";
+import { contracts, HollowTokenABI, THE_HOLLOW_GAME_ADDRESS, THE_HOLLOW_GAME_ABI } from "@/lib/contracts";
 
 interface AdminData {
   raffles: Array<Raffle & { participants_count?: number; prize_types?: string[]; status: string }>;
@@ -200,14 +200,8 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between">
         <h2 className="text-5xl font-header text-white">Admin Dashboard</h2>
         <div className="flex items-center gap-3">
-          <Link href="/admin/staking">
-            <button className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded uppercase tracking-widest text-sm transition-all border border-white/10 flex items-center gap-2">
-              <span className="material-symbols-outlined text-lg">savings</span>
-              Staking Config
-            </button>
-          </Link>
           <Link href="/admin/raffles/create">
-            <button className="px-6 py-3 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-sm transition-all shadow-[0_0_20px_rgba(244,255,26,0.15)] flex items-center gap-2">
+            <button className="px-6 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-sm transition-all shadow-[0_0_20px_rgba(51,197,217,0.15)] flex items-center gap-2">
               <span className="material-symbols-outlined text-lg">add</span>
               Create Raffle
             </button>
@@ -217,7 +211,7 @@ export default function AdminDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="ui-container p-6 rounded border-l-4 border-[#F4FF1A]">
+        <div className="ui-container p-6 rounded border-l-4 border-[#33C5D9]">
           <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-2">Total Raffles</p>
           <p className="text-3xl font-display font-bold text-white">{data?.stats?.total_raffles || 0}</p>
         </div>
@@ -237,6 +231,9 @@ export default function AdminDashboard() {
 
       {/* HOLLOW Token Config */}
       <HollowTokenConfig />
+
+      {/* Game Play Fee Config */}
+      <GameConfig />
 
       {/* Raffles Table */}
       <div className="ui-container rounded overflow-hidden">
@@ -332,7 +329,7 @@ export default function AdminDashboard() {
 }
 
 function HollowTokenConfig() {
-  const { data: currentPrice } = useClaimPrice();
+  const { data: currentAmount } = useClaimAmount();
   const { data: currentCooldown } = useClaimCooldown();
 
   const [priceInput, setPriceInput] = useState("");
@@ -358,10 +355,10 @@ function HollowTokenConfig() {
 
   // Pre-fill inputs with current values
   useEffect(() => {
-    if (currentPrice !== undefined && !priceInput) {
-      setPriceInput(formatEther(currentPrice));
+    if (currentAmount !== undefined && !priceInput) {
+      setPriceInput(formatEther(currentAmount as bigint));
     }
-  }, [currentPrice, priceInput]);
+  }, [currentAmount, priceInput]);
 
   useEffect(() => {
     if (currentCooldown !== undefined && !cooldownInput) {
@@ -376,11 +373,11 @@ function HollowTokenConfig() {
       writePrice({
         address: contracts.hollowToken.address,
         abi: HollowTokenABI,
-        functionName: "setClaimPrice",
+        functionName: "setClaimAmount",
         args: [wei],
       });
     } catch {
-      alert("Invalid price value");
+      alert("Invalid amount value");
     }
   };
 
@@ -411,12 +408,12 @@ function HollowTokenConfig() {
         <h3 className="text-xl font-header text-white">HOLLOW Token Config</h3>
       </div>
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Claim Price */}
+        {/* Claim Amount */}
         <div className="space-y-3">
           <div>
-            <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Claim Price (ETH)</p>
+            <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Claim Amount (HOLLOW)</p>
             <p className="text-sm text-white/60">
-              Current: <span className="text-[#F4FF1A] font-bold">{currentPrice !== undefined ? formatEther(currentPrice) : "..."} ETH</span>
+              Current: <span className="text-[#33C5D9] font-bold">{currentAmount !== undefined ? formatEther(currentAmount as bigint) : "..."} HOLLOW</span>
             </p>
           </div>
           <div className="flex gap-2">
@@ -425,17 +422,17 @@ function HollowTokenConfig() {
               value={priceInput}
               onChange={(e) => setPriceInput(e.target.value)}
               placeholder="0.0"
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#F4FF1A]/50 placeholder-white/20"
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20"
             />
             <button
               onClick={handleSetPrice}
               disabled={pricePending || priceConfirming}
-              className="px-4 py-3 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {pricePending ? "Sign..." : priceConfirming ? "Confirming..." : "Update"}
             </button>
           </div>
-          {priceSuccess && <p className="text-green-400 text-xs">Price updated successfully!</p>}
+          {priceSuccess && <p className="text-green-400 text-xs">Amount updated successfully!</p>}
           {priceError && <p className="text-red-400 text-xs">{priceError.message.split('\n')[0]}</p>}
         </div>
 
@@ -444,7 +441,7 @@ function HollowTokenConfig() {
           <div>
             <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Claim Cooldown (seconds)</p>
             <p className="text-sm text-white/60">
-              Current: <span className="text-[#F4FF1A] font-bold">{currentCooldown !== undefined ? `${Number(currentCooldown)}s (${formatCooldownDisplay(Number(currentCooldown))})` : "..."}</span>
+              Current: <span className="text-[#33C5D9] font-bold">{currentCooldown !== undefined ? `${Number(currentCooldown)}s (${formatCooldownDisplay(Number(currentCooldown))})` : "..."}</span>
             </p>
           </div>
           <div className="flex gap-2">
@@ -454,12 +451,12 @@ function HollowTokenConfig() {
               onChange={(e) => setCooldownInput(e.target.value)}
               placeholder="3600"
               min="0"
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#F4FF1A]/50 placeholder-white/20"
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20"
             />
             <button
               onClick={handleSetCooldown}
               disabled={cooldownPending || cooldownConfirming}
-              className="px-4 py-3 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cooldownPending ? "Sign..." : cooldownConfirming ? "Confirming..." : "Update"}
             </button>
@@ -478,7 +475,7 @@ function HollowTokenConfig() {
                 onClick={() => setCooldownInput(preset.value)}
                 className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded border transition-all ${
                   cooldownInput === preset.value
-                    ? "bg-[#F4FF1A]/10 text-[#F4FF1A] border-[#F4FF1A]/30"
+                    ? "bg-[#33C5D9]/10 text-[#33C5D9] border-[#33C5D9]/30"
                     : "bg-white/5 text-muted-blue border-white/10 hover:bg-white/10"
                 }`}
               >
@@ -488,6 +485,88 @@ function HollowTokenConfig() {
           </div>
           {cooldownSuccess && <p className="text-green-400 text-xs">Cooldown updated successfully!</p>}
           {cooldownError && <p className="text-red-400 text-xs">{cooldownError.message.split('\n')[0]}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GameConfig() {
+  const { data: currentFee } = useReadContract({
+    address: THE_HOLLOW_GAME_ADDRESS,
+    abi: THE_HOLLOW_GAME_ABI,
+    functionName: "getPlayPrice",
+  });
+
+  const [feeInput, setFeeInput] = useState("");
+
+  const {
+    writeContract: writeFee,
+    data: feeHash,
+    isPending: feePending,
+    error: feeError,
+    reset: resetFee,
+  } = useWriteContract();
+  const { isLoading: feeConfirming, isSuccess: feeSuccess } = useWaitForTransactionReceipt({ hash: feeHash });
+
+  // Pre-fill input with the current on-chain fee
+  useEffect(() => {
+    if (currentFee !== undefined && !feeInput) {
+      setFeeInput(formatEther(currentFee as bigint));
+    }
+  }, [currentFee, feeInput]);
+
+  const handleSetFee = () => {
+    resetFee();
+    try {
+      const wei = parseEther(feeInput);
+      if (wei <= 0n) {
+        alert("Fee must be greater than 0");
+        return;
+      }
+      writeFee({
+        address: THE_HOLLOW_GAME_ADDRESS,
+        abi: THE_HOLLOW_GAME_ABI,
+        functionName: "setPlayPrice",
+        args: [wei],
+      });
+    } catch {
+      alert("Invalid fee value");
+    }
+  };
+
+  return (
+    <div className="ui-container rounded overflow-hidden">
+      <div className="px-6 py-4 border-b border-white/10">
+        <h3 className="text-xl font-header text-white">Game Config</h3>
+      </div>
+      <div className="p-6">
+        <div className="space-y-3 max-w-md">
+          <div>
+            <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Play Fee (zkLTC)</p>
+            <p className="text-sm text-white/60">
+              Current: <span className="text-[#33C5D9] font-bold">{currentFee !== undefined ? formatEther(currentFee as bigint) : "..."} zkLTC</span>
+            </p>
+            <p className="text-[10px] text-muted-blue mt-1">Amount each player pays to play. Must be greater than 0.</p>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={feeInput}
+              onChange={(e) => setFeeInput(e.target.value)}
+              placeholder="0.0001"
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20"
+            />
+            <button
+              onClick={handleSetFee}
+              disabled={feePending || feeConfirming}
+              className="px-4 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {feePending ? "Sign..." : feeConfirming ? "Confirming..." : "Update"}
+            </button>
+          </div>
+          {feeSuccess && <p className="text-green-400 text-xs">Play fee updated successfully!</p>}
+          {feeError && <p className="text-red-400 text-xs">{feeError.message.split('\n')[0]}</p>}
         </div>
       </div>
     </div>

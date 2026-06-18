@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // }
 
     // Create game session
-    const { data, error } = await supabase.rpc('create_game_session', {
+    const { data, error } = await supabase.rpc('litvm_raffle_create_game_session', {
       user_wallet: walletAddress,
       payment_tx_hash: txHash
     });
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data, error } = await supabase.rpc('get_active_session', {
+    const { data, error } = await supabase.rpc('litvm_raffle_get_active_session', {
       p_user_wallet: walletAddress
     });
 

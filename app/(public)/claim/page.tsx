@@ -3,14 +3,14 @@
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { LitvmHero } from "@/components/ui/LitvmHero";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   useCanClaim,
   useClaimTokens,
-  useClaimPrice,
   useClaimCooldown,
-  useGetClaimAmount,
+  useClaimAmount,
   useGetLastClaimTimestamp,
   useHollowBalance,
   formatTokenBalance
@@ -47,23 +47,14 @@ export default function ClaimPage() {
   const queryClient = useQueryClient();
 
   const { data: canClaim, isLoading: isCheckingClaim } = useCanClaim(address);
-  const { data: claimAmountData, isLoading: isLoadingAmount } = useGetClaimAmount(address);
+  const { data: claimAmount, isLoading: isLoadingAmount } = useClaimAmount();
   const { data: balance } = useHollowBalance(address);
   const { data: lastClaimTimestamp } = useGetLastClaimTimestamp(address);
-  const { data: claimPrice } = useClaimPrice();
   const { data: claimCooldown } = useClaimCooldown();
   const { claimTokens, isPending, isConfirming, isSuccess, error, reset } = useClaimTokens();
 
-  const claimAmount = claimAmountData?.[0];
-  const tier = claimAmountData?.[1] as number | undefined;
   const cooldownSeconds = claimCooldown ? Number(claimCooldown) : 3600;
   const cooldownLabel = formatCooldownLabel(cooldownSeconds);
-
-  const tierLabels: Record<number, string> = {
-    0: "KAT Whale",
-    1: "KAT Holder",
-    2: "Katana community",
-  };
 
   const handleClaim = () => {
     if (lastClaimTimestamp) {
@@ -78,7 +69,7 @@ export default function ClaimPage() {
         }
       }
     }
-    claimTokens(claimPrice ?? 0n);
+    claimTokens();
   };
 
   // Handle success
@@ -109,12 +100,13 @@ export default function ClaimPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 lg:gap-8 px-4 py-6 lg:py-8">
+      <LitvmHero />
       <div className="w-full max-w-5xl">
         <div className="ui-container p-6 sm:p-8 lg:p-12 rounded w-full">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Left Side - Tokens Claim */}
             <div className="flex-1 space-y-4 lg:space-y-6 flex flex-col items-center">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#F4FF1A] rounded-xl flex items-center justify-center mb-4 sm:mb-6 shadow-[0_0_30px_rgba(244,255,26,0.2)]">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#33C5D9] rounded-xl flex items-center justify-center mb-4 sm:mb-6 shadow-[0_0_30px_rgba(51,197,217,0.2)]">
                 <span className="material-symbols-outlined text-dark-navy" style={{ fontSize: 40 }}>redeem</span>
               </div>
 
@@ -130,7 +122,7 @@ export default function ClaimPage() {
               {isConnected && balance !== undefined && (
                 <div className="p-4 bg-white/5 rounded border border-white/10 w-full text-center">
                   <p className="text-[10px] uppercase font-bold tracking-widest text-muted-blue mb-1">Your Balance</p>
-                  <p className="text-2xl font-display font-bold text-[#F4FF1A]">
+                  <p className="text-2xl font-display font-bold text-[#33C5D9]">
                     {formatTokenBalance(balance)} HOLLOW
                   </p>
                 </div>
@@ -138,13 +130,11 @@ export default function ClaimPage() {
 
               {/* Claim Amount Preview */}
               {isConnected && claimAmount !== undefined && (
-                <div className="p-4 bg-[#F4FF1A]/5 rounded border border-[#F4FF1A]/20 w-full text-center">
+                <div className="p-4 bg-[#33C5D9]/5 rounded border border-[#33C5D9]/20 w-full text-center">
                   <p className="text-xl font-display font-bold text-white">
-                    +{claimAmount.toString()} HOLLOW
+                    +{formatTokenBalance(claimAmount as bigint)} HOLLOW
                   </p>
-                  {tier !== undefined && tier < 2 && (
-                    <p className="text-xs text-[#F4FF1A] mt-1">You qualify for boosted rewards!</p>
-                  )}
+                  <p className="text-xs text-[#33C5D9] mt-1">Free to claim — you only pay gas.</p>
                 </div>
               )}
 
@@ -153,7 +143,7 @@ export default function ClaimPage() {
                 <button
                   onClick={handleClaim}
                   disabled={isProcessing}
-                  className="w-full py-4 sm:py-5 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.2em] text-xs sm:text-sm transition-all shadow-[0_0_30px_rgba(244,255,26,0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 sm:py-5 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.2em] text-xs sm:text-sm transition-all shadow-[0_0_30px_rgba(51,197,217,0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isPending ? "Confirm in Wallet..." : isConfirming ? "Claiming..." : "Claim Your Tokens"}
                 </button>
@@ -174,7 +164,7 @@ export default function ClaimPage() {
                     return (
                       <button
                         onClick={openConnectModal}
-                        className="w-full py-4 sm:py-5 bg-[#F4FF1A] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.2em] text-xs sm:text-sm transition-all shadow-[0_0_30px_rgba(244,255,26,0.15)]"
+                        className="w-full py-4 sm:py-5 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.2em] text-xs sm:text-sm transition-all shadow-[0_0_30px_rgba(51,197,217,0.15)]"
                       >
                         Connect Wallet
                       </button>
@@ -187,43 +177,36 @@ export default function ClaimPage() {
             {/* Vertical Separator */}
             <div className="hidden lg:block w-px bg-white/10"></div>
 
-            {/* Right Side - Claim Tiers */}
+            {/* Right Side - How claiming works */}
             <div className="lg:w-80 flex-shrink-0 flex items-center">
               <div className="w-full">
-                <h2 className="text-base sm:text-lg font-header mb-3 sm:mb-4 text-center">Claim Tiers</h2>
+                <h2 className="text-base sm:text-lg font-header mb-3 sm:mb-4 text-center">How It Works</h2>
                 <p className="text-muted-blue text-[10px] sm:text-xs text-center mb-4 sm:mb-5 px-4">
-                  Your claim amount is determined by your KAT token holdings.
+                  Claiming is free and open to everyone — you only pay network gas.
                 </p>
                 <div className="space-y-2 sm:space-y-3">
-                  <div className={`flex items-center justify-between p-3 rounded border ${tier === 0 ? "bg-[#F4FF1A]/10 border-[#F4FF1A]/30" : "bg-white/5 border-white/10"}`}>
+                  <div className="flex items-center justify-between p-3 rounded border bg-[#33C5D9]/10 border-[#33C5D9]/30">
                     <div className="flex items-center gap-3">
-                      <img src="https://katanascan.com/token/images/katanatoken_32.svg" alt="KAT" className="w-6 h-6" />
+                      <span className="material-symbols-outlined text-[#33C5D9]">redeem</span>
                       <div>
-                        <p className={`text-sm font-bold ${tier === 0 ? "text-[#F4FF1A]" : "text-white"}`}>KAT Whale</p>
-                        <p className="text-[10px] text-muted-blue">Hold ≥ 10,000 KAT</p>
+                        <p className="text-sm font-bold text-white">Per Claim</p>
+                        <p className="text-[10px] text-muted-blue">Fixed reward, set by the team</p>
                       </div>
                     </div>
-                    <p className="text-sm font-display font-bold text-white">200 <span className="text-[10px] text-muted-blue">/ {cooldownLabel}</span></p>
+                    <p className="text-sm font-display font-bold text-white">
+                      {claimAmount !== undefined ? formatTokenBalance(claimAmount as bigint) : "..."}
+                      <span className="text-[10px] text-muted-blue"> HOLLOW</span>
+                    </p>
                   </div>
-                  <div className={`flex items-center justify-between p-3 rounded border ${tier === 1 ? "bg-[#F4FF1A]/10 border-[#F4FF1A]/30" : "bg-white/5 border-white/10"}`}>
+                  <div className="flex items-center justify-between p-3 rounded border bg-white/5 border-white/10">
                     <div className="flex items-center gap-3">
-                      <img src="https://katanascan.com/token/images/katanatoken_32.svg" alt="KAT" className="w-6 h-6" />
+                      <span className="material-symbols-outlined text-muted-blue">schedule</span>
                       <div>
-                        <p className={`text-sm font-bold ${tier === 1 ? "text-[#F4FF1A]" : "text-white"}`}>KAT Holder</p>
-                        <p className="text-[10px] text-muted-blue">Hold any amount of KAT</p>
+                        <p className="text-sm font-bold text-white">Cooldown</p>
+                        <p className="text-[10px] text-muted-blue">Wait between claims</p>
                       </div>
                     </div>
-                    <p className="text-sm font-display font-bold text-white">100 <span className="text-[10px] text-muted-blue">/ {cooldownLabel}</span></p>
-                  </div>
-                  <div className={`flex items-center justify-between p-3 rounded border ${tier === 2 ? "bg-[#F4FF1A]/10 border-[#F4FF1A]/30" : "bg-white/5 border-white/10"}`}>
-                    <div className="flex items-center gap-3">
-                      <img src="https://pbs.twimg.com/media/G96KV6FXkAE_0cy?format=jpg" alt="Katana community" className="w-6 h-6 opacity-50" />
-                      <div>
-                        <p className={`text-sm font-bold ${tier === 2 ? "text-[#F4FF1A]" : "text-white"}`}>Katana community</p>
-                        <p className="text-[10px] text-muted-blue">Open to everyone</p>
-                      </div>
-                    </div>
-                    <p className="text-sm font-display font-bold text-white">25 <span className="text-[10px] text-muted-blue">/ {cooldownLabel}</span></p>
+                    <p className="text-sm font-display font-bold text-white">{cooldownLabel}</p>
                   </div>
                 </div>
                 <p className="text-[10px] text-muted-blue text-center mt-4 uppercase tracking-widest">

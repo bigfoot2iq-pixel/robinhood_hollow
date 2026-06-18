@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get("offset") || "0");
 
     const { data, error, count } = await supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get stats
-    const { data: stats } = await supabase.rpc("hollow_raffles_get_admin_stats");
+    const { data: stats } = await supabase.rpc("litvm_raffle_get_admin_stats");
 
     const raffleIds = (data || []).map((raffle) => raffle.id);
     const participantsByRaffle = new Map<string, number>();
@@ -130,7 +130,7 @@ export async function GET(request: NextRequest) {
 
     if (raffleIds.length > 0) {
       const { data: entries, error: entriesError } = await supabase
-        .from("hollow_raffles_entries")
+        .from("litvm_raffle_entries")
         .select("raffle_id")
         .in("raffle_id", raffleIds);
 
@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
 
     if (raffleIds.length > 0) {
       const { data: prizes, error: prizesError } = await supabase
-        .from("hollow_raffles_prizes")
+        .from("litvm_raffle_prizes")
         .select("raffle_id, prize_type")
         .in("raffle_id", raffleIds);
 

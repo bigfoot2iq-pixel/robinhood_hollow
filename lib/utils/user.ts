@@ -77,7 +77,7 @@ const compressImage = async (file: File, maxSize: number = 200, quality: number 
 export const getUserByWallet = async (walletAddress: string, walletType?: WalletType): Promise<TheHollowUser | null> => {
   try {
     let query = supabase
-      .from('the_hollow_users')
+      .from('litvm_raffle_game_users')
       .select('*')
       .eq('wallet_address', walletAddress);
     
@@ -106,7 +106,7 @@ export const getUserByWallet = async (walletAddress: string, walletType?: Wallet
 export const upsertUser = async (walletAddress: string, walletType: WalletType): Promise<TheHollowUser | null> => {
   try {
     const { data, error } = await supabase
-      .rpc('upsert_the_hollow_user', { 
+      .rpc('upsert_litvm_raffle_game_user', { 
         wallet: walletAddress, 
         wallet_type: walletType 
       });
@@ -179,7 +179,7 @@ export const updateUserRegistration = async (
     
     // Update user record
     const { data, error } = await supabase
-      .from('the_hollow_users')
+      .from('litvm_raffle_game_users')
       .update(updateData)
       .eq('wallet_address', walletAddress)
       .select()
@@ -223,7 +223,7 @@ export const uploadAvatar = async (walletAddress: string, file: File): Promise<s
 
     // Upload compressed file
     const { data, error } = await supabase.storage
-      .from('the-hollow-avatars')
+      .from('litvm-raffle-avatars')
       .upload(fileName, compressedFile, {
         cacheControl: '3600',
         upsert: true,
@@ -236,7 +236,7 @@ export const uploadAvatar = async (walletAddress: string, file: File): Promise<s
 
     // Get public URL
     const { data: publicUrlData } = supabase.storage
-      .from('the-hollow-avatars')
+      .from('litvm-raffle-avatars')
       .getPublicUrl(fileName);
 
     return publicUrlData.publicUrl;
@@ -258,7 +258,7 @@ export const deleteOldAvatar = async (imageUrl: string): Promise<void> => {
     const fileName = urlParts[urlParts.length - 1];
 
     await supabase.storage
-      .from('the-hollow-avatars')
+      .from('litvm-raffle-avatars')
       .remove([fileName]);
   } catch (err) {
     console.error('Error deleting old avatar:', err);

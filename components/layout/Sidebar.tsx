@@ -14,7 +14,6 @@ const navItems = [
   { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
   { href: "/game", label: "Game", icon: "sports_esports" },
   { href: "/leaderboard", label: "Leaderboard", icon: "emoji_events" },
-  { href: "/staking", label: "Staking", icon: "token" },
   { href: "/checker", label: "Checker", icon: "fact_check" },
   { href: "/profile", label: "Profile", icon: "person" },
 ];
@@ -55,8 +54,7 @@ export function Sidebar() {
       <div className="flex flex-col gap-8">
         {/* Logo */}
         <Link href="/claim" className="flex items-center gap-3">
-          <img src="/hollow_logo.png" alt="Katana Logo" className="h-10 w-auto" />
-          <h2 className="text-2xl font-header tracking-tight text-white uppercase">Katana</h2>
+          <img src="/litvm/logo.svg" alt="LitVM" className="h-8 w-auto" />
         </Link>
 
         {/* Navigation */}
@@ -72,7 +70,7 @@ export function Sidebar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded transition-all cursor-pointer ${
                   isActive
-                    ? "bg-[#F4FF1A] text-dark-navy"
+                    ? "bg-[#33C5D9] text-dark-navy"
                     : "text-muted-blue hover:bg-white/5 hover:text-white"
                 }`}
               >
@@ -90,7 +88,7 @@ export function Sidebar() {
               onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded transition-all cursor-pointer ${
                 pathname.startsWith("/admin")
-                  ? "bg-[#F4FF1A] text-dark-navy"
+                  ? "bg-[#33C5D9] text-dark-navy"
                   : "text-muted-blue hover:bg-white/5 hover:text-white"
               }`}
             >
@@ -116,7 +114,7 @@ export function Sidebar() {
               return (
                 <button
                   onClick={openConnectModal}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-[#F4FF1A] hover:brightness-110 text-dark-navy text-sm font-bold rounded transition-all uppercase tracking-widest"
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy text-sm font-bold rounded transition-all uppercase tracking-widest"
                 >
                   <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
                   Connect Wallet
@@ -141,8 +139,8 @@ export function Sidebar() {
                 onClick={openAccountModal}
                 className="flex items-center gap-3 p-3 bg-white/5 rounded border border-white/10 hover:bg-white/10 transition-colors cursor-pointer w-full"
               >
-                <div className="h-10 w-10 rounded bg-[#F4FF1A] flex items-center justify-center text-dark-navy text-xs font-bold flex-shrink-0">
-                  K
+                <div className="h-10 w-10 rounded bg-[#33C5D9] flex items-center justify-center text-dark-navy text-sm font-bold flex-shrink-0">
+                  Ł
                 </div>
                 <div className="flex flex-col overflow-hidden flex-1 text-left">
                   <p className="text-sm font-bold text-white truncate">

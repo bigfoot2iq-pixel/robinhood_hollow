@@ -12,13 +12,8 @@ export const HollowTokenABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "katToken_",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
-				"name": "claimPrice_",
+				"name": "claimAmount_",
 				"type": "uint256"
 			},
 			{
@@ -184,6 +179,25 @@ export const HollowTokenABI = [
 			{
 				"indexed": false,
 				"internalType": "uint256",
+				"name": "oldAmount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "ClaimAmountUpdated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
 				"name": "oldCooldown",
 				"type": "uint256"
 			},
@@ -195,63 +209,6 @@ export const HollowTokenABI = [
 			}
 		],
 		"name": "ClaimCooldownUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "oldPrice",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "newPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "ClaimPriceUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "ETHWithdrawn",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "oldKat",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "newKat",
-				"type": "address"
-			}
-		],
-		"name": "KatTokenUpdated",
 		"type": "event"
 	},
 	{
@@ -319,12 +276,6 @@ export const HollowTokenABI = [
 				"internalType": "uint256",
 				"name": "amount",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint8",
-				"name": "tier",
-				"type": "uint8"
 			}
 		],
 		"name": "TokensClaimed",
@@ -370,59 +321,7 @@ export const HollowTokenABI = [
 	},
 	{
 		"inputs": [],
-		"name": "KAT_WHALE_THRESHOLD",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "MAX_SUPPLY",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "TIER_BASE_AMOUNT",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "TIER_KAT_HOLDER_AMOUNT",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "TIER_KAT_WHALE_AMOUNT",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -552,7 +451,7 @@ export const HollowTokenABI = [
 	},
 	{
 		"inputs": [],
-		"name": "claimCooldown",
+		"name": "claimAmount",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -565,7 +464,7 @@ export const HollowTokenABI = [
 	},
 	{
 		"inputs": [],
-		"name": "claimPrice",
+		"name": "claimCooldown",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -580,7 +479,7 @@ export const HollowTokenABI = [
 		"inputs": [],
 		"name": "claimTokens",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -604,49 +503,12 @@ export const HollowTokenABI = [
 				"type": "address"
 			}
 		],
-		"name": "getClaimAmount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8",
-				"name": "tier",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
 		"name": "getLastClaimTimestamp",
 		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "katToken",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -759,11 +621,11 @@ export const HollowTokenABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "newCooldown",
+				"name": "newAmount",
 				"type": "uint256"
 			}
 		],
-		"name": "setClaimCooldown",
+		"name": "setClaimAmount",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -772,24 +634,11 @@ export const HollowTokenABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "newPrice",
+				"name": "newCooldown",
 				"type": "uint256"
 			}
 		],
-		"name": "setClaimPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "katToken_",
-				"type": "address"
-			}
-		],
-		"name": "setKatToken",
+		"name": "setClaimCooldown",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -889,13 +738,6 @@ export const HollowTokenABI = [
 	{
 		"inputs": [],
 		"name": "unpause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdrawETH",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

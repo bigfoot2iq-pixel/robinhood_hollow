@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { RaffleCard } from "@/components/raffle";
+import { useCallback, useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { RaffleCard, CreateRaffleModal } from "@/components/raffle";
 import type { PrizeType, Raffle, RaffleStatus } from "@/lib/supabase";
 
 const statusFilters: { label: string; value: RaffleStatus | "all" }[] = [
@@ -18,42 +19,55 @@ type RaffleSummary = Raffle & {
 };
 
 export default function RafflesPage() {
+  const { isConnected } = useAccount();
   const [raffles, setRaffles] = useState<RaffleSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<RaffleStatus | "all">("all");
   const [total, setTotal] = useState(0);
+  const [showCreate, setShowCreate] = useState(false);
+
+  const fetchRaffles = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filter !== "all") {
+        params.set("status", filter);
+      }
+      params.set("limit", "20");
+
+      const response = await fetch(`/api/raffles?${params}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setRaffles(data.raffles);
+        setTotal(data.total);
+      }
+    } catch (error) {
+      console.error("Error fetching raffles:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [filter]);
 
   useEffect(() => {
-    async function fetchRaffles() {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-        if (filter !== "all") {
-          params.set("status", filter);
-        }
-        params.set("limit", "20");
-
-        const response = await fetch(`/api/raffles?${params}`);
-        const data = await response.json();
-        
-        if (response.ok) {
-          setRaffles(data.raffles);
-          setTotal(data.total);
-        }
-      } catch (error) {
-        console.error("Error fetching raffles:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchRaffles();
-  }, [filter]);
+  }, [fetchRaffles]);
 
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Page Title */}
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white mb-4 lg:mb-8">Raffles Explorer</h2>
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-4 lg:mb-8">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white">Raffles Explorer</h2>
+        {isConnected && (
+          <button
+            onClick={() => setShowCreate(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all shadow-[0_0_20px_rgba(51,197,217,0.15)]"
+          >
+            <span className="material-symbols-outlined text-base">add</span>
+            Create Raffle
+          </button>
+        )}
+      </div>
 
       {/* Filter Tabs */}
       <div className="flex overflow-x-auto border-b border-white/10 gap-4 sm:gap-6 lg:gap-8 mb-6 lg:mb-8 pb-px">
@@ -63,7 +77,7 @@ export default function RafflesPage() {
             onClick={() => setFilter(status.value)}
             className={`pb-3 sm:pb-4 px-2 text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors whitespace-nowrap ${
               filter === status.value
-                ? "text-[#F4FF1A] border-b-2 border-[#F4FF1A]"
+                ? "text-[#33C5D9] border-b-2 border-[#33C5D9]"
                 : "text-muted-blue hover:text-white"
             }`}
           >
@@ -100,6 +114,13 @@ export default function RafflesPage() {
             </div>
           )}
         </>
+      )}
+
+      {showCreate && (
+        <CreateRaffleModal
+          onClose={() => setShowCreate(false)}
+          onCreated={() => fetchRaffles()}
+        />
       )}
     </div>
   );

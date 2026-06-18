@@ -72,7 +72,7 @@ export function GlobalLoader() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(to bottom, #14357A 0%, #4FA3E3 100%)",
+        background: "linear-gradient(to bottom, #0E2230 0%, #4FC3D0 100%)",
         opacity: isFading ? 0 : 1,
         transition: "opacity 0.4s ease-out",
         pointerEvents: isFading ? "none" : "auto",
@@ -84,7 +84,7 @@ export function GlobalLoader() {
           width: 36,
           height: 36,
           border: "3px solid rgba(255,255,255,0.15)",
-          borderTopColor: "#F4FF1A",
+          borderTopColor: "#33C5D9",
           borderRadius: "50%",
           animation: "globalLoaderSpin 0.8s linear infinite",
         }}

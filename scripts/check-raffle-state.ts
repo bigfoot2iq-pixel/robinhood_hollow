@@ -9,7 +9,7 @@ import { contracts, katanaNetwork, KatanaRafflesABI } from "../lib/contracts/con
 const RAFFLE_STATES = ["CREATED", "ACTIVE", "COMPLETED", "CANCELLED"];
 
 async function checkRaffleState(chainRaffleId: number) {
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
   
   const client = createPublicClient({
     chain: katanaNetwork,

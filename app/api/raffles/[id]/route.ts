@@ -17,7 +17,7 @@ export async function GET(
     const isUuid = uuidRegex.test(id);
 
     let query = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*");
 
     if (isUuid) {
@@ -39,19 +39,19 @@ export async function GET(
 
     // Get entries count
     const { data: entriesData, count: participantsCount } = await supabase
-      .from("hollow_raffles_entries")
+      .from("litvm_raffle_entries")
       .select("entry_count", { count: "exact" })
       .eq("raffle_id", raffle.id);
 
     const totalEntries = entriesData?.reduce((sum, entry) => sum + entry.entry_count, 0) || 0;
 
     const { data: winners } = await supabase
-      .from("hollow_raffles_winners")
+      .from("litvm_raffle_winners")
       .select("*")
       .eq("raffle_id", raffle.id);
 
     const { data: prizes } = await supabase
-      .from("hollow_raffles_prizes")
+      .from("litvm_raffle_prizes")
       .select("*")
       .eq("raffle_id", raffle.id)
       .order("created_at", { ascending: true });

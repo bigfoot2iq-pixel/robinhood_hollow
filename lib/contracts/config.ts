@@ -1,38 +1,44 @@
 import { defineChain } from "viem";
 
-export const katanaNetwork = defineChain({
-  id: 747474,
-  name: "Katana Network",
+// LitVM LiteForge testnet — Litecoin's Virtual Machine (https://www.litvm.com/)
+export const litvmTestnet = defineChain({
+  id: 4441,
+  name: "LitVM LiteForge",
   nativeCurrency: {
     decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
+    name: "zkLTC",
+    symbol: "zkLTC",
   },
   rpcUrls: {
     default: {
-      http: [process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network"],
+      http: [process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http"],
+      webSocket: ["wss://liteforge.rpc.caldera.xyz/ws"],
     },
   },
   blockExplorers: {
     default: {
-      name: "Katana Explorer",
-      url: "https://explorer.katana.network",
+      name: "Liteforge Explorer",
+      url: "https://liteforge.explorer.caldera.xyz",
     },
   },
+  testnet: true,
 });
+
+// Backwards-compatible alias (legacy imports referencing the old name)
+export const katanaNetwork = litvmTestnet;
 
 // Hardhat local network for development (matches hardhat.config.ts chainId)
 export const hardhatLocal = defineChain({
-  id: 747474,
+  id: 4441,
   name: "Hardhat Local",
   nativeCurrency: {
     decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
+    name: "zkLTC",
+    symbol: "zkLTC",
   },
   rpcUrls: {
     default: {
-      http: ["https://katana.drpc.org"],
+      http: ["http://127.0.0.1:8545"],
     },
   },
   testnet: true,
@@ -44,22 +50,6 @@ export const contracts = {
   },
   raffles: {
     address: process.env.NEXT_PUBLIC_RAFFLES_CONTRACT_ADDRESS as `0x${string}`,
-  },
-  katToken: {
-    address: "0x7F1f4b4b29f5058fA32CC7a97141b8D7e5ABDC2d" as `0x${string}`,
-  },
-  avKAT: {
-    address: "0x7231dbaCdFc968E07656D12389AB20De82FbfCeB" as `0x${string}`,
-  },
-  avKATVault: {
-    // spender address used in KAT approve before depositing into avKAT
-    address: "0x4d6fc15ca6258b168225d283262743c623c13ead" as `0x${string}`,
-  },
-  vKAT: {
-    address: "0x4d6fc15ca6258b168225d283262743c623c13ead" as `0x${string}`,
-  },
-  stakingRewards: {
-    address: process.env.NEXT_PUBLIC_STAKING_REWARDS_ADDRESS as `0x${string}`,
   },
 } as const;
 

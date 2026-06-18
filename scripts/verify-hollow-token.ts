@@ -1,21 +1,23 @@
 import pkg from "hardhat";
 const { run } = pkg;
 
-// Deployed contract address
-const HOLLOW_TOKEN_ADDRESS = "0x26492D9f1acf9fa1aEf71B00A4B84d49fbAFdAc2";
+// Deployed contract address (from .env.local)
+const HOLLOW_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS ?? "";
 
 // Constructor arguments (must match what was used at deployment)
 const HOLLOW_TOKEN_ARGS = [
   "Hollow Token",
   "HOLLOW",
-  "0x7F1f4b4b29f5058fA32CC7a97141b8D7e5ABDC2d",
-  "0",       // claimPrice (wei)
-  "3600",    // claimCooldown (seconds) = 1 hour
+  "100000000000000000000", // claimAmount (wei) = 100 HOLLOW
+  "3600",                  // claimCooldown (seconds) = 1 hour
 ];
 
 async function main() {
+  if (!HOLLOW_TOKEN_ADDRESS) {
+    throw new Error("Set NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS in .env.local");
+  }
   console.log("═══════════════════════════════════════════════════");
-  console.log("  HollowToken Verification (Katanascan)");
+  console.log("  HollowToken Verification (Liteforge Explorer)");
   console.log("═══════════════════════════════════════════════════\n");
   console.log(`Verifying HollowToken at ${HOLLOW_TOKEN_ADDRESS}...`);
 
@@ -24,11 +26,11 @@ async function main() {
       address: HOLLOW_TOKEN_ADDRESS,
       constructorArguments: HOLLOW_TOKEN_ARGS,
     });
-    console.log("HollowToken verified on Katanascan!");
+    console.log("HollowToken verified on Liteforge Explorer!");
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     if (msg.includes("already verified")) {
-      console.log("HollowToken is already verified on Katanascan.");
+      console.log("HollowToken is already verified on Liteforge Explorer.");
     } else {
       console.error("Verification failed:", msg);
     }
@@ -36,7 +38,7 @@ async function main() {
 
   console.log("\n═══════════════════════════════════════════════════");
   console.log("  Done! Check:");
-  console.log(`  https://katanascan.com/address/${HOLLOW_TOKEN_ADDRESS}#code`);
+  console.log(`  https://liteforge.explorer.caldera.xyz/address/${HOLLOW_TOKEN_ADDRESS}#code`);
   console.log("═══════════════════════════════════════════════════");
 }
 

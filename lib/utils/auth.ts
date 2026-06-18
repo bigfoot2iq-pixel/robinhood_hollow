@@ -7,7 +7,7 @@ async function isAdminWallet(wallet: string) {
   const walletLower = wallet.toLowerCase();
 
   const { data, error } = await supabase
-    .from("hollow_raffles_admin")
+    .from("litvm_raffle_admin")
     .select("wallet_address")
     .ilike("wallet_address", walletLower)
     .maybeSingle();

@@ -4,11 +4,14 @@ const { ethers, run } = pkg;
 // ── Constructor arguments ──────────────────────────────────────────
 const HOLLOW_TOKEN_NAME = "Hollow Token";
 const HOLLOW_TOKEN_SYMBOL = "HOLLOW";
-const KAT_TOKEN_ADDRESS = "0x7F1f4b4b29f5058fA32CC7a97141b8D7e5ABDC2d";
-const WATCHDOG_ADDRESS = "0xD6Ded4c01dF14E71DBd5168b46e6CeA015aAB89a";
+// Tokens minted per free claim (whole HOLLOW) and cooldown in seconds.
+const INITIAL_CLAIM_AMOUNT = ethers.parseEther("100");
+const INITIAL_CLAIM_COOLDOWN = 3600;
+// Watchdog wallet allowed to end raffles. Falls back to the deployer.
+const WATCHDOG_ADDRESS = process.env.WATCHDOG_ADDRESS;
 
 async function verifyContract(address: string, constructorArguments: unknown[]) {
-  console.log(`\nVerifying ${address} on Katanascan...`);
+  console.log(`\nVerifying ${address} on Liteforge Explorer...`);
   try {
     await run("verify:verify", {
       address,
@@ -27,13 +30,16 @@ async function verifyContract(address: string, constructorArguments: unknown[]) 
 
 async function main() {
   const [deployer] = await ethers.getSigners();
+  const watchdog = WATCHDOG_ADDRESS && ethers.isAddress(WATCHDOG_ADDRESS)
+    ? WATCHDOG_ADDRESS
+    : deployer.address;
+
   console.log("═══════════════════════════════════════════════════");
-  console.log("  Katana Mainnet Deployment");
+  console.log("  LitVM Testnet Deployment (HollowToken + Raffles)");
   console.log("═══════════════════════════════════════════════════");
   console.log("Deployer:", deployer.address);
-  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "KAT");
-  console.log("KAT Token:", KAT_TOKEN_ADDRESS);
-  console.log("Watchdog:", WATCHDOG_ADDRESS);
+  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "zkLTC");
+  console.log("Watchdog:", watchdog, watchdog === deployer.address ? "(defaulted to deployer)" : "");
   console.log("");
 
   // ── 1. Deploy HollowToken ───────────────────────────────────────
@@ -42,7 +48,8 @@ async function main() {
   const hollowToken = await HollowToken.deploy(
     HOLLOW_TOKEN_NAME,
     HOLLOW_TOKEN_SYMBOL,
-    KAT_TOKEN_ADDRESS,
+    INITIAL_CLAIM_AMOUNT,
+    INITIAL_CLAIM_COOLDOWN,
   );
   await hollowToken.waitForDeployment();
   const hollowAddress = await hollowToken.getAddress();
@@ -53,7 +60,7 @@ async function main() {
   const KatanaRaffles = await ethers.getContractFactory("KatanaRaffles");
   const katanaRaffles = await KatanaRaffles.deploy(
     hollowAddress,
-    WATCHDOG_ADDRESS,
+    watchdog,
   );
   await katanaRaffles.waitForDeployment();
   const rafflesAddress = await katanaRaffles.getAddress();
@@ -63,18 +70,14 @@ async function main() {
   console.log("\nWaiting 30s for explorer to index the contracts...");
   await new Promise((resolve) => setTimeout(resolve, 30_000));
 
-  // ── 4. Verify HollowToken ──────────────────────────────────────
+  // ── 4. Verify ───────────────────────────────────────────────────
   await verifyContract(hollowAddress, [
     HOLLOW_TOKEN_NAME,
     HOLLOW_TOKEN_SYMBOL,
-    KAT_TOKEN_ADDRESS,
+    INITIAL_CLAIM_AMOUNT,
+    INITIAL_CLAIM_COOLDOWN,
   ]);
-
-  // ── 5. Verify KatanaRaffles ─────────────────────────────────────
-  await verifyContract(rafflesAddress, [
-    hollowAddress,
-    WATCHDOG_ADDRESS,
-  ]);
+  await verifyContract(rafflesAddress, [hollowAddress, watchdog]);
 
   // ── Summary ─────────────────────────────────────────────────────
   console.log("\n═══════════════════════════════════════════════════");
@@ -85,9 +88,9 @@ async function main() {
   console.log(`\nUpdate your .env.local:`);
   console.log(`NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS=${hollowAddress}`);
   console.log(`NEXT_PUBLIC_RAFFLES_CONTRACT_ADDRESS=${rafflesAddress}`);
-  console.log(`\nKatanascan:`);
-  console.log(`https://katanascan.com/address/${hollowAddress}#code`);
-  console.log(`https://katanascan.com/address/${rafflesAddress}#code`);
+  console.log(`\nLiteforge Explorer:`);
+  console.log(`https://liteforge.explorer.caldera.xyz/address/${hollowAddress}#code`);
+  console.log(`https://liteforge.explorer.caldera.xyz/address/${rafflesAddress}#code`);
 }
 
 main().catch((error) => {

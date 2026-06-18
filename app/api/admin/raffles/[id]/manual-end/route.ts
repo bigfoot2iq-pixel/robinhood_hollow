@@ -40,7 +40,7 @@ export async function POST(
     const isUuid = uuidRegex.test(id);
 
     let raffleQuery = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*");
 
     if (isUuid) {
@@ -124,7 +124,7 @@ export async function POST(
     // Store winners in database
     if (winners.length > 0) {
       const { data: prizes } = await supabase
-        .from("hollow_raffles_prizes")
+        .from("litvm_raffle_prizes")
         .select("*")
         .eq("raffle_id", raffle.id)
         .order("created_at", { ascending: true });
@@ -137,7 +137,7 @@ export async function POST(
         distribution_tx_hash: txHash,
       }));
 
-      const { error: winnerError } = await supabase.from("hollow_raffles_winners").insert(winnerInserts);
+      const { error: winnerError } = await supabase.from("litvm_raffle_winners").insert(winnerInserts);
       if (winnerError) {
         console.error("Error inserting winners:", winnerError);
       }
@@ -145,7 +145,7 @@ export async function POST(
 
     // Log admin action
     const adminWallet = request.headers.get("x-admin-wallet") || "unknown";
-    await supabase.from("hollow_raffles_admin_logs").insert({
+    await supabase.from("litvm_raffle_admin_logs").insert({
       admin_wallet: adminWallet,
       action: "manual_end_raffle",
       details: {

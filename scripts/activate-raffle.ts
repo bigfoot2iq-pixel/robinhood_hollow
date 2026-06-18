@@ -17,7 +17,7 @@ async function activateRaffle(chainRaffleId: number) {
     process.exit(1);
   }
 
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
   
   const account = privateKeyToAccount(privateKey as `0x${string}`);
   

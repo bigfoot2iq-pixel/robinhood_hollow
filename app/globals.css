@@ -1,30 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #F4FF1A;
-  --dark-blue: #14357A;
-  --light-blue: #4FA3E3;
-  --dark-navy: #0B1E3A;
-  --muted-blue: #6B86A5;
-  --background: #0B1E3A;
+  /* LitVM palette — derived from litvm.com (deep navy + teal/cyan glow, coral accents) */
+  --primary: #33C5D9;        /* teal-cyan accent */
+  --accent-glow: #7FE0EE;    /* light cyan glow */
+  --accent-warm: #EE9B6E;    /* coral (hero sunset) */
+  --litecoin: #345D9D;       /* Litecoin blue — chain badges */
+  --dark-blue: #0E2230;      /* teal-navy surface */
+  --light-blue: #4FC3D0;     /* light teal */
+  --dark-navy: #0A1622;      /* deep navy base */
+  --muted-blue: #93A4B5;     /* muted blue-grey text */
+  --background: #0A1622;
   --foreground: #ffffff;
 }
 
 @theme inline {
-  --color-primary: #F4FF1A;
-  --color-dark-blue: #14357A;
-  --color-light-blue: #4FA3E3;
-  --color-dark-navy: #0B1E3A;
-  --color-muted-blue: #6B86A5;
+  --color-primary: #33C5D9;
+  --color-accent-glow: #7FE0EE;
+  --color-accent-warm: #EE9B6E;
+  --color-litecoin: #345D9D;
+  --color-dark-blue: #0E2230;
+  --color-light-blue: #4FC3D0;
+  --color-dark-navy: #0A1622;
+  --color-muted-blue: #93A4B5;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-plus-jakarta), sans-serif;
   --font-display: var(--font-space-grotesk), sans-serif;
-  --font-header: var(--font-dm-serif), serif;
+  --font-header: var(--font-space-grotesk), sans-serif;
 }
 
 body {
-  background: linear-gradient(to bottom, #14357A 0%, #4FA3E3 100%);
+  background:
+    radial-gradient(1200px 600px at 70% -10%, rgba(51,197,217, 0.12) 0%, transparent 60%),
+    radial-gradient(900px 500px at 10% 110%, rgba(238, 155, 110, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, #0A1622 0%, #0C1E2B 45%, #0E2A38 100%);
   background-attachment: fixed;
   color: #ffffff;
   font-family: var(--font-plus-jakarta), sans-serif;
@@ -36,7 +46,20 @@ body {
 }
 
 .font-header {
-  font-family: var(--font-dm-serif), serif;
+  font-family: var(--font-space-grotesk), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Teal glow utility for accent elements */
+.glow-teal {
+  box-shadow: 0 0 24px rgba(51,197,217, 0.35);
+}
+
+.text-gradient-litvm {
+  background: linear-gradient(120deg, #7FE0EE 0%, #33C5D9 40%, #EE9B6E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Replaces the class previously injected by the Google Fonts <link> */
@@ -55,8 +78,25 @@ body {
 }
 
 .ui-container {
-  background-color: #0B1E3A;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(19, 33, 46, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+/* Multi-step form transition */
+@keyframes stepIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-step {
+  animation: stepIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .container {

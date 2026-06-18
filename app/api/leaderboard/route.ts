@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     // Call the database function to get leaderboard data
     const { data, error } = await supabase
-      .rpc('get_leaderboard', {
+      .rpc('litvm_raffle_get_leaderboard', {
         limit_count: limit,
         offset_count: offset
       });

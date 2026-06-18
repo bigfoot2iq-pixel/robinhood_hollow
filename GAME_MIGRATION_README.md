@@ -119,8 +119,8 @@ Visit:
 The migrations add these tables/functions:
 
 ### Tables
-- `hollow_raffles_users` - Extended with `game_score` column
-- `the_hollow_game_sessions` - Pay-to-play session tracking
+- `litvm_raffle_users` - Extended with `game_score` column
+- `litvm_raffle_game_sessions` - Pay-to-play session tracking
 
 ### Functions
 - `update_game_score(user_wallet, new_score)` - Updates high score
@@ -147,8 +147,8 @@ The migrations add these tables/functions:
 ## Notes
 
 - The game uses the same Supabase database as the raffles
-- User table is shared: `hollow_raffles_users`
-- Game sessions are separate: `the_hollow_game_sessions`
+- User table is shared: `litvm_raffle_users`
+- Game sessions are separate: `litvm_raffle_game_sessions`
 - All imports have been updated to use the correct paths
 - The game is fully integrated with the existing wallet connection system
 
@@ -164,7 +164,7 @@ The migrations add these tables/functions:
 
 ### Database errors
 - Ensure migrations are run in Supabase
-- Check that table names match (hollow_raffles_users vs the_hollow_users)
+- Check that table names match (litvm_raffle_users vs litvm_raffle_game_users)
 
 ### Contract errors
 - Deploy the game contract first

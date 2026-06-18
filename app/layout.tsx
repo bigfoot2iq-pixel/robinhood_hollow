@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Plus_Jakarta_Sans, Space_Grotesk, DM_Serif_Display } from "next/font/google";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import { Web3Provider } from "@/components/providers";
 import { Header, Sidebar } from "@/components/layout";
 import { GlobalLoader } from "@/components/ui/GlobalLoader";
+import { LitvmAmbientBackground } from "@/components/ui/LitvmAmbientBackground";
 import { Toaster } from "sonner";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -16,15 +17,8 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["700"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-space-grotesk",
-  display: "swap",
-});
-
-const dmSerif = DM_Serif_Display({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-dm-serif",
   display: "swap",
 });
 
@@ -36,10 +30,10 @@ const materialSymbols = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Katana Raffles - Win Amazing Prizes",
-  description: "Decentralized raffles platform on Katana Network. Buy tokens, enter raffles, win prizes!",
+  title: "LitVM Raffles - Win Litecoin Prizes",
+  description: "Decentralized raffles platform on LitVM, Litecoin's Virtual Machine. Enter raffles, win prizes on the LiteForge testnet!",
   icons: {
-    icon: "/hollow_logo.png",
+    icon: "/litvm/logo-letter.svg",
   },
 };
 
@@ -49,15 +43,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${plusJakarta.variable} ${spaceGrotesk.variable} ${dmSerif.variable} ${materialSymbols.variable}`}>
+    <html lang="en" className={`dark ${plusJakarta.variable} ${spaceGrotesk.variable} ${materialSymbols.variable}`}>
       <head />
       <body className="antialiased min-h-screen">
+        <LitvmAmbientBackground />
         <GlobalLoader />
         <Toaster
           theme="dark"
           toastOptions={{
             style: {
-              background: "#0a1128",
+              background: "#0A1622",
               border: "1px solid rgba(255, 255, 255, 0.1)",
               color: "#fff",
             },

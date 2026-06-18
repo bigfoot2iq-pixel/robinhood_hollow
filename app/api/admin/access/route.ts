@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     console.info("[AdminAccess] Checking wallet", walletLower);
     const { data, error } = await supabase
-      .from("hollow_raffles_admin")
+      .from("litvm_raffle_admin")
       .select("wallet_address")
       .ilike("wallet_address", walletLower)
       .maybeSingle();

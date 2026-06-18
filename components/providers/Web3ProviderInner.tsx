@@ -27,8 +27,8 @@ export default function Web3ProviderInner({ children }: { children: ReactNode })
         <RainbowKitProvider
           initialChain={katanaNetwork}
           theme={darkTheme({
-            accentColor: "#F4FF1A",
-            accentColorForeground: "#0B1E3A",
+            accentColor: "#33C5D9",
+            accentColorForeground: "#0A1622",
             borderRadius: "small",
             fontStack: "system",
           })}

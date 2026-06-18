@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const nowIso = now.toISOString();
 
     let query = supabase
-      .from("hollow_raffles_raffles")
+      .from("litvm_raffle_raffles")
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const prizeTypesByRaffle = new Map<string, PrizeType[]>();
     if (raffleIds.length > 0) {
       const { data: prizes, error: prizesError } = await supabase
-        .from("hollow_raffles_prizes")
+        .from("litvm_raffle_prizes")
         .select("raffle_id, prize_type")
         .in("raffle_id", raffleIds);
 
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
       const counts = await Promise.all(
         raffleIds.map(async (id) => {
           const { count, error: countError } = await supabase
-            .from("hollow_raffles_entries")
+            .from("litvm_raffle_entries")
             .select("*", { count: "exact", head: true })
             .eq("raffle_id", id);
           if (countError) {
