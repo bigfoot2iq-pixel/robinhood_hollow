@@ -174,10 +174,10 @@ export async function GET(
 
     const holders: Holder[] = pageEntries.map((entry, index) => {
       const formatted = formatUnits(entry.balance, decimals);
-      // bigint-safe percentage to 4 decimals (parts-per-million / 10000)
+      // bigint-safe percentage to 4 decimals, trailing zeros stripped (100.0000 -> 100)
       const percentage =
         totalSupply > 0n
-          ? (Number((entry.balance * 1_000_000n) / totalSupply) / 10000).toFixed(4) + '%'
+          ? parseFloat((Number((entry.balance * 1_000_000n) / totalSupply) / 10000).toFixed(4)) + '%'
           : '0%';
 
       return {

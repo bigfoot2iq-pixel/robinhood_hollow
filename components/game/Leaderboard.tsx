@@ -313,7 +313,7 @@ export default function Leaderboard() {
                     </div>
 
                     {/* Percentage */}
-                    <div className="col-span-2 flex flex-col items-end justify-center">
+                    <div className="col-span-2 flex flex-col items-end justify-center pl-6">
                       <p className="text-sm font-bold text-white mb-1">{holder.percentage}</p>
                       <div className="w-full h-1.5 bg-white/10 rounded overflow-hidden">
                         <div 
