@@ -17,7 +17,7 @@ export function Header() {
     if (pathname.startsWith("/leaderboard")) return "Leaderboard";
     if (pathname.startsWith("/profile")) return "Profile Overview";
     if (pathname.startsWith("/admin")) return "Admin Dashboard";
-    return "LitVM";
+    return "LitVM Hollow";
   };
 
   return (

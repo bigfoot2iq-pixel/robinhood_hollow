@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { LitvmHero } from "@/components/ui/LitvmHero";
@@ -12,7 +13,6 @@ import {
   useClaimCooldown,
   useClaimAmount,
   useGetLastClaimTimestamp,
-  useHollowBalance,
   formatTokenBalance
 } from "@/lib/hooks";
 
@@ -48,7 +48,6 @@ export default function ClaimPage() {
 
   const { data: canClaim, isLoading: isCheckingClaim } = useCanClaim(address);
   const { data: claimAmount, isLoading: isLoadingAmount } = useClaimAmount();
-  const { data: balance } = useHollowBalance(address);
   const { data: lastClaimTimestamp } = useGetLastClaimTimestamp(address);
   const { data: claimCooldown } = useClaimCooldown();
   const { claimTokens, isPending, isConfirming, isSuccess, error, reset } = useClaimTokens();
@@ -118,24 +117,15 @@ export default function ClaimPage() {
                 <br /><br />
                 <span className="text-white font-bold">Hold. Earn. Compound. Unlock</span>
               </p>
-              {/* Current Balance */}
-              {isConnected && balance !== undefined && (
-                <div className="p-4 bg-white/5 rounded border border-white/10 w-full text-center">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-muted-blue mb-1">Your Balance</p>
-                  <p className="text-2xl font-display font-bold text-[#33C5D9]">
-                    {formatTokenBalance(balance)} HOLLOW
-                  </p>
-                </div>
-              )}
-
               {/* Claim Amount Preview */}
               {isConnected && claimAmount !== undefined && (
-                <div className="p-4 bg-[#33C5D9]/5 rounded border border-[#33C5D9]/20 w-full text-center">
-                  <p className="text-xl font-display font-bold text-white">
+                <p className="text-sm text-muted-blue text-center">
+                  Claim{" "}
+                  <span className="font-bold text-white">
                     +{formatTokenBalance(claimAmount as bigint)} HOLLOW
-                  </p>
-                  <p className="text-xs text-[#33C5D9] mt-1">Free to claim — you only pay gas.</p>
-                </div>
+                  </span>
+                  {" "}— free, you only pay gas.
+                </p>
               )}
 
               {/* Claim / Connect Wallet Button */}
@@ -172,6 +162,15 @@ export default function ClaimPage() {
                   }}
                 </ConnectButton.Custom>
               )}
+
+              {/* Faucet link — claiming costs gas */}
+              <Link
+                href="/faucet"
+                className="w-full flex items-center justify-center gap-2 py-3 border border-[#33C5D9]/30 hover:border-[#33C5D9]/60 hover:bg-[#33C5D9]/5 text-[#33C5D9] font-bold rounded uppercase tracking-[0.2em] text-xs sm:text-sm transition-all"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>water_drop</span>
+                Need gas? Get testnet tokens
+              </Link>
             </div>
 
             {/* Vertical Separator */}

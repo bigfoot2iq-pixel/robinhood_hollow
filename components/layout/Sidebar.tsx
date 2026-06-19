@@ -9,11 +9,12 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/claim", label: "Claim", icon: "redeem" },
-  { href: "/raffles", label: "Raffles", icon: "confirmation_number" },
-  { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
+  { href: "/faucet", label: "Faucet", icon: "water_drop" },
+  { href: "/claim", label: "Claim token", icon: "redeem" },
   { href: "/game", label: "Game", icon: "sports_esports" },
+  { href: "/raffles", label: "Raffles", icon: "confirmation_number" },
   { href: "/leaderboard", label: "Leaderboard", icon: "emoji_events" },
+  { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
   { href: "/checker", label: "Checker", icon: "fact_check" },
   { href: "/profile", label: "Profile", icon: "person" },
 ];
@@ -53,8 +54,11 @@ export function Sidebar() {
       `}>
       <div className="flex flex-col gap-8">
         {/* Logo */}
-        <Link href="/claim" className="flex items-center gap-3">
-          <img src="/litvm/logo.svg" alt="LitVM" className="h-8 w-auto" />
+        <Link href="/claim" className="flex items-center gap-2">
+          <img src="/litvm/logo.svg" alt="LitVM Hollow" className="h-8 w-auto" />
+          <span className="font-header font-bold text-white text-2xl leading-none tracking-tight">
+            Hollow
+          </span>
         </Link>
 
         {/* Navigation */}

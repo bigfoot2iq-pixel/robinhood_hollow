@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import LastStandGame from './LastStandGame';
@@ -235,6 +236,15 @@ export default function LastStandContainer() {
                   <p className="text-xs text-muted-blue">
                     One payment = one game round until you lose
                   </p>
+
+                  {/* Faucet link — paying costs gas */}
+                  <Link
+                    href="/faucet"
+                    className="flex items-center justify-center gap-2 text-xs font-bold text-[#33C5D9] transition-opacity hover:opacity-80"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: 16 }}>water_drop</span>
+                    Need gas? Get testnet tokens
+                  </Link>
                 </div>
               )}
             </div>
