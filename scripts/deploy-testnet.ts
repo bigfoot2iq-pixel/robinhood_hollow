@@ -85,7 +85,7 @@ async function main() {
 
   // ── 2. Deploy KatanaRaffles ─────────────────────────────────────
   console.log("\nDeploying KatanaRaffles...");
-  const KatanaRaffles = await ethers.getContractFactory("KatanaRaffles");
+  const KatanaRaffles = await ethers.getContractFactory("LitvmRaffles");
   const katanaRaffles = await KatanaRaffles.deploy(
     hollowAddress,
     watchdog,

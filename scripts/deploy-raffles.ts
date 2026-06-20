@@ -26,7 +26,7 @@ async function main() {
 
   // Deploy KatanaRaffles
   console.log("Deploying KatanaRaffles...");
-  const KatanaRaffles = await ethers.getContractFactory("KatanaRaffles");
+  const KatanaRaffles = await ethers.getContractFactory("LitvmRaffles");
   const katanaRaffles = await KatanaRaffles.deploy(
     HOLLOW_TOKEN_ADDRESS,
     WATCHDOG_ADDRESS,

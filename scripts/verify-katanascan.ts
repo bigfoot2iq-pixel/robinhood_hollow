@@ -33,7 +33,7 @@ async function main() {
   console.log("═══════════════════════════════════════════════════\n");
 
   await verifyContract("HollowToken", HOLLOW_TOKEN_ADDRESS, HOLLOW_TOKEN_ARGS);
-  await verifyContract("KatanaRaffles", KATANA_RAFFLES_ADDRESS, KATANA_RAFFLES_ARGS);
+  await verifyContract("LitvmRaffles", KATANA_RAFFLES_ADDRESS, KATANA_RAFFLES_ARGS);
 
   console.log("\n═══════════════════════════════════════════════════");
   console.log("  Done! Check:");
