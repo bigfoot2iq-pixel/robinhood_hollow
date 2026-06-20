@@ -10,9 +10,11 @@
 --                  filled statement into the Supabase SQL editor instead, or use
 --                  the Vault variant at the bottom.
 --
--- NOTE: schedule is '*/15 * * * *' (every 15 min). For load testing you can
---       drop to e.g. '10 seconds', but short intervals risk run overlap ->
---       watchdog nonce collisions and faster gas burn.
+-- NOTE: schedule is '30 seconds' (pg_cron sub-minute syntax). The endpoint now
+--       processes at most SETTLE_BATCH_SIZE (default 20) raffles per run, oldest
+--       first, so each invocation stays short. Short intervals can still overlap
+--       (two POSTs in flight) -> watchdog nonce collisions; bump to '1 minute' if
+--       you see nonce errors, or guard the endpoint with a DB advisory lock.
 
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
@@ -23,7 +25,7 @@ where exists (select 1 from cron.job where jobname = 'settle-expired-raffles');
 
 select cron.schedule(
   'settle-expired-raffles',
-  '*/15 * * * *',
+  '30 seconds',
   $$
   select net.http_post(
     url     := 'https://litvm-raffle.vercel.app/api/cron/settle-raffles',
@@ -53,7 +55,7 @@ select cron.schedule(
 --
 --   select cron.schedule(
 --     'settle-expired-raffles',
---     '*/30 * * * *',
+--     '30 seconds',
 --     $$
 --     select net.http_post(
 --       url := (select decrypted_secret from vault.decrypted_secrets where name = 'app_url')

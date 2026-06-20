@@ -13,6 +13,7 @@ const navItems = [
   { href: "/claim", label: "Claim token", icon: "redeem" },
   { href: "/game", label: "Game", icon: "sports_esports" },
   { href: "/raffles", label: "Raffles", icon: "confirmation_number" },
+  { href: "/community-raffles", label: "Community Raffles", icon: "groups" },
   { href: "/leaderboard", label: "Leaderboard", icon: "emoji_events" },
   { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
   { href: "/checker", label: "Checker", icon: "fact_check" },
@@ -54,11 +55,8 @@ export function Sidebar() {
       `}>
       <div className="flex flex-col gap-8">
         {/* Logo */}
-        <Link href="/claim" className="flex items-center gap-2">
-          <img src="/litvm/logo.svg" alt="LitVM Hollow" className="h-8 w-auto" />
-          <span className="font-header font-bold text-white text-2xl leading-none tracking-tight">
-            Hollow
-          </span>
+        <Link href="/claim" className="flex items-center">
+          <img src="/litvm_hollow_logo.png" alt="LitVM Hollow" className="w-full h-12 object-cover" />
         </Link>
 
         {/* Navigation */}

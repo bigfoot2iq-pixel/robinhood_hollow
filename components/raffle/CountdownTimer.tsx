@@ -6,7 +6,8 @@ interface CountdownTimerProps {
 }
 
 export function CountdownTimer({ endDate, className = "" }: CountdownTimerProps) {
-  const { hours, minutes, seconds, isExpired } = useCountdown(endDate);
+  const { days, hours, minutes, seconds, isExpired } = useCountdown(endDate);
+  const showDays = Number(days) > 0;
 
   if (isExpired) {
     return (
@@ -21,6 +22,15 @@ export function CountdownTimer({ endDate, className = "" }: CountdownTimerProps)
     <div className={`flex items-center gap-2 ${className}`}>
       <span className="material-symbols-outlined text-[#33C5D9] text-sm animate-pulse">schedule</span>
       <div className="flex items-center gap-1">
+        {showDays && (
+          <>
+            <div className="flex flex-col items-center">
+              <span className="text-sm font-display font-bold text-white leading-none">{days}</span>
+              <span className="text-[7px] font-bold text-muted-blue uppercase tracking-wider">days</span>
+            </div>
+            <span className="text-white/40 text-xs mb-2">:</span>
+          </>
+        )}
         <div className="flex flex-col items-center">
           <span className="text-sm font-display font-bold text-white leading-none">{hours}</span>
           <span className="text-[7px] font-bold text-muted-blue uppercase tracking-wider">hrs</span>

@@ -34,6 +34,53 @@ export async function getOnChainRaffleState(chainRaffleId: number): Promise<Raff
   return CHAIN_STATE_MAP[state] ?? "pending";
 }
 
+// address(0) creator on-chain = owner/platform raffle; otherwise a user raffle.
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+export interface OnChainRaffleMeta {
+  status: RaffleStatus;
+  creator: string;
+}
+
+/**
+ * Batch read on-chain state + creator for multiple raffles via parallel calls.
+ * The `raffles` mapping getter returns the full struct; index 2 = state, index 6 = creator.
+ * creator === ZERO_ADDRESS means a platform (owner) raffle; otherwise community (user) raffle.
+ */
+export async function getOnChainRaffleMeta(
+  chainRaffleIds: { dbId: string; chainId: number }[]
+): Promise<Map<string, OnChainRaffleMeta>> {
+  const result = new Map<string, OnChainRaffleMeta>();
+  if (chainRaffleIds.length === 0) return result;
+
+  const client = getPublicClient();
+
+  const responses = await Promise.allSettled(
+    chainRaffleIds.map((r) =>
+      client.readContract({
+        address: contracts.raffles.address,
+        abi,
+        functionName: "raffles",
+        args: [BigInt(r.chainId)],
+      })
+    )
+  );
+
+  for (let i = 0; i < chainRaffleIds.length; i++) {
+    const response = responses[i];
+    if (response.status === "fulfilled") {
+      const data = response.value as [number, string, number, bigint, boolean, boolean, string, bigint];
+      const state = Number(data[2]);
+      result.set(chainRaffleIds[i].dbId, {
+        status: CHAIN_STATE_MAP[state] ?? "pending",
+        creator: data[6],
+      });
+    }
+  }
+
+  return result;
+}
+
 /** Batch read on-chain state for multiple raffles via parallel calls */
 export async function getOnChainRaffleStates(
   chainRaffleIds: { dbId: string; chainId: number }[]

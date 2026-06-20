@@ -9,6 +9,11 @@ type ServiceClient = Awaited<ReturnType<typeof createServiceClient>>;
 // On-chain KatanaRaffles.RaffleState enum
 const RAFFLE_STATE = { CREATED: 0, ACTIVE: 1, COMPLETED: 2, CANCELLED: 3 } as const;
 
+// Max raffles touched per invocation. Keeps each cron run short (single-EOA
+// watchdog sends tx sequentially) so frequent runs don't overrun their window.
+// Oldest raffles are processed first, so a backlog drains in order across runs.
+const BATCH_SIZE = Math.max(1, Number(process.env.SETTLE_BATCH_SIZE ?? 20));
+
 export type SettleAction = {
   raffleId: string;
   chainRaffleId: number;
@@ -135,7 +140,9 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
     .select("id, chain_raffle_id, title")
     .lte("start_date", nowIso)
     .gt("end_date", nowIso)
-    .not("chain_raffle_id", "is", null);
+    .not("chain_raffle_id", "is", null)
+    .order("chain_raffle_id", { ascending: true })
+    .limit(BATCH_SIZE);
 
   if (startErr) throw new Error(`Failed to load raffles to start: ${startErr.message}`);
 
@@ -167,7 +174,9 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
     .from("litvm_raffle_raffles")
     .select("id, chain_raffle_id, title, end_date, max_participants")
     .lte("start_date", nowIso)
-    .not("chain_raffle_id", "is", null);
+    .not("chain_raffle_id", "is", null)
+    .order("end_date", { ascending: true })
+    .limit(BATCH_SIZE);
 
   if (endErr) throw new Error(`Failed to load raffles to end: ${endErr.message}`);
 

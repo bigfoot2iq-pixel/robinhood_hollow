@@ -12,6 +12,7 @@ export function Header() {
   // Determine page title based on path
   const getPageTitle = () => {
     if (pathname === "/") return "Profile Overview";
+    if (pathname.startsWith("/community-raffles")) return "Community Raffles";
     if (pathname.startsWith("/raffles")) return "Raffles";
     if (pathname.startsWith("/game")) return "LitVM: Last Stand";
     if (pathname.startsWith("/leaderboard")) return "Leaderboard";
@@ -27,8 +28,14 @@ export function Header() {
         <div className="lg:hidden w-10"></div>
         <h1 className="text-lg lg:text-2xl font-header text-white truncate">{getPageTitle()}</h1>
         <div className="hidden xl:flex gap-4">
-          <a className="text-sm text-muted-blue hover:text-[#33C5D9] transition-colors" href="#">Explorer</a>
-          <a className="text-sm text-muted-blue hover:text-[#33C5D9] transition-colors" href="#">Marketplace</a>
+          <a
+            className="text-sm text-muted-blue hover:text-[#33C5D9] transition-colors"
+            href="https://liteforge.explorer.caldera.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Explorer
+          </a>
         </div>
       </div>
 
@@ -43,19 +50,6 @@ export function Header() {
             </span>
           </div>
         )}
-        
-        <div className="relative group hidden xl:block">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-blue">search</span>
-          <input
-            className="bg-white/10 border-none rounded pl-10 pr-4 py-2 text-sm focus:ring-1 focus:ring-[#33C5D9] w-64 text-white placeholder-muted-blue"
-            placeholder="Search..."
-            type="text"
-          />
-        </div>
-
-        <button className="p-2 bg-white/10 rounded text-white hover:bg-[#33C5D9] hover:text-dark-navy transition-all">
-          <span className="material-symbols-outlined text-xl lg:text-2xl">notifications</span>
-        </button>
       </div>
     </header>
   );
