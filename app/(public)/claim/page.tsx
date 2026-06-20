@@ -12,6 +12,10 @@ import {
   useClaimTokens,
   useClaimCooldown,
   useClaimAmount,
+  useGetTier,
+  useTier1Amount,
+  useTier2Amount,
+  useTier3Amount,
   useGetLastClaimTimestamp,
   formatTokenBalance
 } from "@/lib/hooks";
@@ -42,12 +46,59 @@ function isUserRejection(error: Error): boolean {
   return /user rejected|user denied|rejected the request/i.test(msg);
 }
 
+function TierRow({
+  icon,
+  label,
+  sub,
+  amount,
+  active,
+}: {
+  icon: string;
+  label: string;
+  sub: string;
+  amount: bigint | undefined;
+  active: boolean;
+}) {
+  return (
+    <div
+      className={`flex items-center justify-between p-3 rounded border transition-all ${
+        active
+          ? "bg-[#33C5D9]/10 border-[#33C5D9]/30 shadow-[0_0_20px_rgba(51,197,217,0.1)]"
+          : "bg-white/5 border-white/10"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <span className={`material-symbols-outlined ${active ? "text-[#33C5D9]" : "text-muted-blue"}`}>{icon}</span>
+        <div>
+          <p className="text-sm font-bold text-white flex items-center gap-2">
+            {label}
+            {active && (
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest rounded bg-[#33C5D9] text-dark-navy">
+                You
+              </span>
+            )}
+          </p>
+          <p className="text-[10px] text-muted-blue">{sub}</p>
+        </div>
+      </div>
+      <p className="text-sm font-display font-bold text-white whitespace-nowrap">
+        {amount !== undefined ? formatTokenBalance(amount) : "..."}
+        <span className="text-[10px] text-muted-blue"> HOLLOW</span>
+      </p>
+    </div>
+  );
+}
+
 export default function ClaimPage() {
   const { address, isConnected } = useAccount();
   const queryClient = useQueryClient();
 
   const { data: canClaim, isLoading: isCheckingClaim } = useCanClaim(address);
-  const { data: claimAmount, isLoading: isLoadingAmount } = useClaimAmount();
+  const { data: claimAmount, isLoading: isLoadingAmount } = useClaimAmount(address);
+  const { data: tier } = useGetTier(address);
+  const { data: tier1Amount } = useTier1Amount();
+  const { data: tier2Amount } = useTier2Amount();
+  const { data: tier3Amount } = useTier3Amount();
   const { data: lastClaimTimestamp } = useGetLastClaimTimestamp(address);
   const { data: claimCooldown } = useClaimCooldown();
   const { claimTokens, isPending, isConfirming, isSuccess, error, reset } = useClaimTokens();
@@ -111,7 +162,7 @@ export default function ClaimPage() {
 
               <h1 className="text-2xl sm:text-3xl font-header mb-2 sm:mb-3 text-center">Claim Tokens</h1>
               <p className="text-muted-blue text-sm sm:text-base mb-6 sm:mb-8 text-center px-4">
-                Claim your HOLLOW rewards in real time — every single second.
+                Claim your HOLLOW rewards — the more top tokens you hold, the more you earn.
                 <br />
                 And it doesn&apos;t stop there. Your HOLLOW tokens unlock access to upcoming raffles and exclusive future drops.
                 <br /><br />
@@ -176,27 +227,36 @@ export default function ClaimPage() {
             {/* Vertical Separator */}
             <div className="hidden lg:block w-px bg-white/10"></div>
 
-            {/* Right Side - How claiming works */}
+            {/* Right Side - Reward tiers */}
             <div className="lg:w-80 flex-shrink-0 flex items-center">
               <div className="w-full">
-                <h2 className="text-base sm:text-lg font-header mb-3 sm:mb-4 text-center">How It Works</h2>
+                <h2 className="text-base sm:text-lg font-header mb-3 sm:mb-4 text-center">Reward Tiers</h2>
                 <p className="text-muted-blue text-[10px] sm:text-xs text-center mb-4 sm:mb-5 px-4">
-                  Claiming is free and open to everyone — you only pay network gas.
+                  Your reward depends on the tokens you hold. Holding any qualifying
+                  token earns the full tier amount — one is enough.
                 </p>
                 <div className="space-y-2 sm:space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded border bg-[#33C5D9]/10 border-[#33C5D9]/30">
-                    <div className="flex items-center gap-3">
-                      <span className="material-symbols-outlined text-[#33C5D9]">redeem</span>
-                      <div>
-                        <p className="text-sm font-bold text-white">Per Claim</p>
-                        <p className="text-[10px] text-muted-blue">Fixed reward, set by the team</p>
-                      </div>
-                    </div>
-                    <p className="text-sm font-display font-bold text-white">
-                      {claimAmount !== undefined ? formatTokenBalance(claimAmount as bigint) : "..."}
-                      <span className="text-[10px] text-muted-blue"> HOLLOW</span>
-                    </p>
-                  </div>
+                  <TierRow
+                    icon="workspace_premium"
+                    label="Top 5 tokens"
+                    sub="Hold any top-5 token"
+                    amount={tier1Amount as bigint | undefined}
+                    active={isConnected && tier === 1}
+                  />
+                  <TierRow
+                    icon="military_tech"
+                    label="Next 5 tokens"
+                    sub="Hold any token ranked 6–10"
+                    amount={tier2Amount as bigint | undefined}
+                    active={isConnected && tier === 2}
+                  />
+                  <TierRow
+                    icon="redeem"
+                    label="Everyone else"
+                    sub="Hold none of the above"
+                    amount={tier3Amount as bigint | undefined}
+                    active={isConnected && tier === 3}
+                  />
                   <div className="flex items-center justify-between p-3 rounded border bg-white/5 border-white/10">
                     <div className="flex items-center gap-3">
                       <span className="material-symbols-outlined text-muted-blue">schedule</span>

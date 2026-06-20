@@ -8,8 +8,10 @@ const HOLLOW_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS ?? "";
 const HOLLOW_TOKEN_ARGS = [
   "Hollow Token",
   "HOLLOW",
-  "100000000000000000000", // claimAmount (wei) = 100 HOLLOW
-  "3600",                  // claimCooldown (seconds) = 1 hour
+  "200000000000000000000", // tier1Amount (wei) = 200 HOLLOW
+  "100000000000000000000", // tier2Amount (wei) = 100 HOLLOW
+  "50000000000000000000",  // tier3Amount (wei) = 50 HOLLOW
+  "86400",                 // claimCooldown (seconds) = 1 day
 ];
 
 async function main() {

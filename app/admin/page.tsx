@@ -2,11 +2,18 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useAccount, useSignMessage, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther, formatEther } from "viem";
+import { useAccount, useSignMessage, useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from "wagmi";
+import { parseEther, formatEther, isAddress } from "viem";
 import { format } from "date-fns";
 import type { Raffle } from "@/lib/supabase";
-import { useClaimAmount, useClaimCooldown } from "@/lib/hooks";
+import {
+  useClaimCooldown,
+  useTier1Amount,
+  useTier2Amount,
+  useTier3Amount,
+  useTier1Tokens,
+  useTier2Tokens,
+} from "@/lib/hooks";
 import { contracts, HollowTokenABI, THE_HOLLOW_GAME_ADDRESS, THE_HOLLOW_GAME_ABI } from "@/lib/contracts";
 
 interface AdminData {
@@ -328,21 +335,189 @@ export default function AdminDashboard() {
   );
 }
 
+function TierAmountField({
+  label,
+  hint,
+  current,
+  fn,
+}: {
+  label: string;
+  hint: string;
+  current: bigint | undefined;
+  fn: "setTier1Amount" | "setTier2Amount" | "setTier3Amount";
+}) {
+  const [input, setInput] = useState("");
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract();
+  const { isLoading: confirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  useEffect(() => {
+    if (current !== undefined && !input) setInput(formatEther(current));
+  }, [current, input]);
+
+  const handleSet = () => {
+    reset();
+    try {
+      writeContract({
+        address: contracts.hollowToken.address,
+        abi: HollowTokenABI,
+        functionName: fn,
+        args: [parseEther(input)],
+      });
+    } catch {
+      alert("Invalid amount value");
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">{label}</p>
+        <p className="text-[10px] text-muted-blue mb-1">{hint}</p>
+        <p className="text-sm text-white/60">
+          Current: <span className="text-[#33C5D9] font-bold">{current !== undefined ? formatEther(current) : "..."} HOLLOW</span>
+        </p>
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="0.0"
+          className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20"
+        />
+        <button
+          onClick={handleSet}
+          disabled={isPending || confirming}
+          className="px-4 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isPending ? "Sign..." : confirming ? "Confirming..." : "Update"}
+        </button>
+      </div>
+      {isSuccess && <p className="text-green-400 text-xs">Amount updated successfully!</p>}
+      {error && <p className="text-red-400 text-xs">{error.message.split("\n")[0]}</p>}
+    </div>
+  );
+}
+
+function TierTokensField({
+  label,
+  hint,
+  current,
+  fn,
+}: {
+  label: string;
+  hint: string;
+  current: readonly `0x${string}`[] | undefined;
+  fn: "setTier1Tokens" | "setTier2Tokens";
+}) {
+  const [input, setInput] = useState("");
+  const [touched, setTouched] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const publicClient = usePublicClient();
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract();
+  const { isLoading: confirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  useEffect(() => {
+    if (current !== undefined && !touched) setInput(current.join("\n"));
+  }, [current, touched]);
+
+  // True if the contract reports ERC-1155 support (ERC-165 id 0xd9b67a26).
+  // Non-ERC-165 contracts (plain ERC-20) revert here -> treated as not 1155.
+  const isERC1155 = async (token: `0x${string}`): Promise<boolean> => {
+    if (!publicClient) return false;
+    try {
+      return (await publicClient.readContract({
+        address: token,
+        abi: [
+          {
+            inputs: [{ internalType: "bytes4", name: "interfaceId", type: "bytes4" }],
+            name: "supportsInterface",
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: "view",
+            type: "function",
+          },
+        ] as const,
+        functionName: "supportsInterface",
+        args: ["0xd9b67a26"],
+      })) as boolean;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSet = async () => {
+    reset();
+    const addrs = input
+      .split(/[\s,]+/)
+      .map((a) => a.trim())
+      .filter(Boolean);
+    const bad = addrs.find((a) => !isAddress(a));
+    if (bad) {
+      alert(`Invalid address: ${bad}`);
+      return;
+    }
+    setChecking(true);
+    try {
+      const flags = await Promise.all(addrs.map((a) => isERC1155(a as `0x${string}`)));
+      const erc1155 = addrs.filter((_, i) => flags[i]);
+      if (erc1155.length > 0) {
+        alert(`ERC-1155 not supported (multi-id token can't be tier-checked):\n${erc1155.join("\n")}`);
+        return;
+      }
+    } finally {
+      setChecking(false);
+    }
+    writeContract({
+      address: contracts.hollowToken.address,
+      abi: HollowTokenABI,
+      functionName: fn,
+      args: [addrs as `0x${string}`[]],
+    });
+  };
+
+  const count = input.split(/[\s,]+/).map((a) => a.trim()).filter(Boolean).length;
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">{label}</p>
+        <p className="text-[10px] text-muted-blue">{hint}</p>
+      </div>
+      <textarea
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          setTouched(true);
+        }}
+        rows={5}
+        placeholder={"0x...\n0x...\n(one address per line)"}
+        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-xs font-mono focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20 resize-y"
+      />
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[10px] text-muted-blue">{count} address{count === 1 ? "" : "es"}</span>
+        <button
+          onClick={handleSet}
+          disabled={checking || isPending || confirming}
+          className="px-4 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {checking ? "Checking..." : isPending ? "Sign..." : confirming ? "Confirming..." : "Save List"}
+        </button>
+      </div>
+      {isSuccess && <p className="text-green-400 text-xs">Token list updated successfully!</p>}
+      {error && <p className="text-red-400 text-xs">{error.message.split("\n")[0]}</p>}
+    </div>
+  );
+}
+
 function HollowTokenConfig() {
-  const { data: currentAmount } = useClaimAmount();
   const { data: currentCooldown } = useClaimCooldown();
+  const { data: tier1Amount } = useTier1Amount();
+  const { data: tier2Amount } = useTier2Amount();
+  const { data: tier3Amount } = useTier3Amount();
+  const { data: tier1Tokens } = useTier1Tokens();
+  const { data: tier2Tokens } = useTier2Tokens();
 
-  const [priceInput, setPriceInput] = useState("");
   const [cooldownInput, setCooldownInput] = useState("");
-
-  const {
-    writeContract: writePrice,
-    data: priceHash,
-    isPending: pricePending,
-    error: priceError,
-    reset: resetPrice,
-  } = useWriteContract();
-  const { isLoading: priceConfirming, isSuccess: priceSuccess } = useWaitForTransactionReceipt({ hash: priceHash });
 
   const {
     writeContract: writeCooldown,
@@ -353,33 +528,11 @@ function HollowTokenConfig() {
   } = useWriteContract();
   const { isLoading: cooldownConfirming, isSuccess: cooldownSuccess } = useWaitForTransactionReceipt({ hash: cooldownHash });
 
-  // Pre-fill inputs with current values
-  useEffect(() => {
-    if (currentAmount !== undefined && !priceInput) {
-      setPriceInput(formatEther(currentAmount as bigint));
-    }
-  }, [currentAmount, priceInput]);
-
   useEffect(() => {
     if (currentCooldown !== undefined && !cooldownInput) {
       setCooldownInput(Number(currentCooldown).toString());
     }
   }, [currentCooldown, cooldownInput]);
-
-  const handleSetPrice = () => {
-    resetPrice();
-    try {
-      const wei = parseEther(priceInput);
-      writePrice({
-        address: contracts.hollowToken.address,
-        abi: HollowTokenABI,
-        functionName: "setClaimAmount",
-        args: [wei],
-      });
-    } catch {
-      alert("Invalid amount value");
-    }
-  };
 
   const handleSetCooldown = () => {
     resetCooldown();
@@ -406,40 +559,56 @@ function HollowTokenConfig() {
     <div className="ui-container rounded overflow-hidden">
       <div className="px-6 py-4 border-b border-white/10">
         <h3 className="text-xl font-header text-white">HOLLOW Token Config</h3>
+        <p className="text-[11px] text-muted-blue mt-1">
+          Tiered rewards: holders of a listed token earn more per claim. Holding one token
+          of a tier is enough — the reward is not multiplied by how many you hold.
+        </p>
       </div>
-      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Claim Amount */}
-        <div className="space-y-3">
-          <div>
-            <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Claim Amount (HOLLOW)</p>
-            <p className="text-sm text-white/60">
-              Current: <span className="text-[#33C5D9] font-bold">{currentAmount !== undefined ? formatEther(currentAmount as bigint) : "..."} HOLLOW</span>
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={priceInput}
-              onChange={(e) => setPriceInput(e.target.value)}
-              placeholder="0.0"
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20"
-            />
-            <button
-              onClick={handleSetPrice}
-              disabled={pricePending || priceConfirming}
-              className="px-4 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {pricePending ? "Sign..." : priceConfirming ? "Confirming..." : "Update"}
-            </button>
-          </div>
-          {priceSuccess && <p className="text-green-400 text-xs">Amount updated successfully!</p>}
-          {priceError && <p className="text-red-400 text-xs">{priceError.message.split('\n')[0]}</p>}
-        </div>
 
-        {/* Claim Cooldown */}
-        <div className="space-y-3">
+      {/* Tier reward amounts */}
+      <div className="p-6 border-b border-white/10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <TierAmountField
+          label="Tier 1 — Top 5 tokens"
+          hint="Reward for holding any top-5 token"
+          current={tier1Amount as bigint | undefined}
+          fn="setTier1Amount"
+        />
+        <TierAmountField
+          label="Tier 2 — Next 5 tokens"
+          hint="Reward for holding any token ranked 6–10"
+          current={tier2Amount as bigint | undefined}
+          fn="setTier2Amount"
+        />
+        <TierAmountField
+          label="Tier 3 — Everyone else"
+          hint="Reward for holding none of the listed tokens"
+          current={tier3Amount as bigint | undefined}
+          fn="setTier3Amount"
+        />
+      </div>
+
+      {/* Tier token lists */}
+      <div className="p-6 border-b border-white/10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TierTokensField
+          label="Top 5 token addresses (Tier 1)"
+          hint="ERC-20 / ERC-721 contracts. Holding any one qualifies for Tier 1."
+          current={tier1Tokens as readonly `0x${string}`[] | undefined}
+          fn="setTier1Tokens"
+        />
+        <TierTokensField
+          label="Next 5 token addresses (Tier 2)"
+          hint="ERC-20 / ERC-721 contracts. Holding any one qualifies for Tier 2."
+          current={tier2Tokens as readonly `0x${string}`[] | undefined}
+          fn="setTier2Tokens"
+        />
+      </div>
+
+      {/* Claim cooldown (global window, all tiers) */}
+      <div className="p-6">
+        <div className="space-y-3 max-w-md">
           <div>
             <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Claim Cooldown (seconds)</p>
+            <p className="text-[10px] text-muted-blue mb-1">Global window between claims — applies to every tier.</p>
             <p className="text-sm text-white/60">
               Current: <span className="text-[#33C5D9] font-bold">{currentCooldown !== undefined ? `${Number(currentCooldown)}s (${formatCooldownDisplay(Number(currentCooldown))})` : "..."}</span>
             </p>
@@ -449,7 +618,7 @@ function HollowTokenConfig() {
               type="number"
               value={cooldownInput}
               onChange={(e) => setCooldownInput(e.target.value)}
-              placeholder="3600"
+              placeholder="86400"
               min="0"
               className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-[#33C5D9]/50 placeholder-white/20"
             />
@@ -484,7 +653,7 @@ function HollowTokenConfig() {
             ))}
           </div>
           {cooldownSuccess && <p className="text-green-400 text-xs">Cooldown updated successfully!</p>}
-          {cooldownError && <p className="text-red-400 text-xs">{cooldownError.message.split('\n')[0]}</p>}
+          {cooldownError && <p className="text-red-400 text-xs">{cooldownError.message.split("\n")[0]}</p>}
         </div>
       </div>
     </div>

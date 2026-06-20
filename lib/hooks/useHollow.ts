@@ -15,11 +15,69 @@ export function useCanClaim(address: `0x${string}` | undefined) {
   });
 }
 
-export function useClaimAmount() {
+/** HOLLOW the connected account would receive on its next claim (its tier amount). */
+export function useClaimAmount(address: `0x${string}` | undefined) {
   return useReadContract({
     address: contracts.hollowToken.address,
     abi: HollowTokenABI,
-    functionName: "claimAmount",
+    functionName: "getClaimAmount",
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    },
+  });
+}
+
+/** Tier the account qualifies for: 1 (top-5), 2 (next-5), 3 (none). */
+export function useGetTier(address: `0x${string}` | undefined) {
+  return useReadContract({
+    address: contracts.hollowToken.address,
+    abi: HollowTokenABI,
+    functionName: "getTier",
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    },
+  });
+}
+
+export function useTier1Amount() {
+  return useReadContract({
+    address: contracts.hollowToken.address,
+    abi: HollowTokenABI,
+    functionName: "tier1Amount",
+  });
+}
+
+export function useTier2Amount() {
+  return useReadContract({
+    address: contracts.hollowToken.address,
+    abi: HollowTokenABI,
+    functionName: "tier2Amount",
+  });
+}
+
+export function useTier3Amount() {
+  return useReadContract({
+    address: contracts.hollowToken.address,
+    abi: HollowTokenABI,
+    functionName: "tier3Amount",
+  });
+}
+
+export function useTier1Tokens() {
+  return useReadContract({
+    address: contracts.hollowToken.address,
+    abi: HollowTokenABI,
+    functionName: "getTier1Tokens",
+  });
+}
+
+export function useTier2Tokens() {
+  return useReadContract({
+    address: contracts.hollowToken.address,
+    abi: HollowTokenABI,
+    functionName: "getTier2Tokens",
   });
 }
 
