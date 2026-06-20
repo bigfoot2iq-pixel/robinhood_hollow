@@ -17,7 +17,14 @@ import {
 import { contracts, HollowTokenABI, THE_HOLLOW_GAME_ADDRESS, THE_HOLLOW_GAME_ABI } from "@/lib/contracts";
 
 interface AdminData {
-  raffles: Array<Raffle & { participants_count?: number; prize_types?: string[]; status: string }>;
+  raffles: Array<
+    Raffle & {
+      participants_count?: number;
+      prize_types?: string[];
+      status: string;
+      is_community?: boolean;
+    }
+  >;
   total: number;
   stats: {
     total_raffles: number;
@@ -27,15 +34,21 @@ interface AdminData {
   } | null;
 }
 
+type RaffleScope = "all" | "platform" | "community";
+const PAGE_SIZE = 20;
+
 export default function AdminDashboard() {
   const { address } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const [data, setData] = useState<AdminData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [scope, setScope] = useState<RaffleScope>("all");
+  const [offset, setOffset] = useState(0);
   const [actionLoading, setActionLoading] = useState<{ [key: string]: boolean }>({});
   const authRef = useRef<{ wallet: string; signature: string; timestamp: string } | null>(null);
   const authPromiseRef = useRef<Promise<{ wallet: string; signature: string; timestamp: string }> | null>(null);
   const walletLower = address?.toLowerCase();
+  const [activeTab, setActiveTab] = useState<"token" | "game" | "raffles">("token");
 
   const getAdminAuth = useCallback(async () => {
     if (!walletLower) {
@@ -70,35 +83,46 @@ export default function AdminDashboard() {
     return authPromiseRef.current;
   }, [walletLower, signMessageAsync]);
 
-  useEffect(() => {
-    async function fetchData() {
-      if (!walletLower) return;
-      setLoading(true);
+  const loadRaffles = useCallback(async () => {
+    if (!walletLower) return;
+    setLoading(true);
 
-      try {
-        const auth = await getAdminAuth();
+    try {
+      const auth = await getAdminAuth();
 
-        const response = await fetch("/api/admin/raffles", {
-          headers: {
-            "x-admin-wallet": auth.wallet,
-            "x-admin-signature": auth.signature,
-            "x-admin-timestamp": auth.timestamp,
-          },
-        });
+      const params = new URLSearchParams({
+        limit: String(PAGE_SIZE),
+        offset: String(offset),
+      });
+      if (scope !== "all") params.set("scope", scope);
 
-        if (response.ok) {
-          const result = await response.json();
-          setData(result);
-        }
-      } catch (error) {
-        console.error("Error fetching admin data:", error);
-      } finally {
-        setLoading(false);
+      const response = await fetch(`/api/admin/raffles?${params.toString()}`, {
+        headers: {
+          "x-admin-wallet": auth.wallet,
+          "x-admin-signature": auth.signature,
+          "x-admin-timestamp": auth.timestamp,
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setData(result);
       }
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
+    } finally {
+      setLoading(false);
     }
+  }, [walletLower, getAdminAuth, scope, offset]);
 
-    fetchData();
-  }, [walletLower, getAdminAuth]);
+  useEffect(() => {
+    loadRaffles();
+  }, [loadRaffles]);
+
+  const changeScope = (next: RaffleScope) => {
+    setScope(next);
+    setOffset(0);
+  };
 
   const handleActivateRaffle = async (raffleId: string) => {
     if (!walletLower) return;
@@ -119,18 +143,7 @@ export default function AdminDashboard() {
 
       if (response.ok) {
         alert("Raffle activated successfully!");
-        // Refresh data
-        const dataResponse = await fetch("/api/admin/raffles", {
-          headers: {
-            "x-admin-wallet": auth.wallet,
-            "x-admin-signature": auth.signature,
-            "x-admin-timestamp": auth.timestamp,
-          },
-        });
-        if (dataResponse.ok) {
-          const result = await dataResponse.json();
-          setData(result);
-        }
+        await loadRaffles();
       } else {
         const error = await response.json();
         alert(`Failed to activate raffle: ${error.error || "Unknown error"}`);
@@ -167,18 +180,7 @@ export default function AdminDashboard() {
       if (response.ok) {
         const result = await response.json();
         alert(`Raffle ended successfully! ${result.winners.length} winner(s) selected from ${result.participantCount} participant(s).`);
-        // Refresh data
-        const dataResponse = await fetch("/api/admin/raffles", {
-          headers: {
-            "x-admin-wallet": auth.wallet,
-            "x-admin-signature": auth.signature,
-            "x-admin-timestamp": auth.timestamp,
-          },
-        });
-        if (dataResponse.ok) {
-          const result = await dataResponse.json();
-          setData(result);
-        }
+        await loadRaffles();
       } else {
         const error = await response.json();
         alert(`Failed to end raffle: ${error.error || "Unknown error"}`);
@@ -191,7 +193,7 @@ export default function AdminDashboard() {
     }
   };
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <div className="space-y-6">
         {[...Array(4)].map((_, i) => (
@@ -200,6 +202,12 @@ export default function AdminDashboard() {
       </div>
     );
   }
+
+  const total = data?.total || 0;
+  const pageStart = total === 0 ? 0 : offset + 1;
+  const pageEnd = Math.min(offset + PAGE_SIZE, total);
+  const hasPrev = offset > 0;
+  const hasNext = offset + PAGE_SIZE < total;
 
   return (
     <div className="space-y-8">
@@ -236,22 +244,66 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-white/10">
+        {([
+          { id: "token", label: "HOLLOW Token Config" },
+          { id: "game", label: "Game Config" },
+          { id: "raffles", label: "Raffles" },
+        ] as const).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-5 py-3 text-xs font-bold uppercase tracking-widest transition-all border-b-2 -mb-px ${
+              activeTab === tab.id
+                ? "text-[#33C5D9] border-[#33C5D9]"
+                : "text-muted-blue border-transparent hover:text-white"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* HOLLOW Token Config */}
-      <HollowTokenConfig />
+      {activeTab === "token" && <HollowTokenConfig />}
 
       {/* Game Play Fee Config */}
-      <GameConfig />
+      {activeTab === "game" && <GameConfig />}
 
       {/* Raffles Table */}
+      {activeTab === "raffles" && (
       <div className="ui-container rounded overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/10">
-          <h3 className="text-xl font-header text-white">Recent Raffles</h3>
+        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between gap-4 flex-wrap">
+          <h3 className="text-xl font-header text-white">
+            All Raffles {total > 0 && <span className="text-muted-blue text-sm font-normal">({total})</span>}
+          </h3>
+          <div className="flex gap-1 bg-white/5 rounded p-1">
+            {([
+              { id: "all", label: "All" },
+              { id: "platform", label: "Platform" },
+              { id: "community", label: "Community" },
+            ] as const).map((s) => (
+              <button
+                key={s.id}
+                onClick={() => changeScope(s.id)}
+                className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
+                  scope === s.id
+                    ? "bg-[#33C5D9] text-dark-navy"
+                    : "text-muted-blue hover:text-white"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
         </div>
         {data?.raffles && data.raffles.length > 0 ? (
           <table className="w-full text-left border-collapse">
             <thead className="bg-white/5 border-b border-white/10">
               <tr>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">Title</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">Source</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">Status</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">Type</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-blue">Participants</th>
@@ -264,6 +316,15 @@ export default function AdminDashboard() {
                 <tr key={raffle.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-5">
                     <p className="font-bold text-white">{raffle.title}</p>
+                  </td>
+                  <td className="px-6 py-5">
+                    <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded border ${
+                      raffle.is_community
+                        ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                        : "bg-[#33C5D9]/10 text-[#33C5D9] border-[#33C5D9]/20"
+                    }`}>
+                      {raffle.is_community ? "Community" : "Platform"}
+                    </span>
                   </td>
                   <td className="px-6 py-5">
                     <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded border ${
@@ -327,10 +388,40 @@ export default function AdminDashboard() {
         ) : (
           <div className="p-8 text-center">
             <span className="material-symbols-outlined text-muted-blue text-4xl mb-2 block">confirmation_number</span>
-            <p className="text-muted-blue">No raffles created yet</p>
+            <p className="text-muted-blue">
+              {scope === "community"
+                ? "No community raffles yet"
+                : scope === "platform"
+                ? "No platform raffles yet"
+                : "No raffles created yet"}
+            </p>
+          </div>
+        )}
+        {total > 0 && (
+          <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between gap-4 flex-wrap">
+            <p className="text-xs text-muted-blue uppercase tracking-widest">
+              Showing {pageStart}–{pageEnd} of {total}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setOffset((o) => Math.max(0, o - PAGE_SIZE))}
+                disabled={!hasPrev || loading}
+                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded uppercase tracking-widest transition-all border border-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Prev
+              </button>
+              <button
+                onClick={() => setOffset((o) => o + PAGE_SIZE)}
+                disabled={!hasNext || loading}
+                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded uppercase tracking-widest transition-all border border-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }

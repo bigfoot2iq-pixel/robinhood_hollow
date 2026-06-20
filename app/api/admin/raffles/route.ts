@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { verifyAdminSignature } from "@/lib/utils/auth";
 import { KatanaRafflesABI, contracts, katanaNetwork } from "@/lib/contracts";
-import { getOnChainRaffleStates } from "@/lib/utils/chain";
+import { getOnChainRaffleMeta, ZERO_ADDRESS } from "@/lib/utils/chain";
 import {
   createPublicClient,
   createWalletClient,
@@ -106,15 +106,18 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServiceClient();
     const { searchParams } = new URL(request.url);
-    
-    const limit = parseInt(searchParams.get("limit") || "50");
+
+    // scope splits platform (owner) raffles from community (user-created) raffles.
+    // Creator is on-chain truth: address(0) = platform, otherwise community. Because the
+    // creator isn't a DB column, every row is fetched and partitioned/paginated in-app.
+    const scope = searchParams.get("scope") as "platform" | "community" | null;
+    const limit = parseInt(searchParams.get("limit") || "20");
     const offset = parseInt(searchParams.get("offset") || "0");
 
-    const { data, error, count } = await supabase
+    const { data, error } = await supabase
       .from("litvm_raffle_raffles")
-      .select("*", { count: "exact" })
-      .order("created_at", { ascending: false })
-      .range(offset, offset + limit - 1);
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Error fetching raffles:", error);
@@ -124,7 +127,28 @@ export async function GET(request: NextRequest) {
     // Get stats
     const { data: stats } = await supabase.rpc("litvm_raffle_get_admin_stats");
 
-    const raffleIds = (data || []).map((raffle) => raffle.id);
+    // Read on-chain meta (state + creator) for every deployed raffle, then partition by scope.
+    const chainMeta = await getOnChainRaffleMeta(
+      (data || [])
+        .filter((r) => r.chain_raffle_id)
+        .map((r) => ({ dbId: r.id, chainId: r.chain_raffle_id! }))
+    );
+
+    const isCommunity = (raffleId: string) => {
+      const creator = chainMeta.get(raffleId)?.creator;
+      return !!creator && creator.toLowerCase() !== ZERO_ADDRESS;
+    };
+
+    const filteredRows = (data || []).filter((raffle) => {
+      if (scope === "platform") return !isCommunity(raffle.id);
+      if (scope === "community") return isCommunity(raffle.id);
+      return true;
+    });
+
+    const total = filteredRows.length;
+    const pageRows = filteredRows.slice(offset, offset + limit);
+
+    const raffleIds = pageRows.map((raffle) => raffle.id);
     const participantsByRaffle = new Map<string, number>();
     const prizeTypesByRaffle = new Map<string, string[]>();
 
@@ -163,22 +187,19 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Read on-chain state for deployed raffles
-    const chainRaffleIds = (data || [])
-      .filter((r) => r.chain_raffle_id)
-      .map((r) => ({ dbId: r.id, chainId: r.chain_raffle_id! }));
-    const chainStates = await getOnChainRaffleStates(chainRaffleIds);
-
-    const raffles = (data || []).map((raffle) => ({
+    const raffles = pageRows.map((raffle) => ({
       ...raffle,
       participants_count: participantsByRaffle.get(raffle.id) || 0,
       prize_types: Array.from(new Set(prizeTypesByRaffle.get(raffle.id) || [])),
-      status: chainStates.get(raffle.id) || "pending",
+      status: chainMeta.get(raffle.id)?.status || "pending",
+      is_community: isCommunity(raffle.id),
     }));
 
     return NextResponse.json({
       raffles,
-      total: count,
+      total,
+      limit,
+      offset,
       stats,
     });
   } catch (error) {
