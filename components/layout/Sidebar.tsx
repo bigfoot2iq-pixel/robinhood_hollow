@@ -17,7 +17,6 @@ const navItems = [
   { href: "/leaderboard", label: "Leaderboard", icon: "emoji_events" },
   { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
   { href: "/checker", label: "Checker", icon: "fact_check" },
-  { href: "/profile", label: "Profile", icon: "person" },
 ];
 
 export function Sidebar() {

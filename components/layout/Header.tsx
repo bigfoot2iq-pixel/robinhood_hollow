@@ -16,7 +16,6 @@ export function Header() {
     if (pathname.startsWith("/raffles")) return "Raffles";
     if (pathname.startsWith("/game")) return "LitVM: Last Stand";
     if (pathname.startsWith("/leaderboard")) return "Leaderboard";
-    if (pathname.startsWith("/profile")) return "Profile Overview";
     if (pathname.startsWith("/admin")) return "Admin Dashboard";
     return "LitVM Hollow";
   };

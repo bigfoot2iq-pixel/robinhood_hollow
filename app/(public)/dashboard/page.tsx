@@ -46,11 +46,42 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="text-muted-blue text-xs lg:text-sm leading-relaxed mb-4 lg:mb-6 flex-1">
-              Find exciting raffles with prizes ranging from ERC20 token pools to rare NFTs and composable ERC6220 collections.
+              Find exciting raffles with prizes ranging from ERC20 token pools to rare NFTs and composable ERC6220 collections — plus raffles created by the community.
             </p>
-            <Link href="/raffles">
-              <button className="w-full py-3 lg:py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded uppercase tracking-[0.15em] text-xs lg:text-sm transition-all border border-white/10">
-                View Raffles
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link href="/raffles" className="flex-1">
+                <button className="w-full py-3 lg:py-4 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.15em] text-xs lg:text-sm transition-all">
+                  View Raffles
+                </button>
+              </Link>
+              <Link href="/community-raffles" className="flex-1">
+                <button className="w-full py-3 lg:py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded uppercase tracking-[0.15em] text-xs lg:text-sm transition-all border border-white/10 flex items-center justify-center gap-2">
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>groups</span>
+                  Community
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Game Card */}
+        <div className="ui-container rounded overflow-hidden flex flex-col">
+          <div className="p-6 lg:p-8 border-b border-white/5 flex flex-col flex-1">
+            <div className="flex items-center gap-3 lg:gap-4 mb-4 lg:mb-6">
+              <div className="w-12 h-12 lg:w-14 lg:h-14 bg-[#33C5D9] flex items-center justify-center rounded-xl flex-shrink-0">
+                <span className="material-symbols-outlined text-dark-navy" style={{ fontSize: 28 }}>sports_esports</span>
+              </div>
+              <div>
+                <h3 className="text-xl lg:text-2xl font-header text-white">Play the Game</h3>
+                <p className="text-muted-blue text-xs lg:text-sm">Jump in and start earning</p>
+              </div>
+            </div>
+            <p className="text-muted-blue text-xs lg:text-sm leading-relaxed mb-4 lg:mb-6 flex-1">
+              Play to earn tokens, climb the leaderboard, and use your rewards to enter raffles.
+            </p>
+            <Link href="/game">
+              <button className="w-full py-3 lg:py-4 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.15em] text-xs lg:text-sm transition-all">
+                Play Game
               </button>
             </Link>
           </div>

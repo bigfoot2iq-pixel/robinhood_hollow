@@ -34,17 +34,17 @@ const copyToClipboard = (text: string) => {
 
 export default function Leaderboard() {
   const [copiedWallet, setCopiedWallet] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'game' | 'hollow'>('game');
+  const [activeTab, setActiveTab] = useState<'game' | 'hollow'>('hollow');
   const { user } = useMultiUser();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab === 'hollow') {
-      setActiveTab('hollow');
-    } else {
+    if (tab === 'game') {
       setActiveTab('game');
+    } else {
+      setActiveTab('hollow');
     }
   }, [searchParams]);
 
@@ -111,24 +111,24 @@ export default function Leaderboard() {
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
         <button
-          onClick={() => handleTabChange('game')}
-          className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
-            activeTab === 'game' 
-              ? 'bg-[#33C5D9] text-dark-navy' 
-              : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
-          }`}
-        >
-          Game Score
-        </button>
-        <button
           onClick={() => handleTabChange('hollow')}
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
-            activeTab === 'hollow' 
-              ? 'bg-[#33C5D9] text-dark-navy' 
+            activeTab === 'hollow'
+              ? 'bg-[#33C5D9] text-dark-navy'
               : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
           }`}
         >
           Hollow Token
+        </button>
+        <button
+          onClick={() => handleTabChange('game')}
+          className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
+            activeTab === 'game'
+              ? 'bg-[#33C5D9] text-dark-navy'
+              : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+          }`}
+        >
+          Game Score
         </button>
       </div>
 
