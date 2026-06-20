@@ -233,6 +233,24 @@ export default function FaucetPage() {
             Drips 0.001 {litvmTestnet.nativeCurrency.symbol} for gas — enough for hundreds of
             transactions. One request per address every 24 hours.
           </p>
+
+          {/* Fallback: official faucet */}
+          <div className="flex flex-col gap-3 border-t border-white/10 pt-5">
+            <p className="text-xs text-muted-blue">
+              Can&apos;t claim here? Use the official LiteForge faucet instead.
+            </p>
+            <a
+              href="https://liteforge.hub.caldera.xyz/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-12 w-fit items-center gap-2 rounded-xl border border-[#33C5D9]/40 bg-[#33C5D9]/10 px-5 text-sm font-bold uppercase tracking-[0.15em] text-[#33C5D9] transition-all hover:bg-[#33C5D9]/20"
+            >
+              Official Faucet
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+                open_in_new
+              </span>
+            </a>
+          </div>
         </div>
       </div>
 
