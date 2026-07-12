@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { verifyAdminSignature } from "@/lib/utils/auth";
-import { KatanaRafflesABI, contracts, katanaNetwork } from "@/lib/contracts";
+import { RobinhoodRafflesABI, contracts, robinhoodChain } from "@/lib/contracts";
 import { getOnChainRaffleMeta, ZERO_ADDRESS } from "@/lib/utils/chain";
 import {
   createPublicClient,
@@ -277,9 +277,9 @@ export async function POST(request: NextRequest) {
     }
 
     const rpcUrl =
-      process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+      process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
     const publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
     });
 

@@ -10,7 +10,7 @@ interface UsePayToPlayReturn {
   playPrice: bigint | undefined
   playPriceFormatted: string
   playPriceUsd: string
-  ltcPrice: number | null
+  ethPrice: number | null
   isLoadingPrice: boolean
   
   // Write state
@@ -28,30 +28,30 @@ interface UsePayToPlayReturn {
 
 export function usePayToPlay(): UsePayToPlayReturn {
   const [error, setError] = useState<string | null>(null)
-  const [ltcPrice, setLtcPrice] = useState<number | null>(null)
-  const [isLoadingLtcPrice, setIsLoadingLtcPrice] = useState(true)
+  const [ethPrice, setEthPrice] = useState<number | null>(null)
+  const [isLoadingEthPrice, setIsLoadingEthPrice] = useState(true)
 
-  // Fetch LTC price from CoinGecko (zkLTC tracks Litecoin)
+  // Fetch ETH price from CoinGecko
   useEffect(() => {
-    const fetchLtcPrice = async () => {
+    const fetchEthPrice = async () => {
       try {
         const response = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=litecoin&vs_currencies=usd'
+          'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
         )
         const data = await response.json()
-        setLtcPrice(data.litecoin.usd)
+        setEthPrice(data.ethereum.usd)
       } catch (err) {
-        console.error('Failed to fetch LTC price:', err)
+        console.error('Failed to fetch ETH price:', err)
         // Fallback price if API fails
-        setLtcPrice(85)
+        setEthPrice(3500)
       } finally {
-        setIsLoadingLtcPrice(false)
+        setIsLoadingEthPrice(false)
       }
     }
 
-    fetchLtcPrice()
+    fetchEthPrice()
     // Refresh price every 60 seconds
-    const interval = setInterval(fetchLtcPrice, 60000)
+    const interval = setInterval(fetchEthPrice, 60000)
     return () => clearInterval(interval)
   }, [])
 
@@ -82,16 +82,16 @@ export function usePayToPlay(): UsePayToPlayReturn {
     hash: txHash,
   })
 
-  // Format price for display in zkLTC
+  // Format price for display in ETH
   const playPriceFormatted = playPrice
-    ? `${formatEther(playPrice)} zkLTC`
+    ? `${formatEther(playPrice)} ETH`
     : '...'
 
   // Calculate USD price
   const playPriceUsd = (() => {
-    if (!playPrice || !ltcPrice) return '...'
+    if (!playPrice || !ethPrice) return '...'
     const coinAmount = parseFloat(formatEther(playPrice))
-    const usdAmount = coinAmount * ltcPrice
+    const usdAmount = coinAmount * ethPrice
     // Format based on amount
     if (usdAmount < 0.01) {
       return `$${usdAmount.toFixed(4)}`
@@ -102,7 +102,7 @@ export function usePayToPlay(): UsePayToPlayReturn {
     }
   })()
 
-  const isLoadingPrice = isLoadingContractPrice || isLoadingLtcPrice
+  const isLoadingPrice = isLoadingContractPrice || isLoadingEthPrice
 
   // Pay to play function
   const pay = useCallback(async (): Promise<`0x${string}` | null> => {
@@ -148,7 +148,7 @@ export function usePayToPlay(): UsePayToPlayReturn {
     playPrice,
     playPriceFormatted,
     playPriceUsd,
-    ltcPrice,
+    ethPrice,
     isLoadingPrice,
     pay,
     isPaying,

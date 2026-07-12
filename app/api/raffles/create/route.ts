@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { KatanaRafflesABI, katanaNetwork, contracts } from "@/lib/contracts";
+import { RobinhoodRafflesABI, robinhoodChain, contracts } from "@/lib/contracts";
 import { createPublicClient, getAddress, http, parseEventLogs } from "viem";
 import { z } from "zod";
 
@@ -74,9 +74,9 @@ export async function POST(request: NextRequest) {
     const rpcUrl =
       process.env.RPC_URL ||
       process.env.NEXT_PUBLIC_RPC_URL ||
-      "https://liteforge.rpc.caldera.xyz/http";
+      "https://rpc.mainnet.chain.robinhood.com";
     const publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
     });
 
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     // The on-chain raffle id comes from the RaffleCreated event (emitted by
     // createRaffleByUser via the shared token-raffle path).
     const raffleEvents = parseEventLogs({
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       logs: receipt.logs,
       eventName: "RaffleCreated",
     });
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     // registering metadata against admin raffles (creator == 0) or someone else's raffle.
     const [onChainCreator] = (await publicClient.readContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "getRaffleSchedule",
       args: [BigInt(chainRaffleId)],
     })) as [string, bigint];
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     // NFT metadata can't be registered against a token raffle (or vice versa).
     const info = (await publicClient.readContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "getRaffleInfo",
       args: [BigInt(chainRaffleId)],
     })) as readonly [number, string, bigint, number, boolean, boolean];

@@ -69,11 +69,11 @@ export function RafflesExplorer({ scope, title, showCreate = false, emptyHint }:
     <div className="space-y-6 lg:space-y-8">
       {/* Page Title */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4 lg:mb-8">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white">{title}</h2>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-foreground">{title}</h2>
         {showCreate && isConnected && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-widest text-xs transition-all shadow-[0_0_20px_rgba(51,197,217,0.15)]"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1a160d] border border-white/10 hover:brightness-125 text-text-primary font-bold rounded uppercase tracking-widest text-xs transition-all shadow-[0_0_20px_rgba(26,22,13,0.15)]"
           >
             <span className="material-symbols-outlined text-base">add</span>
             Create Raffle
@@ -83,22 +83,22 @@ export function RafflesExplorer({ scope, title, showCreate = false, emptyHint }:
 
       {/* Timing explainer */}
       {scope === "community" && (
-      <div className="ui-container rounded border border-[#33C5D9]/20 bg-gradient-to-r from-[#33C5D9]/10 to-transparent p-3 sm:p-4">
+      <div className="ui-container rounded border border-[#ccff00]/20 bg-gradient-to-r from-[#ccff00]/10 to-transparent p-3 sm:p-4">
         <div className="flex items-start gap-3">
-          <span className="material-symbols-outlined text-[#33C5D9] text-xl shrink-0">schedule</span>
+          <span className="material-symbols-outlined text-[#ccff00] text-xl shrink-0">schedule</span>
           <div className="space-y-1">
-            <p className="text-xs sm:text-sm font-bold text-white uppercase tracking-widest">
+            <p className="text-xs sm:text-sm font-bold text-text-primary uppercase tracking-widest">
               How raffle timing works
             </p>
             <ul className="text-[11px] sm:text-xs text-muted-blue leading-relaxed list-disc pl-4 space-y-0.5">
               <li>
-                Each raffle ends when its countdown hits <span className="text-white font-semibold">zero</span> — or earlier if every spot fills up.
+                Each raffle ends when its countdown hits <span className="text-text-primary font-semibold">zero</span> — or earlier if every spot fills up.
               </li>
               <li>
-                Winners are drawn <span className="text-white font-semibold">automatically on-chain within ~1 minute</span> of a raffle ending.
+                Winners are drawn <span className="text-text-primary font-semibold">automatically on-chain within ~1 minute</span> of a raffle ending.
               </li>
               <li>
-                The countdown and all dates are shown in <span className="text-white font-semibold">your local timezone</span>.
+                The countdown and all dates are shown in <span className="text-text-primary font-semibold">your local timezone</span>.
               </li>
             </ul>
           </div>
@@ -114,8 +114,8 @@ export function RafflesExplorer({ scope, title, showCreate = false, emptyHint }:
             onClick={() => setFilter(status.value)}
             className={`pb-3 sm:pb-4 px-2 text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors whitespace-nowrap ${
               filter === status.value
-                ? "text-[#33C5D9] border-b-2 border-[#33C5D9]"
-                : "text-muted-blue hover:text-white"
+                ? "text-[#ccff00] border-b-2 border-[#ccff00]"
+                : "text-muted-blue hover:text-text-primary"
             }`}
           >
             {status.label}
@@ -145,7 +145,7 @@ export function RafflesExplorer({ scope, title, showCreate = false, emptyHint }:
           </div>
           {total > raffles.length && (
             <div className="text-center mt-6 lg:mt-8">
-              <button className="px-5 sm:px-6 py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded uppercase tracking-widest text-xs sm:text-sm transition-all border border-white/10">
+              <button className="px-5 sm:px-6 py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 text-text-primary font-bold rounded uppercase tracking-widest text-xs sm:text-sm transition-all border border-white/10">
                 Load More
               </button>
             </div>

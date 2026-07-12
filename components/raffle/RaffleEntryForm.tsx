@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAccount, usePublicClient, useWriteContract, useReadContract } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTokenAllowance, useTokenBalance, formatTokenBalance } from "@/lib/hooks";
-import { contracts, KatanaRafflesABI, HollowTokenABI } from "@/lib/contracts";
+import { contracts, RobinhoodRafflesABI, HollowTokenABI } from "@/lib/contracts";
 import type { Raffle } from "@/lib/supabase";
 import { getTokenMetadataCached } from "@/lib/utils/erc20";
 
@@ -42,7 +42,7 @@ export function RaffleEntryForm({
   // Fetch on-chain raffle state
   const { data: raffleInfo } = useReadContract({
     address: contracts.raffles.address,
-    abi: KatanaRafflesABI,
+    abi: RobinhoodRafflesABI,
     functionName: "getRaffleInfo",
     args: [BigInt(chainRaffleId)],
     query: {
@@ -128,7 +128,7 @@ export function RaffleEntryForm({
       setStatus("joining");
       const joinHash = await writeContractAsync({
         address: contracts.raffles.address,
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         functionName: "joinRaffle",
         args: [BigInt(chainRaffleId), tokensNeeded],
       });
@@ -224,7 +224,7 @@ export function RaffleEntryForm({
   if (maxEntries <= 0) {
     return (
       <div className="text-center py-6">
-        <span className="material-symbols-outlined text-[#33C5D9] text-4xl mb-2 block">check_circle</span>
+        <span className="material-symbols-outlined text-[#ccff00] text-4xl mb-2 block">check_circle</span>
         <p className="text-muted-blue">You have reached the maximum entries for this raffle</p>
       </div>
     );
@@ -242,7 +242,7 @@ export function RaffleEntryForm({
           max={maxEntries}
           value={entryCount}
           onChange={(e) => setEntryCount(Math.max(1, Math.min(maxEntries, parseInt(e.target.value) || 1)))}
-          className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white text-lg font-display font-bold focus:outline-none focus:ring-1 focus:ring-[#33C5D9]"
+          className="w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-text-primary text-lg font-display font-bold focus:outline-none focus:ring-1 focus:ring-[#ccff00]"
         />
         <p className="text-xs text-muted-blue mt-2">
           Max {maxEntries} entries remaining
@@ -252,19 +252,19 @@ export function RaffleEntryForm({
       <div className="p-4 bg-dark-navy rounded border border-white/10 space-y-2">
         <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-blue">
           <span>Entry Cost</span>
-          <span className="text-white">{raffle.tokens_required} {tokenSymbol}</span>
+          <span className="text-text-primary">{raffle.tokens_required} {tokenSymbol}</span>
         </div>
         <div className="h-[1px] bg-white/10"></div>
         <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-blue">
           <span>Total</span>
-          <span className="text-[#33C5D9]">{entryCount * raffle.tokens_required} {tokenSymbol}</span>
+          <span className="text-[#ccff00]">{entryCount * raffle.tokens_required} {tokenSymbol}</span>
         </div>
         {balance !== undefined && (
           <>
             <div className="h-[1px] bg-white/10"></div>
             <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-blue">
               <span>Your Balance</span>
-              <span className={hasInsufficientBalance ? "text-red-400" : "text-white"}>
+              <span className={hasInsufficientBalance ? "text-red-400" : "text-text-primary"}>
                 {formatTokenBalance(balance)} {tokenSymbol}
               </span>
             </div>
@@ -282,7 +282,7 @@ export function RaffleEntryForm({
       <button
         type="submit"
         disabled={isLoading || hasInsufficientBalance}
-        className="w-full py-4 bg-[#33C5D9] hover:brightness-110 text-dark-navy font-bold rounded uppercase tracking-[0.15em] text-sm transition-all shadow-[0_0_20px_rgba(51,197,217,0.15)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-4 bg-[#1a160d] border border-white/10 hover:brightness-125 text-text-primary font-bold rounded uppercase tracking-[0.15em] text-sm transition-all shadow-[0_0_20px_rgba(26,22,13,0.15)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isLoading && (
           <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -1,28 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  /* LitVM palette — derived from litvm.com (deep navy + teal/cyan glow, coral accents) */
-  --primary: #33C5D9;        /* teal-cyan accent */
-  --accent-glow: #7FE0EE;    /* light cyan glow */
-  --accent-warm: #EE9B6E;    /* coral (hero sunset) */
-  --litecoin: #345D9D;       /* Litecoin blue — chain badges */
-  --dark-blue: #0E2230;      /* teal-navy surface */
-  --light-blue: #4FC3D0;     /* light teal */
-  --dark-navy: #0A1622;      /* deep navy base */
-  --muted-blue: #93A4B5;     /* muted blue-grey text */
-  --background: #0A1622;
-  --foreground: #ffffff;
+  /* Robinhood palette — neon green background + dark brown/black primary */
+  --primary: #1a160d;        /* dark brown-black: buttons, icons, text */
+  --accent-glow: #e6ff66;    /* light lime glow */
+  --accent-warm: #ccff00;    /* neon green */
+  --litecoin: #1a160d;       /* dark brown — chain badges */
+  --dark-blue: #2a2200;      /* dark olive surface */
+  --light-blue: #a3e635;     /* lime secondary accent */
+  --dark-navy: #1a160d;      /* dark brown: card/overlay backgrounds */
+  --muted-blue: #7a8c6a;     /* muted sage: secondary text — brightened for readability */
+  --background: #ccff00;
+  --foreground: #1a160d;
+
+  /* Semantic text colors for dark backgrounds */
+  --text-primary: #f0ede4;   /* warm off-white: headings, primary values */
+  --text-secondary: #c8c4b8; /* lighter warm: body text, descriptions */
+  --text-tertiary: #9a9688;  /* muted warm: labels, placeholders */
 }
 
 @theme inline {
-  --color-primary: #33C5D9;
-  --color-accent-glow: #7FE0EE;
-  --color-accent-warm: #EE9B6E;
-  --color-litecoin: #345D9D;
-  --color-dark-blue: #0E2230;
-  --color-light-blue: #4FC3D0;
-  --color-dark-navy: #0A1622;
-  --color-muted-blue: #93A4B5;
+  --color-primary: #1a160d;
+  --color-accent-glow: #e6ff66;
+  --color-accent-warm: #ccff00;
+  --color-litecoin: #1a160d;
+  --color-dark-blue: #2a2200;
+  --color-light-blue: #a3e635;
+  --color-dark-navy: #1a160d;
+  --color-muted-blue: #7a8c6a;
+  --color-text-primary: #f0ede4;
+  --color-text-secondary: #c8c4b8;
+  --color-text-tertiary: #9a9688;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-plus-jakarta), sans-serif;
@@ -31,12 +39,9 @@
 }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 70% -10%, rgba(51,197,217, 0.12) 0%, transparent 60%),
-    radial-gradient(900px 500px at 10% 110%, rgba(238, 155, 110, 0.08) 0%, transparent 55%),
-    linear-gradient(180deg, #0A1622 0%, #0C1E2B 45%, #0E2A38 100%);
+  background: #ccff00;
   background-attachment: fixed;
-  color: #ffffff;
+  color: #1a160d;
   font-family: var(--font-plus-jakarta), sans-serif;
   min-height: 100vh;
 }
@@ -50,13 +55,13 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Teal glow utility for accent elements */
+/* Glow utility for accent elements */
 .glow-teal {
-  box-shadow: 0 0 24px rgba(51,197,217, 0.35);
+  box-shadow: 0 0 24px rgba(204, 255, 0, 0.35);
 }
 
-.text-gradient-litvm {
-  background: linear-gradient(120deg, #7FE0EE 0%, #33C5D9 40%, #EE9B6E 100%);
+.text-gradient-rh {
+  background: linear-gradient(120deg, #ccff00 0%, #1a160d 50%, #5a6a4a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -78,9 +83,9 @@ body {
 }
 
 .ui-container {
-  background-color: rgba(19, 33, 46, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
+  background-color: rgba(26, 22, 13, 0.88);
+  border: 1px solid rgba(204, 255, 0, 0.1);
+  backdrop-filter: blur(12px);
 }
 
 /* Multi-step form transition */
@@ -114,16 +119,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(26, 22, 13, 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(26, 22, 13, 0.2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(26, 22, 13, 0.3);
 }
 
 /* Mobile optimizations */

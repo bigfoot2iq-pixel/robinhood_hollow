@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -131,7 +131,7 @@ export default function UserRegistrationModal({
 
         {/* Modal */}
         <motion.div
-          className="relative w-full max-w-md bg-katana-dark border border-katana-blue/30 rounded-2xl p-6 shadow-2xl"
+          className="relative w-full max-w-md bg-dark-navy border border-dark-blue/30 rounded-2xl p-6 shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -140,7 +140,7 @@ export default function UserRegistrationModal({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-gray-200 hover:text-white transition-colors rounded-full hover:bg-katana-blue/10"
+            className="absolute top-4 right-4 p-2 text-text-secondary hover:text-text-primary transition-colors rounded-full hover:bg-dark-blue/10"
           >
             <X size={20} />
           </button>
@@ -148,15 +148,15 @@ export default function UserRegistrationModal({
           {/* Header */}
           <div className="text-center mb-6">
             <motion.div
-              className="w-16 h-16 bg-katana-primary rounded-full mx-auto mb-4 flex items-center justify-center"
+              className="w-16 h-16 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center"
               whileHover={{ scale: 1.05 }}
             >
-              <User size={32} className="text-white" />
+              <User size={32} className="text-text-primary" />
             </motion.div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl font-bold text-text-primary mb-2">
               {user?.is_registered ? 'Edit Profile' : 'Welcome to The Hollow'}
             </h2>
-            <p className="text-gray-200">
+            <p className="text-text-secondary">
               {user?.is_registered ? 'Update your profile information' : 'Complete your profile to get started'}
             </p>
           </div>
@@ -164,14 +164,14 @@ export default function UserRegistrationModal({
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Input */}
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-text-primary mb-2">
                 Username
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-katana-dark border border-gray-700 rounded-full text-white placeholder-gray-300 focus:outline-none focus:border-katana-primary focus:ring-1 focus:ring-katana-primary transition-colors"
+                className="w-full px-4 py-3 bg-dark-navy border border-dark-blue/30 rounded-full text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 placeholder="Enter your username"
                 disabled={loading}
               />
@@ -179,15 +179,15 @@ export default function UserRegistrationModal({
 
             {/* Image Upload */}
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-text-primary mb-2">
                 Profile Picture (Optional)
               </label>
               
               <div
                 className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-colors ${
                   dragOver
-                    ? 'border-katana-primary bg-katana-blue/5'
-                    : 'border-gray-600 hover:border-katana-primary/50'
+                    ? 'border-primary bg-dark-blue/5'
+                    : 'border-dark-blue/30 hover:border-primary/50'
                 }`}
                 onDrop={handleDrop}
                 onDragOver={(e) => {
@@ -209,25 +209,25 @@ export default function UserRegistrationModal({
                         setImageFile(null);
                         setImagePreview(null);
                       }}
-                      className="absolute -top-2 -right-2 p-1 bg-katana-blue text-white rounded-full hover:bg-katana-dark transition-colors"
+                      className="absolute -top-2 -right-2 p-1 bg-dark-blue text-text-primary rounded-full hover:bg-dark-navy transition-colors"
                     >
                       <X size={16} />
                     </button>
                   </div>
                 ) : (
                   <div>
-                    <Upload size={32} className="mx-auto text-gray-200 mb-2" />
-                    <p className="text-gray-200 mb-2">
+                    <Upload size={32} className="mx-auto text-text-secondary mb-2" />
+                    <p className="text-text-secondary mb-2">
                       Drop an image here or{' '}
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="text-katana-primary hover:text-katana-primary underline"
+                        className="text-primary hover:text-primary underline"
                       >
                         browse
                       </button>
                     </p>
-                    <p className="text-xs text-gray-300">
+                    <p className="text-xs text-text-tertiary">
                       Max 2MB • JPG, PNG, GIF
                     </p>
                   </div>
@@ -250,7 +250,7 @@ export default function UserRegistrationModal({
             {/* Error Message */}
             {error && (
               <motion.div
-                className="flex items-center space-x-2 text-katana-primary bg-katana-blue/10 border border-katana-primary/20 rounded-full px-4 py-2"
+                className="flex items-center space-x-2 text-primary bg-dark-blue/10 border border-primary/20 rounded-full px-4 py-2"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -266,7 +266,7 @@ export default function UserRegistrationModal({
                   type="button"
                   onClick={handleSkip}
                   disabled={loading}
-                  className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-full transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-3 bg-dark-blue/20 hover:bg-dark-blue/30 text-text-primary rounded-full transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Skip
                 </button>
@@ -274,12 +274,12 @@ export default function UserRegistrationModal({
               <button
                 type="submit"
                 disabled={loading}
-                className={`px-4 py-3 bg-katana-primary hover:bg-katana-blue text-white rounded-full transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 ${
+                className={`px-4 py-3 bg-primary hover:bg-dark-blue text-text-primary rounded-full transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 ${
                   user?.is_registered ? 'w-full' : 'flex-1'
                 }`}
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white/20 border-t-text-primary rounded-full animate-spin" />
                 ) : (
                   <>
                     <CheckCircle size={18} />

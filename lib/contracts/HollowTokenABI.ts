@@ -3,9 +3,6 @@ export const HollowTokenABI = [
 		"inputs": [
 			{ "internalType": "string", "name": "name_", "type": "string" },
 			{ "internalType": "string", "name": "symbol_", "type": "string" },
-			{ "internalType": "uint256", "name": "tier1Amount_", "type": "uint256" },
-			{ "internalType": "uint256", "name": "tier2Amount_", "type": "uint256" },
-			{ "internalType": "uint256", "name": "tier3Amount_", "type": "uint256" },
 			{ "internalType": "uint256", "name": "claimCooldown_", "type": "uint256" }
 		],
 		"stateMutability": "nonpayable",
@@ -75,6 +72,17 @@ export const HollowTokenABI = [
 	{
 		"anonymous": false,
 		"inputs": [
+			{ "indexed": true, "internalType": "uint8", "name": "categoryId", "type": "uint8" },
+			{ "indexed": false, "internalType": "string", "name": "name", "type": "string" },
+			{ "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+			{ "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" }
+		],
+		"name": "CategoryUpdated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
 			{ "indexed": false, "internalType": "uint256", "name": "oldCooldown", "type": "uint256" },
 			{ "indexed": false, "internalType": "uint256", "name": "newCooldown", "type": "uint256" }
 		],
@@ -84,10 +92,10 @@ export const HollowTokenABI = [
 	{
 		"anonymous": false,
 		"inputs": [
-			{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" },
+			{ "indexed": true, "internalType": "address", "name": "to", "type": "address" },
 			{ "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
 		],
-		"name": "OwnerWithdrawal",
+		"name": "FeesWithdrawn",
 		"type": "event"
 	},
 	{
@@ -108,48 +116,10 @@ export const HollowTokenABI = [
 	{
 		"anonymous": false,
 		"inputs": [
-			{ "indexed": false, "internalType": "uint256", "name": "oldAmount", "type": "uint256" },
-			{ "indexed": false, "internalType": "uint256", "name": "newAmount", "type": "uint256" }
-		],
-		"name": "Tier1AmountUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [{ "indexed": false, "internalType": "address[]", "name": "tokens", "type": "address[]" }],
-		"name": "Tier1TokensUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{ "indexed": false, "internalType": "uint256", "name": "oldAmount", "type": "uint256" },
-			{ "indexed": false, "internalType": "uint256", "name": "newAmount", "type": "uint256" }
-		],
-		"name": "Tier2AmountUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [{ "indexed": false, "internalType": "address[]", "name": "tokens", "type": "address[]" }],
-		"name": "Tier2TokensUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{ "indexed": false, "internalType": "uint256", "name": "oldAmount", "type": "uint256" },
-			{ "indexed": false, "internalType": "uint256", "name": "newAmount", "type": "uint256" }
-		],
-		"name": "Tier3AmountUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
 			{ "indexed": true, "internalType": "address", "name": "claimer", "type": "address" },
-			{ "indexed": true, "internalType": "uint8", "name": "tier", "type": "uint8" },
-			{ "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+			{ "indexed": true, "internalType": "uint8", "name": "categoryId", "type": "uint8" },
+			{ "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+			{ "indexed": false, "internalType": "uint256", "name": "feePaid", "type": "uint256" }
 		],
 		"name": "TokensClaimed",
 		"type": "event"
@@ -169,6 +139,13 @@ export const HollowTokenABI = [
 		"inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
 		"name": "Unpaused",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "CATEGORY_COUNT",
+		"outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -229,6 +206,27 @@ export const HollowTokenABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"name": "categoryAmount",
+		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"name": "categoryFee",
+		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"name": "categoryName",
+		"outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "claimCooldown",
 		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -236,10 +234,10 @@ export const HollowTokenABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [{ "internalType": "uint8", "name": "categoryId", "type": "uint8" }],
 		"name": "claimTokens",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -250,7 +248,28 @@ export const HollowTokenABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+		"inputs": [{ "internalType": "uint8", "name": "categoryId", "type": "uint8" }],
+		"name": "getCategoryAmount",
+		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "uint8", "name": "categoryId", "type": "uint8" }],
+		"name": "getCategoryFee",
+		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "uint8", "name": "categoryId", "type": "uint8" }],
+		"name": "getCategoryName",
+		"outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "uint8", "name": "categoryId", "type": "uint8" }],
 		"name": "getClaimAmount",
 		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
 		"stateMutability": "view",
@@ -260,27 +279,6 @@ export const HollowTokenABI = [
 		"inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
 		"name": "getLastClaimTimestamp",
 		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
-		"name": "getTier",
-		"outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getTier1Tokens",
-		"outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getTier2Tokens",
-		"outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
@@ -338,43 +336,20 @@ export const HollowTokenABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{ "internalType": "uint8", "name": "categoryId", "type": "uint8" },
+			{ "internalType": "string", "name": "name", "type": "string" },
+			{ "internalType": "uint256", "name": "amount", "type": "uint256" },
+			{ "internalType": "uint256", "name": "fee", "type": "uint256" }
+		],
+		"name": "setCategory",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [{ "internalType": "uint256", "name": "newCooldown", "type": "uint256" }],
 		"name": "setClaimCooldown",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "uint256", "name": "newAmount", "type": "uint256" }],
-		"name": "setTier1Amount",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "address[]", "name": "tokens", "type": "address[]" }],
-		"name": "setTier1Tokens",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "uint256", "name": "newAmount", "type": "uint256" }],
-		"name": "setTier2Amount",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "address[]", "name": "tokens", "type": "address[]" }],
-		"name": "setTier2Tokens",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "uint256", "name": "newAmount", "type": "uint256" }],
-		"name": "setTier3Amount",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -383,41 +358,6 @@ export const HollowTokenABI = [
 		"inputs": [],
 		"name": "symbol",
 		"outputs": [{ "internalType": "string", "name": "", "type": "string" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "tier1Amount",
-		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-		"name": "tier1Tokens",
-		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "tier2Amount",
-		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-		"name": "tier2Tokens",
-		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "tier3Amount",
-		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
@@ -456,5 +396,13 @@ export const HollowTokenABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
-	{ "inputs": [], "name": "unpause", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+	{ "inputs": [], "name": "unpause", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+	{
+		"inputs": [{ "internalType": "address", "name": "to", "type": "address" }],
+		"name": "withdrawFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{ "stateMutability": "payable", "type": "receive" }
 ] as const;

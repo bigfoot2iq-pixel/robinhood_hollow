@@ -17,13 +17,13 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      chainId: 4441,
+      chainId: 4663,
       hardfork: "london",
       initialBaseFeePerGas: 0,
     },
-    litvm: {
-      url: process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http",
-      chainId: 4441,
+    robinhood: {
+      url: process.env.RH_RPC_URL || "https://rpc.mainnet.chain.robinhood.com",
+      chainId: 4663,
       accounts: process.env.DEPLOYER_PRIVATE_KEY
         ? [process.env.DEPLOYER_PRIVATE_KEY]
         : process.env.WATCHDOG_PRIVATE_KEY
@@ -32,18 +32,16 @@ const config: HardhatUserConfig = {
     },
   },
   etherscan: {
-    // Keyed by network name so hardhat-verify uses the custom Caldera explorer
-    // below instead of falling back to api.etherscan.io.
     apiKey: {
-      litvm: process.env.ETHERSCAN_API_KEY || "abc",
+      robinhood: process.env.ETHERSCAN_API_KEY || "abc",
     },
     customChains: [
       {
-        network: "litvm",
-        chainId: 4441,
+        network: "robinhood",
+        chainId: 4663,
         urls: {
-          apiURL: "https://liteforge.explorer.caldera.xyz/api",
-          browserURL: "https://liteforge.explorer.caldera.xyz",
+          apiURL: "https://robinhoodchain.blockscout.com/api",
+          browserURL: "https://robinhoodchain.blockscout.com",
         },
       },
     ],

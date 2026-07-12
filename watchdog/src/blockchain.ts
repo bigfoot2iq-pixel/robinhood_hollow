@@ -9,13 +9,13 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { config } from "./config";
 
-const katanaNetwork = defineChain({
+const robinhoodChain = defineChain({
   id: config.blockchain.chainId,
-  name: "Katana Network",
+  name: "Robinhood Chain",
   nativeCurrency: {
     decimals: 18,
-    name: "Katana",
-    symbol: "KTN",
+    name: "Ether",
+    symbol: "ETH",
   },
   rpcUrls: {
     default: {
@@ -40,12 +40,12 @@ export class Blockchain {
     this.account = privateKeyToAccount(config.blockchain.privateKey as `0x${string}`);
 
     this.publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(),
     });
 
     this.walletClient = createWalletClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(),
       account: this.account,
     });

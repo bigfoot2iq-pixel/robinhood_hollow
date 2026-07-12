@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { wagmiConfig } from "@/lib/wagmi-config";
-import { katanaNetwork } from "@/lib/contracts/config";
+import { robinhoodChain } from "@/lib/contracts/config";
 import { ReactNode, useState } from "react";
 
 export default function Web3ProviderInner({ children }: { children: ReactNode }) {
@@ -25,10 +25,10 @@ export default function Web3ProviderInner({ children }: { children: ReactNode })
     <WagmiProvider config={wagmiConfig} reconnectOnMount={true}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
-          initialChain={katanaNetwork}
+          initialChain={robinhoodChain}
           theme={darkTheme({
-            accentColor: "#33C5D9",
-            accentColorForeground: "#0A1622",
+            accentColor: "#1a160d",
+            accentColorForeground: "#1a160d",
             borderRadius: "small",
             fontStack: "system",
           })}

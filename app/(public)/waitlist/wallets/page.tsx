@@ -49,14 +49,14 @@ export default function WaitlistWalletsPage() {
     return (
       <div className="space-y-6 lg:space-y-8">
         <div className="mb-6 lg:mb-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white mb-2">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-foreground mb-2">
             Waitlisted Wallets
           </h2>
           <p className="text-muted-blue text-xs sm:text-sm">Loading...</p>
         </div>
         <div className="ui-container rounded overflow-hidden">
           <div className="p-12 text-center">
-            <div className="inline-block w-8 h-8 border-4 border-[#33C5D9] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-[#ccff00] rounded-full animate-spin mb-4"></div>
             <p className="text-muted-blue">Loading wallets...</p>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function WaitlistWalletsPage() {
     return (
       <div className="space-y-6 lg:space-y-8">
         <div className="mb-6 lg:mb-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white mb-2">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-foreground mb-2">
             Waitlisted Wallets
           </h2>
         </div>
@@ -82,7 +82,7 @@ export default function WaitlistWalletsPage() {
   return (
     <div className="space-y-6 lg:space-y-8">
       <div className="mb-6 lg:mb-8">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white mb-2">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-foreground mb-2">
           Waitlisted Wallets
         </h2>
         <p className="text-muted-blue text-xs sm:text-sm">
@@ -91,20 +91,20 @@ export default function WaitlistWalletsPage() {
       </div>
 
       {/* Total Counter */}
-      <div className="ui-container rounded-lg p-6 border border-[#33C5D9]/20">
+      <div className="ui-container rounded-lg p-6 border border-white/20">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-muted-blue text-xs uppercase tracking-widest font-bold mb-1">
               Total Waitlisted
             </p>
-            <p className="text-4xl font-bold text-[#33C5D9]">
+            <p className="text-4xl font-bold text-[#ccff00]">
               {total.toLocaleString()}
             </p>
           </div>
           <a
             href="/api/waitlist/wallets/export"
             download
-            className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg border border-[#33C5D9]/30 text-[#33C5D9] hover:bg-[#33C5D9]/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg border border-[#ccff00]/30 text-[#ccff00] hover:bg-[#ccff00]/10 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -138,7 +138,7 @@ export default function WaitlistWalletsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={2} className="px-5 py-8 text-center">
-                    <div className="inline-block w-5 h-5 border-2 border-[#33C5D9] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="inline-block w-5 h-5 border-2 border-white/20 border-t-[#ccff00] rounded-full animate-spin"></div>
                   </td>
                 </tr>
               ) : wallets.length === 0 && !error ? (
@@ -153,11 +153,11 @@ export default function WaitlistWalletsPage() {
                     key={wallet.wallet_address}
                     className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
                   >
-                    <td className="px-5 py-3 text-white/50 text-sm">
+                    <td className="px-5 py-3 text-text-primary/50 text-sm">
                       {(page - 1) * 20 + index + 1}
                     </td>
                     <td className="px-5 py-3">
-                      <span className="text-white text-sm font-mono">
+                      <span className="text-text-primary text-sm font-mono">
                         {wallet.wallet_address}
                       </span>
                     </td>
@@ -170,7 +170,7 @@ export default function WaitlistWalletsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-5 py-4 border-t border-white/10">
+           <div className="flex items-center justify-between px-5 py-4 border-t border-white/10">
             <p className="text-muted-blue text-xs">
               Page {page} of {totalPages}
             </p>
@@ -178,14 +178,14 @@ export default function WaitlistWalletsPage() {
               <button
                 onClick={() => fetchWallets(page - 1)}
                 disabled={page <= 1 || loading}
-                className="px-3 py-1.5 text-xs font-bold uppercase tracking-widest rounded border border-white/10 text-white/70 hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-3 py-1.5 text-xs font-bold uppercase tracking-widest rounded border border-white/10 text-text-primary/70 hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Prev
               </button>
               <button
                 onClick={() => fetchWallets(page + 1)}
                 disabled={page >= totalPages || loading}
-                className="px-3 py-1.5 text-xs font-bold uppercase tracking-widest rounded border border-white/10 text-white/70 hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-3 py-1.5 text-xs font-bold uppercase tracking-widest rounded border border-white/10 text-text-primary/70 hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Next
               </button>

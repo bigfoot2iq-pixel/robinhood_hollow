@@ -1,4 +1,4 @@
-export { litvmTestnet, katanaNetwork, hardhatLocal, contracts, ADMIN_WALLET } from "./config";
+export { robinhoodChain, hardhatLocal, contracts, ADMIN_WALLET } from "./config";
 export { HollowTokenABI } from "./HollowTokenABI";
-export { KatanaRafflesABI } from "./KatanaRafflesABI";
+export { RobinhoodRafflesABI } from "./RobinhoodRafflesABI";
 export { THE_HOLLOW_GAME_ADDRESS, THE_HOLLOW_GAME_ABI } from "./theHollowGame";

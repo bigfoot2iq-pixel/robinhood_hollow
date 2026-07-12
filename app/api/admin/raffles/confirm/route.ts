@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { verifyAdminSignature } from "@/lib/utils/auth";
-import { KatanaRafflesABI, katanaNetwork } from "@/lib/contracts";
+import { RobinhoodRafflesABI, robinhoodChain } from "@/lib/contracts";
 import { createPublicClient, getAddress, http, isAddress, parseEventLogs } from "viem";
 import { z } from "zod";
 
@@ -49,9 +49,9 @@ export async function POST(request: NextRequest) {
     const { txHash, raffleData } = validation.data;
 
     const rpcUrl =
-      process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+      process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
     const publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
     });
 
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     const raffleEvents = parseEventLogs({
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       logs: receipt.logs,
       eventName: "RaffleCreated",
     });

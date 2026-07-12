@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { verifyAdminSignature } from "@/lib/utils/auth";
-import { KatanaRafflesABI, contracts, katanaNetwork } from "@/lib/contracts";
+import { RobinhoodRafflesABI, contracts, robinhoodChain } from "@/lib/contracts";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 
@@ -49,14 +49,14 @@ export async function POST(
       return NextResponse.json({ error: "Missing contract configuration" }, { status: 500 });
     }
 
-    const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+    const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
     const account = privateKeyToAccount(privateKey as `0x${string}`);
     const publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
     });
     const walletClient = createWalletClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
       account,
     });
@@ -64,7 +64,7 @@ export async function POST(
     // Activate raffle on chain
     const txHash = await walletClient.writeContract({
       address: raffleContract,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "activateRaffle",
       args: [BigInt(raffle.chain_raffle_id)],
     });

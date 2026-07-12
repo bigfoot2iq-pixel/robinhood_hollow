@@ -1,13 +1,13 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { litvmTestnet } from '@/lib/contracts/config';
+import { robinhoodChain } from '@/lib/contracts/config';
 import { http, cookieStorage, createStorage } from 'wagmi';
 
 export const wagmiConfig = getDefaultConfig({
-  appName: 'LitVM Raffles',
+  appName: 'Robinhood Raffles',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '2f05ae7f1116030fde2d36508f472bfb',
-  chains: [litvmTestnet],
+  chains: [robinhoodChain],
   transports: {
-    [litvmTestnet.id]: http(process.env.NEXT_PUBLIC_RPC_URL || 'https://liteforge.rpc.caldera.xyz/http'),
+    [robinhoodChain.id]: http(process.env.NEXT_PUBLIC_RPC_URL || 'https://rpc.mainnet.chain.robinhood.com'),
   },
   ssr: true,
   storage: createStorage({

@@ -1,6 +1,6 @@
 import { createWalletClient, createPublicClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { contracts, katanaNetwork, KatanaRafflesABI } from "../lib/contracts/config";
+import { contracts, robinhoodChain, RobinhoodRafflesABI } from "../lib/contracts/config";
 
 /**
  * Script to activate a raffle that's in CREATED state
@@ -17,18 +17,18 @@ async function activateRaffle(chainRaffleId: number) {
     process.exit(1);
   }
 
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
   
   const account = privateKeyToAccount(privateKey as `0x${string}`);
   
   const publicClient = createPublicClient({
-    chain: katanaNetwork,
+    chain: robinhoodChain,
     transport: http(rpcUrl),
   });
 
   const walletClient = createWalletClient({
     account,
-    chain: katanaNetwork,
+    chain: robinhoodChain,
     transport: http(rpcUrl),
   });
 
@@ -40,7 +40,7 @@ async function activateRaffle(chainRaffleId: number) {
     // Check current state
     const result = await publicClient.readContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "raffles",
       args: [BigInt(chainRaffleId)],
     }) as [number, string, number, bigint, boolean, boolean];
@@ -57,7 +57,7 @@ async function activateRaffle(chainRaffleId: number) {
 
     const hash = await walletClient.writeContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "activateRaffle",
       args: [BigInt(chainRaffleId)],
     });
@@ -75,7 +75,7 @@ async function activateRaffle(chainRaffleId: number) {
       // Verify new state
       const newResult = await publicClient.readContract({
         address: contracts.raffles.address,
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         functionName: "raffles",
         args: [BigInt(chainRaffleId)],
       }) as [number, string, number, bigint, boolean, boolean];

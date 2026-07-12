@@ -1,7 +1,7 @@
 import { createWalletClient, createPublicClient, http, getAddress, parseEventLogs } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { randomBytes } from "crypto";
-import { contracts, katanaNetwork, KatanaRafflesABI } from "../lib/contracts/config";
+import { contracts, robinhoodChain, RobinhoodRafflesABI } from "../lib/contracts/config";
 
 /**
  * Script to end a raffle on-chain with custom participants
@@ -33,18 +33,18 @@ async function endRaffle(chainRaffleId: number) {
     process.exit(1);
   }
 
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
 
   const account = privateKeyToAccount(privateKey as `0x${string}`);
 
   const publicClient = createPublicClient({
-    chain: katanaNetwork,
+    chain: robinhoodChain,
     transport: http(rpcUrl),
   });
 
   const walletClient = createWalletClient({
     account,
-    chain: katanaNetwork,
+    chain: robinhoodChain,
     transport: http(rpcUrl),
   });
 
@@ -69,7 +69,7 @@ async function endRaffle(chainRaffleId: number) {
     // Check current state
     const result = await publicClient.readContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "raffles",
       args: [BigInt(chainRaffleId)],
     }) as [number, string, number, bigint, boolean, boolean];
@@ -85,7 +85,7 @@ async function endRaffle(chainRaffleId: number) {
 
     const hash = await walletClient.writeContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "endRaffle",
       args: [BigInt(chainRaffleId), participants, ticketCounts, randomSeed],
     });
@@ -102,7 +102,7 @@ async function endRaffle(chainRaffleId: number) {
 
       // Parse winners from events
       const raffleEndedEvents = parseEventLogs({
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         logs: receipt.logs,
         eventName: "RaffleEnded",
       });

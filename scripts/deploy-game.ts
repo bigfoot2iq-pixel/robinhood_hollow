@@ -2,7 +2,7 @@ import pkg from "hardhat";
 const { ethers, run } = pkg;
 
 async function verifyContract(address: string, constructorArguments: unknown[]) {
-  console.log(`\nVerifying ${address} on Liteforge Explorer...`);
+  console.log(`\nVerifying ${address} on Robinhood Chain Explorer...`);
   try {
     await run("verify:verify", {
       address,
@@ -22,10 +22,10 @@ async function verifyContract(address: string, constructorArguments: unknown[]) 
 async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("═══════════════════════════════════════════════════");
-  console.log("  TheHollowGame Deployment (LitVM testnet)");
+  console.log("  TheHollowGame Deployment (Robinhood Chain)");
   console.log("═══════════════════════════════════════════════════");
   console.log("Deployer:", deployer.address);
-  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "zkLTC");
+  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "ETH");
   console.log("");
 
   // ── 1. Deploy TheHollowGame ───────────────────────────────────────
@@ -50,8 +50,8 @@ async function main() {
   console.log(`TheHollowGame: ${gameAddress}`);
   console.log(`\nUpdate your .env.local:`);
   console.log(`NEXT_PUBLIC_GAME_CONTRACT_ADDRESS=${gameAddress}`);
-  console.log(`\nLiteforge Explorer:`);
-  console.log(`https://liteforge.explorer.caldera.xyz/address/${gameAddress}#code`);
+  console.log(`\nRobinhood Chain Explorer:`);
+  console.log(`https://robinhoodchain.blockscout.com/address/${gameAddress}#code`);
 }
 
 main().catch((error) => {

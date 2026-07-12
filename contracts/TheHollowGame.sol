@@ -6,13 +6,13 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title TheHollowGame
- * @notice Pay-to-play contract for The Hollow game on LitVM.
- * @dev Players pay the native gas token (zkLTC) to play; the owner sets the
+ * @notice Pay-to-play contract for The Hollow game on Robinhood Chain.
+ * @dev Players pay the native gas token (ETH) to play; the owner sets the
  *      price and withdraws collected funds.
  */
 contract TheHollowGame is Ownable, ReentrancyGuard {
-    // Play price in wei of the native token (zkLTC, 18 decimals).
-    // Default 0.0001 zkLTC — owner can adjust via setPlayPrice.
+    // Play price in wei of the native token (ETH, 18 decimals).
+    // Default 0.0001 ETH — owner can adjust via setPlayPrice.
     uint256 public playPrice = 0.0001 ether;
 
     // Events

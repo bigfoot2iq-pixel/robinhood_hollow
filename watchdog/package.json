@@ -1,7 +1,7 @@
 {
-  "name": "katana-raffles-watchdog",
+  "name": "robinhood-raffles-watchdog",
   "version": "1.0.0",
-  "description": "Watchdog service for Katana Raffles automation",
+  "description": "Watchdog service for Robinhood Raffles automation",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

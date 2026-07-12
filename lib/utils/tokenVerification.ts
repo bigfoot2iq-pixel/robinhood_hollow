@@ -1,5 +1,5 @@
 import { createPublicClient, http, parseAbi, getAddress, formatUnits } from "viem";
-import { katanaNetwork } from "@/lib/contracts";
+import { robinhoodChain } from "@/lib/contracts";
 
 const erc20Abi = parseAbi([
   "function balanceOf(address owner) view returns (uint256)",
@@ -33,9 +33,9 @@ export async function verifyERC20Token(
   ownerAddress: string
 ): Promise<VerificationResult> {
   try {
-    const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+    const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
     const publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
     });
 
@@ -131,9 +131,9 @@ export async function verifyERC721Token(
   ownerAddress: string
 ): Promise<VerificationResult> {
   try {
-    const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+    const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
     const publicClient = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(rpcUrl),
     });
 

@@ -20,29 +20,29 @@ export function CountdownTimer({ endDate, className = "" }: CountdownTimerProps)
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="material-symbols-outlined text-[#33C5D9] text-sm animate-pulse">schedule</span>
+      <span className="material-symbols-outlined text-[#ccff00] text-sm animate-pulse">schedule</span>
       <div className="flex items-center gap-1">
         {showDays && (
           <>
             <div className="flex flex-col items-center">
-              <span className="text-sm font-display font-bold text-white leading-none">{days}</span>
+              <span className="text-sm font-display font-bold text-text-primary leading-none">{days}</span>
               <span className="text-[7px] font-bold text-muted-blue uppercase tracking-wider">days</span>
             </div>
-            <span className="text-white/40 text-xs mb-2">:</span>
+            <span className="text-text-tertiary/40 text-xs mb-2">:</span>
           </>
         )}
         <div className="flex flex-col items-center">
-          <span className="text-sm font-display font-bold text-white leading-none">{hours}</span>
+          <span className="text-sm font-display font-bold text-text-primary leading-none">{hours}</span>
           <span className="text-[7px] font-bold text-muted-blue uppercase tracking-wider">hrs</span>
         </div>
-        <span className="text-white/40 text-xs mb-2">:</span>
+        <span className="text-text-tertiary/40 text-xs mb-2">:</span>
         <div className="flex flex-col items-center">
-          <span className="text-sm font-display font-bold text-white leading-none">{minutes}</span>
+          <span className="text-sm font-display font-bold text-text-primary leading-none">{minutes}</span>
           <span className="text-[7px] font-bold text-muted-blue uppercase tracking-wider">min</span>
         </div>
-        <span className="text-white/40 text-xs mb-2">:</span>
+        <span className="text-text-tertiary/40 text-xs mb-2">:</span>
         <div className="flex flex-col items-center">
-          <span className="text-sm font-display font-bold text-white leading-none">{seconds}</span>
+          <span className="text-sm font-display font-bold text-text-primary leading-none">{seconds}</span>
           <span className="text-[7px] font-bold text-muted-blue uppercase tracking-wider">sec</span>
         </div>
       </div>

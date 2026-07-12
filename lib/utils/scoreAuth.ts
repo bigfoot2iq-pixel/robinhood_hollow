@@ -1,5 +1,5 @@
 import { createPublicClient, http, getAddress, isAddress } from "viem";
-import { litvmTestnet } from "@/lib/contracts";
+import { robinhoodChain } from "@/lib/contracts";
 
 /**
  * Canonical message a player signs to authorize a score submission. Binding
@@ -37,7 +37,7 @@ export async function verifyScoreSignature(p: {
   }
 
   const client = createPublicClient({
-    chain: litvmTestnet,
+    chain: robinhoodChain,
     transport: http(process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL),
   });
 

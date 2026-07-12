@@ -44,7 +44,7 @@ export async function verifyAdminSignature(request: NextRequest): Promise<boolea
     }
 
     // Verify signature
-    const message = `Katana Raffles Admin\nTimestamp: ${timestamp}`;
+    const message = `Robinhood Raffles Admin\nTimestamp: ${timestamp}`;
     const isValid = await verifyMessage({
       address: wallet as `0x${string}`,
       message,

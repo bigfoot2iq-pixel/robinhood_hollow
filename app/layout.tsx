@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import { Web3Provider } from "@/components/providers";
 import { Header, Sidebar } from "@/components/layout";
 import { GlobalLoader } from "@/components/ui/GlobalLoader";
-import { LitvmAmbientBackground } from "@/components/ui/LitvmAmbientBackground";
+import { RobinhoodAmbientBackground } from "@/components/ui/RobinhoodAmbientBackground";
 import { Toaster } from "sonner";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -30,8 +30,8 @@ const materialSymbols = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LitVM Raffles - Win Litecoin Prizes",
-  description: "Decentralized raffles platform on LitVM, Litecoin's Virtual Machine. Enter raffles, win prizes on the LiteForge testnet!",
+  title: "Robinhood Raffles - Win Crypto Prizes",
+  description: "Decentralized raffles platform on Robinhood Chain. Enter raffles, win prizes!",
   icons: {
     icon: "/litvm/logo-letter.svg",
   },
@@ -46,15 +46,15 @@ export default function RootLayout({
     <html lang="en" className={`dark ${plusJakarta.variable} ${spaceGrotesk.variable} ${materialSymbols.variable}`}>
       <head />
       <body className="antialiased min-h-screen">
-        <LitvmAmbientBackground />
+        <RobinhoodAmbientBackground />
         <GlobalLoader />
         <Toaster
           theme="dark"
           toastOptions={{
             style: {
-              background: "#0A1622",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              color: "#fff",
+              background: "#1a160d",
+              border: "1px solid rgba(204, 255, 0, 0.2)",
+              color: "#ccff00",
             },
           }}
         />

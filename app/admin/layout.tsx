@@ -25,7 +25,7 @@ export default function AdminLayout({
     return (
       <div className="container py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">Admin Access Required</h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-blue">
           Please connect the admin wallet to access this area
         </p>
       </div>
@@ -36,7 +36,7 @@ export default function AdminLayout({
     return (
       <div className="container py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">Checking Access</h1>
-        <p className="text-muted-foreground">Verifying admin permissions...</p>
+        <p className="text-muted-blue">Verifying admin permissions...</p>
       </div>
     );
   }
@@ -45,7 +45,7 @@ export default function AdminLayout({
     return (
       <div className="container py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">Unauthorized</h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-blue">
           Your wallet is not authorized to access the admin area
         </p>
       </div>

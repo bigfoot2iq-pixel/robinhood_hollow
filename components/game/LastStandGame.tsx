@@ -298,12 +298,12 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
   if (!imagesLoaded) {
     return (
       <div 
-        className="flex items-center justify-center bg-katana-dark"
+        className="flex items-center justify-center bg-dark-navy"
         style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
       >
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-katana-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-white">Loading game assets...</p>
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-primary">Loading game assets...</p>
         </div>
       </div>
     )
@@ -326,14 +326,14 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
           {/* Left side - Movement */}
           <div className="flex gap-2">
             <button
-              className="w-12 h-12 sm:w-14 sm:h-14 bg-katana-dark/80 border-2 border-katana-blue/50 rounded-xl text-white font-bold text-lg sm:text-xl active:bg-katana-primary active:text-katana-dark transition-colors touch-none"
+              className="w-12 h-12 sm:w-14 sm:h-14 bg-dark-navy/80 border-2 border-dark-blue/50 rounded-xl text-text-primary font-bold text-lg sm:text-xl active:bg-primary active:text-dark-navy transition-colors touch-none"
               onTouchStart={() => controlsRef.current.left = true}
               onTouchEnd={() => controlsRef.current.left = false}
             >
               ←
             </button>
             <button
-              className="w-12 h-12 sm:w-14 sm:h-14 bg-katana-dark/80 border-2 border-katana-blue/50 rounded-xl text-white font-bold text-lg sm:text-xl active:bg-katana-primary active:text-katana-dark transition-colors touch-none"
+              className="w-12 h-12 sm:w-14 sm:h-14 bg-dark-navy/80 border-2 border-dark-blue/50 rounded-xl text-text-primary font-bold text-lg sm:text-xl active:bg-primary active:text-dark-navy transition-colors touch-none"
               onTouchStart={() => controlsRef.current.right = true}
               onTouchEnd={() => controlsRef.current.right = false}
             >
@@ -344,21 +344,21 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
           {/* Right side - Actions */}
           <div className="flex gap-2">
             <button
-              className="w-12 h-12 sm:w-14 sm:h-14 bg-katana-dark/80 border-2 border-katana-blue/50 rounded-xl text-white font-bold text-[10px] sm:text-xs active:bg-katana-primary active:text-katana-dark transition-colors touch-none"
+              className="w-12 h-12 sm:w-14 sm:h-14 bg-dark-navy/80 border-2 border-dark-blue/50 rounded-xl text-text-primary font-bold text-[10px] sm:text-xs active:bg-primary active:text-dark-navy transition-colors touch-none"
               onTouchStart={() => controlsRef.current.dodge = true}
               onTouchEnd={() => controlsRef.current.dodge = false}
             >
               DODGE
             </button>
             <button
-              className="w-12 h-12 sm:w-14 sm:h-14 bg-katana-dark/80 border-2 border-katana-primary/50 rounded-xl text-katana-primary font-bold text-[10px] sm:text-xs active:bg-katana-primary active:text-katana-dark transition-colors touch-none"
+              className="w-12 h-12 sm:w-14 sm:h-14 bg-dark-navy/80 border-2 border-primary/50 rounded-xl text-primary font-bold text-[10px] sm:text-xs active:bg-primary active:text-dark-navy transition-colors touch-none"
               onTouchStart={() => controlsRef.current.jump = true}
               onTouchEnd={() => controlsRef.current.jump = false}
             >
               JUMP
             </button>
             <button
-              className="w-14 h-12 sm:w-16 sm:h-14 bg-katana-primary/20 border-2 border-katana-primary rounded-xl text-katana-primary font-bold text-[10px] sm:text-xs active:bg-katana-primary active:text-katana-dark transition-colors touch-none"
+              className="w-14 h-12 sm:w-16 sm:h-14 bg-primary/20 border-2 border-primary rounded-xl text-primary font-bold text-[10px] sm:text-xs active:bg-primary active:text-dark-navy transition-colors touch-none"
               onTouchStart={() => controlsRef.current.attack = true}
               onTouchEnd={() => controlsRef.current.attack = false}
             >
@@ -370,37 +370,37 @@ export default function LastStandGame({ onScoreUpdate, walletAddress, sessionId,
 
       {/* Desktop Control instructions */}
       {!isMobile && (
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:gap-6 px-2 sm:px-4 py-3 bg-katana-dark/50 border border-katana-blue/30 rounded-lg backdrop-blur-sm">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:gap-6 px-2 sm:px-4 py-3 bg-dark-navy/50 border border-dark-blue/30 rounded-lg backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <span className="text-gray-300 text-xs sm:text-sm font-semibold">Move:</span>
             <div className="flex gap-1">
-              <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">A</kbd>
-              <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">D</kbd>
+              <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">A</kbd>
+              <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">D</kbd>
             </div>
           </div>
 
-          <div className="w-px h-4 sm:h-6 bg-katana-blue/30" />
+          <div className="w-px h-4 sm:h-6 bg-dark-blue/30" />
 
           <div className="flex items-center gap-2">
             <span className="text-gray-300 text-xs sm:text-sm font-semibold">Jump:</span>
-            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">W</kbd>
-            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">Space</kbd>
+            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">W</kbd>
+            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">Space</kbd>
           </div>
 
-          <div className="w-px h-4 sm:h-6 bg-katana-blue/30" />
+          <div className="w-px h-4 sm:h-6 bg-dark-blue/30" />
 
           <div className="flex items-center gap-2">
             <span className="text-gray-300 text-xs sm:text-sm font-semibold">Attack:</span>
-            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">J</kbd>
+            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">J</kbd>
             <span className="text-gray-500 text-[10px] sm:text-xs hidden sm:inline">(hold for charged)</span>
           </div>
 
-          <div className="w-px h-4 sm:h-6 bg-katana-blue/30 hidden lg:block" />
+          <div className="w-px h-4 sm:h-6 bg-dark-blue/30 hidden lg:block" />
 
           <div className="flex items-center gap-2">
             <span className="text-gray-300 text-xs sm:text-sm font-semibold">Dodge:</span>
-            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">L</kbd>
-            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-700 rounded text-white font-mono text-[10px] sm:text-xs shadow-md">Shift</kbd>
+            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">L</kbd>
+            <kbd className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#2a2200] rounded text-text-primary font-mono text-[10px] sm:text-xs shadow-md">Shift</kbd>
           </div>
         </div>
       )}

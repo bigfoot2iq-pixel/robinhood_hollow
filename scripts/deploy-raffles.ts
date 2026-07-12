@@ -16,41 +16,41 @@ async function main() {
 
   const [deployer] = await ethers.getSigners();
   console.log("═══════════════════════════════════════════════════");
-  console.log("  KatanaRaffles Deployment (LitVM testnet)");
+  console.log("  RobinhoodRaffles Deployment (Robinhood Chain)");
   console.log("═══════════════════════════════════════════════════");
   console.log("Deployer:", deployer.address);
-  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "zkLTC");
+  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "ETH");
   console.log("HollowToken:", HOLLOW_TOKEN_ADDRESS);
   console.log("Watchdog:", WATCHDOG_ADDRESS);
   console.log("");
 
-  // Deploy KatanaRaffles
-  console.log("Deploying KatanaRaffles...");
-  const KatanaRaffles = await ethers.getContractFactory("LitvmRaffles");
-  const katanaRaffles = await KatanaRaffles.deploy(
+  // Deploy RobinhoodRaffles
+  console.log("Deploying RobinhoodRaffles...");
+  const RobinhoodRaffles = await ethers.getContractFactory("RobinhoodRaffles");
+  const robinhoodRaffles = await RobinhoodRaffles.deploy(
     HOLLOW_TOKEN_ADDRESS,
     WATCHDOG_ADDRESS,
   );
-  await katanaRaffles.waitForDeployment();
-  const rafflesAddress = await katanaRaffles.getAddress();
-  console.log(`✅ KatanaRaffles deployed to: ${rafflesAddress}`);
+  await robinhoodRaffles.waitForDeployment();
+  const rafflesAddress = await robinhoodRaffles.getAddress();
+  console.log(`✅ RobinhoodRaffles deployed to: ${rafflesAddress}`);
 
   // Wait for explorer to index
   console.log("\nWaiting 30s for explorer to index...");
   await new Promise((resolve) => setTimeout(resolve, 30_000));
 
   // Verify
-  console.log(`\nVerifying ${rafflesAddress} on Liteforge Explorer...`);
+  console.log(`\nVerifying ${rafflesAddress} on Robinhood Chain Explorer...`);
   try {
     await run("verify:verify", {
       address: rafflesAddress,
       constructorArguments: [HOLLOW_TOKEN_ADDRESS, WATCHDOG_ADDRESS],
     });
-    console.log(`✅ KatanaRaffles verified!`);
+    console.log(`✅ RobinhoodRaffles verified!`);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     if (msg.includes("already verified")) {
-      console.log(`✅ KatanaRaffles is already verified.`);
+      console.log(`✅ RobinhoodRaffles is already verified.`);
     } else {
       console.error(`❌ Verification failed:`, msg);
     }
@@ -60,11 +60,11 @@ async function main() {
   console.log("\n═══════════════════════════════════════════════════");
   console.log("  Deployment Complete!");
   console.log("═══════════════════════════════════════════════════");
-  console.log(`KatanaRaffles: ${rafflesAddress}`);
+  console.log(`RobinhoodRaffles: ${rafflesAddress}`);
   console.log(`\nUpdate your .env.local:`);
   console.log(`NEXT_PUBLIC_RAFFLES_CONTRACT_ADDRESS=${rafflesAddress}`);
-  console.log(`\nLiteforge Explorer:`);
-  console.log(`https://liteforge.explorer.caldera.xyz/address/${rafflesAddress}#code`);
+  console.log(`\nRobinhood Chain Explorer:`);
+  console.log(`https://robinhoodchain.blockscout.com/address/${rafflesAddress}#code`);
 }
 
 main().catch((error) => {

@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { formatUnits } from 'viem';
-import { litvmTestnet } from '@/lib/contracts/config';
+import { robinhoodChain } from '@/lib/contracts/config';
 
-// LitVM explorer is Caldera-hosted Blockscout, which exposes a native token
+// Robinhood Chain explorer is Blockscout, which exposes a native token
 // holders endpoint — no need to replay transfer events like the old Etherscan
 // flow. Blockscout v2 REST is keyless.
 const EXPLORER_BASE =
   process.env.NEXT_PUBLIC_EXPLORER_URL ||
-  litvmTestnet.blockExplorers?.default?.url ||
-  'https://liteforge.explorer.caldera.xyz';
+  robinhoodChain.blockExplorers?.default?.url ||
+  'https://robinhoodchain.blockscout.com';
 
 const HOLLOW_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_HOLLOW_TOKEN_ADDRESS as string;
 const HOLDERS_PER_PAGE = 50;

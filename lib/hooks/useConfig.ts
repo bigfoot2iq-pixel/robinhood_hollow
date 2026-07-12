@@ -47,7 +47,7 @@ export function useConfig(key: string, initialValue: string = "0") {
 
     try {
       const timestamp = Date.now().toString();
-      const message = `Katana Raffles Admin\nTimestamp: ${timestamp}`;
+      const message = `Robinhood Raffles Admin\nTimestamp: ${timestamp}`;
       const signature = await signMessageAsync({ message });
 
       const response = await fetch("/api/config", {

@@ -75,11 +75,11 @@ export async function POST(request: NextRequest) {
     // Verify transaction on-chain before recording
     try {
       const { createPublicClient, http } = await import("viem");
-      const { katanaNetwork } = await import("@/lib/contracts/config");
+      const { robinhoodChain } = await import("@/lib/contracts/config");
       
       const publicClient = createPublicClient({
-        chain: katanaNetwork,
-        transport: http(process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network"),
+        chain: robinhoodChain,
+        transport: http(process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com"),
       });
 
       const receipt = await publicClient.getTransactionReceipt({ hash: txHash as `0x${string}` });

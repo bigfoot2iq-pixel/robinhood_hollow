@@ -1,40 +1,36 @@
 import { defineChain } from "viem";
 
-// LitVM LiteForge testnet — Litecoin's Virtual Machine (https://www.litvm.com/)
-export const litvmTestnet = defineChain({
-  id: 4441,
-  name: "LitVM LiteForge",
+// Robinhood Chain (Arbitrum L2) — mainnet, chain ID 4663
+export const robinhoodChain = defineChain({
+  id: 4663,
+  name: "Robinhood Chain",
   nativeCurrency: {
     decimals: 18,
-    name: "zkLTC",
-    symbol: "zkLTC",
+    name: "Ether",
+    symbol: "ETH",
   },
   rpcUrls: {
     default: {
-      http: [process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http"],
-      webSocket: ["wss://liteforge.rpc.caldera.xyz/ws"],
+      http: [process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com"],
     },
   },
   blockExplorers: {
     default: {
-      name: "Liteforge Explorer",
-      url: "https://liteforge.explorer.caldera.xyz",
+      name: "Blockscout",
+      url: "https://robinhoodchain.blockscout.com",
     },
   },
-  testnet: true,
+  testnet: false,
 });
-
-// Backwards-compatible alias (legacy imports referencing the old name)
-export const katanaNetwork = litvmTestnet;
 
 // Hardhat local network for development (matches hardhat.config.ts chainId)
 export const hardhatLocal = defineChain({
-  id: 4441,
+  id: 4663,
   name: "Hardhat Local",
   nativeCurrency: {
     decimals: 18,
-    name: "zkLTC",
-    symbol: "zkLTC",
+    name: "Ether",
+    symbol: "ETH",
   },
   rpcUrls: {
     default: {

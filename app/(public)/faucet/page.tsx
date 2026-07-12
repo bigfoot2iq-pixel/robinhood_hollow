@@ -5,20 +5,19 @@ import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { isAddress } from "viem";
 import { toast } from "sonner";
-import { litvmTestnet } from "@/lib/contracts";
+import { robinhoodChain } from "@/lib/contracts";
 
 const EXPLORER_URL =
-  litvmTestnet.blockExplorers?.default.url || "https://liteforge.explorer.caldera.xyz";
-const RPC_HTTP = "https://liteforge.rpc.caldera.xyz/http";
-const RPC_WS = "wss://liteforge.rpc.caldera.xyz/ws";
-const LITVM_ICON =
-  "https://g3ucpmxwuqd1lb6x.public.blob.vercel-storage.com/production/chain-images/liteforge-LitVM%20Icon%20-%20Primary%20Light-nJI1Gfl2yfyhLmtiRlBjv5esqcHJD8.png";
+  robinhoodChain.blockExplorers?.default.url || "https://robinhoodchain.blockscout.com";
+const RPC_HTTP = "https://rpc.mainnet.chain.robinhood.com";
+const RPC_WS = "wss://rpc.mainnet.chain.robinhood.com";
+const ROBINHOOD_ICON = "https://cdn.robinhood.com/robinhood-icon.png";
 
 const DETAIL_ROWS = [
   {
     label: "Native Token",
     icon: "toll",
-    value: litvmTestnet.nativeCurrency.symbol, // zkLTC
+    value: robinhoodChain.nativeCurrency.symbol, // ETH
   },
   {
     label: "Data Availability",
@@ -55,11 +54,11 @@ function CopyRow({ label, value }: { label: string; value: string }) {
       <span className="text-[10px] font-bold uppercase tracking-widest text-muted-blue">{label}</span>
       <button
         onClick={copy}
-        className="group flex items-center gap-2 text-left text-sm font-display text-white transition-colors hover:text-[#33C5D9]"
+        className="group flex items-center gap-2 text-left text-sm font-display text-text-primary transition-colors hover:text-[#ccff00]"
         title="Click to copy"
       >
         <span className="truncate">{value}</span>
-        <span className="material-symbols-outlined text-muted-blue group-hover:text-[#33C5D9]" style={{ fontSize: 16 }}>
+        <span className="material-symbols-outlined text-muted-blue group-hover:text-[#ccff00]" style={{ fontSize: 16 }}>
           {copied ? "check" : "content_copy"}
         </span>
       </button>
@@ -94,7 +93,7 @@ export default function FaucetPage() {
         return;
       }
 
-      toast.success(`Sent ${data.amount} ${litvmTestnet.nativeCurrency.symbol}!`, {
+      toast.success(`Sent ${data.amount} ${robinhoodChain.nativeCurrency.symbol}!`, {
         description: "Tap to view the transaction.",
         action: data.txHash
           ? {
@@ -114,16 +113,16 @@ export default function FaucetPage() {
     <div className="space-y-6 lg:space-y-8">
       {/* Page heading */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-header text-white sm:text-4xl lg:text-5xl">Faucet</h1>
+        <h1 className="text-3xl font-header text-text-primary sm:text-4xl lg:text-5xl">Faucet</h1>
         <p className="max-w-2xl text-sm text-muted-blue sm:text-base">
-          Request the chain&apos;s native {litvmTestnet.nativeCurrency.symbol} token to start testing on the
-          LiteForge testnet.
+          Request the chain&apos;s native {robinhoodChain.nativeCurrency.symbol} token to start testing on the
+          Robinhood Chain.
         </p>
       </div>
 
       {/* Top row: ASCII liquid accent (left) + Faucet card (right) */}
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
-        {/* Animated ASCII liquid accent with centered LitVM logo */}
+        {/* Animated ASCII liquid accent with centered Robinhood logo */}
         <div className="relative hidden w-[240px] flex-shrink-0 self-stretch overflow-hidden rounded-3xl bg-black lg:block">
           <video
             autoPlay
@@ -136,7 +135,7 @@ export default function FaucetPage() {
           </video>
           <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
             <img
-              src={LITVM_ICON}
+              src={ROBINHOOD_ICON}
               alt=""
               width={106}
               height={106}
@@ -148,20 +147,20 @@ export default function FaucetPage() {
         {/* Faucet request card */}
         <div className="ui-container flex flex-1 flex-col gap-6 rounded-2xl p-6 sm:p-8 lg:p-10">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#33C5D9]/15">
-              <span className="material-symbols-outlined text-[#33C5D9]" style={{ fontSize: 24 }}>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ccff00]/15">
+              <span className="material-symbols-outlined text-[#ccff00]" style={{ fontSize: 24 }}>
                 water_drop
               </span>
             </div>
-            <h2 className="text-2xl font-header text-white">Faucet</h2>
+            <h2 className="text-2xl font-header text-text-primary">Faucet</h2>
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
             {/* Token chip — single native token, non-interactive */}
             <div className="flex h-16 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 sm:w-[150px]">
-              <img src={LITVM_ICON} alt="" className="h-6 w-6 object-contain" />
-              <span className="flex-1 truncate text-base font-bold text-white">
-                {litvmTestnet.nativeCurrency.symbol}
+              <img src={ROBINHOOD_ICON} alt="" className="h-6 w-6 object-contain" />
+              <span className="flex-1 truncate text-base font-bold text-text-primary">
+                {robinhoodChain.nativeCurrency.symbol}
               </span>
             </div>
 
@@ -172,7 +171,7 @@ export default function FaucetPage() {
               onKeyDown={(e) => e.key === "Enter" && handleRequest()}
               placeholder="Recipient's wallet address"
               spellCheck={false}
-              className="h-16 flex-1 rounded-xl border border-white/10 bg-white/5 px-4 font-display text-base text-white placeholder:text-muted-blue/70 outline-none transition-colors focus:border-[#33C5D9]/60 focus:ring-1 focus:ring-[#33C5D9]/40"
+              className="h-16 flex-1 rounded-xl border border-white/10 bg-white/5 px-4 font-display text-base text-text-primary placeholder:text-muted-blue/70 outline-none transition-colors focus:border-[#ccff00]/60 focus:ring-1 focus:ring-[#ccff00]/40"
             />
 
             {/* Request (connected) / Connect Wallet (disconnected) */}
@@ -180,7 +179,7 @@ export default function FaucetPage() {
               <button
                 onClick={handleRequest}
                 disabled={!isValid || isRequesting}
-                className="flex h-16 items-center justify-center gap-2 rounded-xl bg-[#33C5D9] px-6 text-sm font-bold uppercase tracking-[0.15em] text-dark-navy transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 sm:w-32"
+                className="flex h-16 items-center justify-center gap-2 rounded-xl bg-[#1a160d] border border-white/10 px-6 text-sm font-bold uppercase tracking-[0.15em] text-text-primary transition-all hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40 sm:w-32"
               >
                 {isRequesting ? (
                   <span className="material-symbols-outlined animate-spin" style={{ fontSize: 20 }}>
@@ -198,7 +197,7 @@ export default function FaucetPage() {
                     return (
                       <button
                         onClick={openChainModal}
-                        className="flex h-16 items-center justify-center rounded-xl bg-red-500 px-6 text-sm font-bold uppercase tracking-[0.15em] text-white transition-all hover:bg-red-600 sm:w-44"
+                        className="flex h-16 items-center justify-center rounded-xl bg-red-500 px-6 text-sm font-bold uppercase tracking-[0.15em] text-text-primary transition-all hover:bg-red-600 sm:w-44"
                       >
                         Wrong Network
                       </button>
@@ -207,7 +206,7 @@ export default function FaucetPage() {
                   return (
                     <button
                       onClick={openConnectModal}
-                      className="flex h-16 items-center justify-center rounded-xl bg-[#33C5D9] px-6 text-sm font-bold uppercase tracking-[0.15em] text-dark-navy transition-all hover:brightness-110 sm:w-44"
+                      className="flex h-16 items-center justify-center rounded-xl bg-[#1a160d] border border-white/10 px-6 text-sm font-bold uppercase tracking-[0.15em] text-text-primary transition-all hover:brightness-125 sm:w-44"
                     >
                       Connect Wallet
                     </button>
@@ -220,7 +219,7 @@ export default function FaucetPage() {
           {connectedAddress && (
             <button
               onClick={() => setAddress(connectedAddress)}
-              className="-mt-2 flex w-fit items-center gap-1.5 text-xs font-semibold text-[#33C5D9] transition-opacity hover:opacity-80"
+              className="-mt-2 flex w-fit items-center gap-1.5 text-xs font-semibold text-[#ccff00] transition-opacity hover:opacity-80"
             >
               <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
                 account_balance_wallet
@@ -230,20 +229,20 @@ export default function FaucetPage() {
           )}
 
           <p className="text-xs text-muted-blue">
-            Drips 0.001 {litvmTestnet.nativeCurrency.symbol} for gas — enough for hundreds of
+            Drips 0.001 {robinhoodChain.nativeCurrency.symbol} for gas — enough for hundreds of
             transactions. One request per address every 24 hours.
           </p>
 
           {/* Fallback: official faucet */}
           <div className="flex flex-col gap-3 border-t border-white/10 pt-5">
             <p className="text-xs text-muted-blue">
-              Can&apos;t claim here? Use the official LiteForge faucet instead.
+              Can&apos;t claim here? Use the official Robinhood Chain faucet instead.
             </p>
             <a
-              href="https://liteforge.hub.caldera.xyz/"
+              href="https://robinhoodchain.faucet.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-12 w-fit items-center gap-2 rounded-xl border border-[#33C5D9]/40 bg-[#33C5D9]/10 px-5 text-sm font-bold uppercase tracking-[0.15em] text-[#33C5D9] transition-all hover:bg-[#33C5D9]/20"
+              className="flex h-12 w-fit items-center gap-2 rounded-xl border border-[#ccff00]/40 bg-[#ccff00]/10 px-5 text-sm font-bold uppercase tracking-[0.15em] text-[#ccff00] transition-all hover:bg-[#ccff00]/20"
             >
               Official Faucet
               <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
@@ -257,12 +256,12 @@ export default function FaucetPage() {
       {/* Details card */}
       <div className="ui-container overflow-hidden rounded-2xl">
         {/* Header bar */}
-        <div className="flex items-center justify-between border-b border-white/5 px-6 py-5 sm:px-8 lg:px-10">
-          <h2 className="text-2xl font-header text-white">Details</h2>
+        <div className="flex items-center justify-between border-b border-white/10 px-6 py-5 sm:px-8 lg:px-10">
+          <h2 className="text-2xl font-header text-text-primary">Details</h2>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-widest text-muted-blue">Chain ID</span>
-            <span className="rounded-md bg-[#33C5D9]/15 px-2.5 py-1 font-display text-sm font-bold text-[#33C5D9]">
-              {litvmTestnet.id}
+            <span className="rounded-md bg-[#ccff00]/15 px-2.5 py-1 font-display text-sm font-bold text-[#ccff00]">
+              {robinhoodChain.id}
             </span>
           </div>
         </div>
@@ -272,23 +271,23 @@ export default function FaucetPage() {
           {DETAIL_ROWS.map((row) => (
             <div
               key={row.label}
-              className="flex flex-col gap-2 bg-[#0E2230]/40 px-6 py-5 sm:px-8 lg:px-6"
+              className="flex flex-col gap-2 bg-white/10 px-6 py-5 sm:px-8 lg:px-6"
             >
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-blue">
                 {row.label}
               </span>
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#33C5D9]" style={{ fontSize: 20 }}>
+                <span className="material-symbols-outlined text-[#ccff00]" style={{ fontSize: 20 }}>
                   {row.icon}
                 </span>
-                <span className="font-display text-base font-bold text-white">{row.value}</span>
+                <span className="font-display text-base font-bold text-text-primary">{row.value}</span>
               </div>
             </div>
           ))}
         </div>
 
         {/* Connection details */}
-        <div className="grid grid-cols-1 gap-6 border-t border-white/5 px-6 py-6 sm:grid-cols-2 sm:px-8 lg:grid-cols-3 lg:px-10">
+        <div className="grid grid-cols-1 gap-6 border-t border-white/10 px-6 py-6 sm:grid-cols-2 sm:px-8 lg:grid-cols-3 lg:px-10">
           <CopyRow label="RPC (HTTP)" value={RPC_HTTP} />
           <CopyRow label="RPC (WS)" value={RPC_WS} />
           <CopyRow label="Block Explorer" value={EXPLORER_URL} />

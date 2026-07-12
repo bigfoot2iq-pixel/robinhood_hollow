@@ -1,5 +1,5 @@
 import { createPublicClient, http } from "viem";
-import { contracts, katanaNetwork, KatanaRafflesABI } from "../lib/contracts/config";
+import { contracts, robinhoodChain, RobinhoodRafflesABI } from "../lib/contracts/config";
 
 /**
  * Script to check the on-chain state of a raffle
@@ -9,10 +9,10 @@ import { contracts, katanaNetwork, KatanaRafflesABI } from "../lib/contracts/con
 const RAFFLE_STATES = ["CREATED", "ACTIVE", "COMPLETED", "CANCELLED"];
 
 async function checkRaffleState(chainRaffleId: number) {
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
   
   const client = createPublicClient({
-    chain: katanaNetwork,
+    chain: robinhoodChain,
     transport: http(rpcUrl),
   });
 
@@ -21,7 +21,7 @@ async function checkRaffleState(chainRaffleId: number) {
   try {
     const result = await client.readContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "raffles",
       args: [BigInt(chainRaffleId)],
     }) as [number, string, number, bigint, boolean, boolean];
@@ -52,7 +52,7 @@ async function checkRaffleState(chainRaffleId: number) {
     // Check if raffle is active
     const isActive = await client.readContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "isRaffleActive",
       args: [BigInt(chainRaffleId)],
     });

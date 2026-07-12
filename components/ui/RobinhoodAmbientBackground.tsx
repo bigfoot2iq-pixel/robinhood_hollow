@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * Site-wide ambient backdrop — mirrors litvm.com's looping cinematic video sections.
+ * Site-wide ambient backdrop — looping cinematic video sections.
  * Fixed behind all content at low opacity so it reads as atmosphere, not noise.
  */
-export function LitvmAmbientBackground() {
+export function RobinhoodAmbientBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
       <video
@@ -18,7 +18,7 @@ export function LitvmAmbientBackground() {
         <source src="/litvm/bg-litecoin.mp4" type="video/mp4" />
       </video>
       {/* Navy wash so foreground text stays legible over the video */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0A1622]/85 via-[#0A1622]/80 to-[#0A1622]/92" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#ccff00]/85 via-[#ccff00]/80 to-[#ccff00]/92" />
     </div>
   );
 }

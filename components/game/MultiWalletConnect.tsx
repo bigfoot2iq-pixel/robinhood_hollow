@@ -81,7 +81,7 @@ export default function MultiWalletConnect() {
           return (
             <motion.button
               onClick={openConnectModal}
-              className="relative overflow-hidden px-6 py-3 rounded-full bg-katana-primary text-katana-dark font-semibold hover:shadow-2xl hover:shadow-katana-primary/25 transition-all duration-300 group border-none"
+              className="relative overflow-hidden px-6 py-3 rounded-full bg-primary text-text-primary font-semibold hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 group border-none"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -95,7 +95,7 @@ export default function MultiWalletConnect() {
           return (
             <motion.button
               onClick={openChainModal}
-              className="relative overflow-hidden px-6 py-3 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-300 border-none"
+              className="relative overflow-hidden px-6 py-3 rounded-full bg-red-500 text-text-primary font-semibold hover:bg-red-600 transition-all duration-300 border-none"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -109,7 +109,7 @@ export default function MultiWalletConnect() {
           <>
             <div className="relative" ref={dropdownRef}>
               <motion.button
-                className={`flex items-center space-x-3 px-4 py-2 bg-katana-dark/80 backdrop-blur-sm border border-katana-primary/20 rounded-full text-white hover:border-katana-primary/40 hover:bg-katana-blue/5 transition-all duration-300 shadow-lg hover:shadow-katana-primary/10 ${
+                className={`flex items-center space-x-3 px-4 py-2 bg-dark-navy/80 backdrop-blur-sm border border-primary/20 rounded-full text-text-primary hover:border-primary/40 hover:bg-dark-blue/5 transition-all duration-300 shadow-lg hover:shadow-primary/10 ${
                   showRegistrationModal ? 'cursor-default' : 'cursor-pointer'
                 }`}
                 whileHover={showRegistrationModal ? {} : { scale: 1.02 }}
@@ -119,12 +119,12 @@ export default function MultiWalletConnect() {
               >
                 {/* User Avatar */}
                 <div className="relative">
-                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-br from-katana-dark via-katana-primary to-katana-blue p-0.5">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-katana-dark flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-br from-dark-navy via-primary to-dark-blue p-0.5">
+                    <div className="w-full h-full rounded-full overflow-hidden bg-dark-navy flex items-center justify-center">
                       {user?.image_url ? (
                         <img src={user.image_url} alt={user.username} className="w-full h-full object-cover" />
                       ) : (
-                        <User size={16} className="text-white" />
+                        <User size={16} className="text-text-primary" />
                       )}
                     </div>
                   </div>
@@ -133,12 +133,12 @@ export default function MultiWalletConnect() {
 
                 {/* User Info */}
                 <div className="flex flex-col text-left min-w-0 flex-1">
-                  <span className="font-semibold text-sm text-white truncate">
+                  <span className="font-semibold text-sm text-text-primary truncate">
                     {user?.username || 'anonymous'}
                   </span>
                   <div className="flex items-center space-x-1">
                     <Wallet size={16} className="text-blue-400" />
-                    <span className="text-xs text-gray-200 font-mono">
+                    <span className="text-xs text-text-secondary font-mono">
                       {account.displayName}
                     </span>
                   </div>
@@ -146,8 +146,8 @@ export default function MultiWalletConnect() {
 
                 <ChevronDown
                   size={16}
-                  className={`text-gray-200 transition-all duration-200 flex-shrink-0 ${
-                    showDropdown ? 'rotate-180 text-katana-primary' : 'hover:text-white'
+                  className={`text-text-secondary transition-all duration-200 flex-shrink-0 ${
+                    showDropdown ? 'rotate-180 text-primary' : 'hover:text-text-primary'
                   }`}
                 />
               </motion.button>
@@ -155,32 +155,32 @@ export default function MultiWalletConnect() {
               {/* Dropdown Menu */}
               {showDropdown && (
                 <motion.div
-                  className="absolute top-full right-0 mt-3 w-72 bg-katana-dark/95 backdrop-blur-xl border border-katana-primary/20 rounded-2xl shadow-2xl shadow-black/50 z-50 overflow-hidden"
+                  className="absolute top-full right-0 mt-3 w-72 bg-dark-navy/95 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-2xl shadow-black/50 z-50 overflow-hidden"
                   initial={{ opacity: 0, y: -10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
                 >
                   {/* User Info Header */}
-                  <div className="px-6 py-4 border-b border-katana-blue/10 bg-gradient-to-r from-katana-blue/5 to-katana-primary/5">
+                  <div className="px-6 py-4 border-b border-dark-blue/10 bg-gradient-to-r from-dark-blue/5 to-primary/5">
                     <div className="flex items-center space-x-4">
                       <div className="relative">
-                        <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-katana-dark via-katana-primary to-katana-blue p-0.5">
-                          <div className="w-full h-full rounded-full overflow-hidden bg-katana-dark flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-dark-navy via-primary to-dark-blue p-0.5">
+                          <div className="w-full h-full rounded-full overflow-hidden bg-dark-navy flex items-center justify-center">
                             {user?.image_url ? (
                               <img src={user.image_url} alt={user.username} className="w-full h-full object-cover" />
                             ) : (
-                              <User size={20} className="text-white" />
+                              <User size={20} className="text-text-primary" />
                             )}
                           </div>
                         </div>
                         <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 border-2 border-gray-900 rounded-full"></div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-white text-base truncate">{user?.username || 'anonymous'}</p>
+                        <p className="font-bold text-text-primary text-base truncate">{user?.username || 'anonymous'}</p>
                         <div className="flex items-center space-x-2 mt-1">
                           <Wallet size={16} className="text-blue-400" />
-                          <span className="text-xs text-gray-200 font-mono">
+                          <span className="text-xs text-text-secondary font-mono">
                             {formatAddress(address)}
                           </span>
                           <span className="text-xs px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full font-medium">
@@ -195,17 +195,17 @@ export default function MultiWalletConnect() {
                   <div className="py-2">
                     <button
                       onClick={handleProfileClick}
-                      className="w-full flex items-center space-x-3 px-6 py-3 text-left text-white hover:text-white hover:bg-gradient-to-r hover:from-katana-blue/10 hover:to-katana-primary/10 transition-all duration-200 group"
+                      className="w-full flex items-center space-x-3 px-6 py-3 text-left text-text-primary hover:text-text-primary hover:bg-gradient-to-r hover:from-dark-blue/10 hover:to-primary/10 transition-all duration-200 group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-katana-blue/20 flex items-center justify-center group-hover:bg-katana-blue/30 transition-colors">
-                        <Edit3 size={16} className="text-katana-primary" />
+                      <div className="w-8 h-8 rounded-lg bg-dark-blue/20 flex items-center justify-center group-hover:bg-dark-blue/30 transition-colors">
+                        <Edit3 size={16} className="text-primary" />
                       </div>
                       <span className="text-sm font-medium">Edit Profile</span>
                     </button>
 
                     <button
                       onClick={handleCopyAddress}
-                      className="w-full flex items-center space-x-3 px-6 py-3 text-left text-white hover:text-white hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-cyan-500/10 transition-all duration-200 group"
+                      className="w-full flex items-center space-x-3 px-6 py-3 text-left text-text-primary hover:text-text-primary hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-cyan-500/10 transition-all duration-200 group"
                     >
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                         copySuccess ? 'bg-green-500/20' : 'bg-blue-500/20 group-hover:bg-blue-500/30'
@@ -217,14 +217,14 @@ export default function MultiWalletConnect() {
                       </span>
                     </button>
 
-                    <div className="mx-4 my-2 border-t border-katana-blue/10"></div>
+                    <div className="mx-4 my-2 border-t border-dark-blue/10"></div>
 
                     <button
                       onClick={handleDisconnect}
-                      className="w-full flex items-center space-x-3 px-6 py-3 text-left text-katana-primary hover:text-katana-dark hover:bg-gradient-to-r hover:from-katana-blue/10 hover:to-katana-dark/10 transition-all duration-200 group"
+                      className="w-full flex items-center space-x-3 px-6 py-3 text-left text-primary hover:text-[#ccff00] hover:bg-gradient-to-r hover:from-dark-blue/10 hover:to-dark-navy/10 transition-all duration-200 group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-katana-blue/20 flex items-center justify-center group-hover:bg-katana-blue/30 transition-colors">
-                        <LogOut size={16} className="text-katana-primary" />
+                      <div className="w-8 h-8 rounded-lg bg-dark-blue/20 flex items-center justify-center group-hover:bg-dark-blue/30 transition-colors">
+                        <LogOut size={16} className="text-primary" />
                       </div>
                       <span className="text-sm font-medium">Disconnect</span>
                     </button>

@@ -30,7 +30,7 @@ export function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-dark-navy/95 border border-white/10 rounded text-white"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-dark-navy/95 border border-[#1a160d]/10 rounded text-text-primary"
       >
         <span className="material-symbols-outlined">
           {mobileMenuOpen ? "close" : "menu"}
@@ -47,7 +47,7 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside className={`
-        w-64 flex-shrink-0 border-r border-white/10 bg-dark-navy/95 flex flex-col justify-between p-6
+        w-64 flex-shrink-0 border-r border-[#1a160d]/10 bg-dark-navy/95 flex flex-col justify-between p-6
         lg:relative lg:translate-x-0
         fixed inset-y-0 left-0 z-40 transition-transform duration-300
         ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -55,7 +55,7 @@ export function Sidebar() {
       <div className="flex flex-col gap-8">
         {/* Logo */}
         <Link href="/claim" className="flex items-center">
-          <img src="/litvm_hollow_logo.png" alt="LitVM Hollow" className="w-full h-12 object-cover" />
+          <img src="/litvm_hollow_logo.png" alt="Robinhood Hollow" className="w-full h-12 object-cover rounded-lg" />
         </Link>
 
         {/* Navigation */}
@@ -71,8 +71,8 @@ export function Sidebar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded transition-all cursor-pointer ${
                   isActive
-                    ? "bg-[#33C5D9] text-dark-navy"
-                    : "text-muted-blue hover:bg-white/5 hover:text-white"
+                    ? "bg-[#ccff00] text-[#1a160d]"
+                    : "text-muted-blue hover:bg-[#1a160d]/30 hover:text-text-primary"
                 }`}
               >
                 <span className="material-symbols-outlined">{item.icon}</span>
@@ -89,8 +89,8 @@ export function Sidebar() {
               onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded transition-all cursor-pointer ${
                 pathname.startsWith("/admin")
-                  ? "bg-[#33C5D9] text-dark-navy"
-                  : "text-muted-blue hover:bg-white/5 hover:text-white"
+                  ? "bg-[#ccff00] text-[#1a160d]"
+                  : "text-muted-blue hover:bg-[#1a160d]/30 hover:text-text-primary"
               }`}
             >
               <span className="material-symbols-outlined">admin_panel_settings</span>
@@ -115,7 +115,7 @@ export function Sidebar() {
               return (
                 <button
                   onClick={openConnectModal}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-[#33C5D9] hover:brightness-110 text-dark-navy text-sm font-bold rounded transition-all uppercase tracking-widest"
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-[#ccff00] hover:brightness-110 text-[#1a160d] text-sm font-bold rounded transition-all uppercase tracking-widest"
                 >
                   <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
                   Connect Wallet
@@ -127,7 +127,7 @@ export function Sidebar() {
               return (
                 <button
                   onClick={openChainModal}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded transition-all uppercase tracking-widest"
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-red-500 hover:bg-red-600 text-text-primary text-sm font-bold rounded transition-all uppercase tracking-widest"
                 >
                   <span className="material-symbols-outlined text-sm">warning</span>
                   Wrong Network
@@ -138,13 +138,13 @@ export function Sidebar() {
             return (
               <button
                 onClick={openAccountModal}
-                className="flex items-center gap-3 p-3 bg-white/5 rounded border border-white/10 hover:bg-white/10 transition-colors cursor-pointer w-full"
+                className="flex items-center gap-3 p-3 bg-[#1a160d]/5 rounded border border-[#1a160d]/10 hover:bg-[#1a160d]/10 transition-colors cursor-pointer w-full"
               >
-                <div className="h-10 w-10 rounded bg-[#33C5D9] flex items-center justify-center text-dark-navy text-sm font-bold flex-shrink-0">
+                <div className="h-10 w-10 rounded bg-[#ccff00] flex items-center justify-center text-[#1a160d] text-sm font-bold flex-shrink-0">
                   Ł
                 </div>
                 <div className="flex flex-col overflow-hidden flex-1 text-left">
-                  <p className="text-sm font-bold text-white truncate">
+                  <p className="text-sm font-bold text-text-primary truncate">
                     {account.displayName}
                   </p>
                   <p className="text-xs text-muted-blue truncate">

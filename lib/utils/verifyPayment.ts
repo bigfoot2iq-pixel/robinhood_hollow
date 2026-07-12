@@ -1,5 +1,5 @@
 import { createPublicClient, http, getAddress, parseEventLogs, isAddress } from "viem";
-import { litvmTestnet } from "@/lib/contracts";
+import { robinhoodChain } from "@/lib/contracts";
 import { THE_HOLLOW_GAME_ADDRESS, THE_HOLLOW_GAME_ABI } from "@/lib/contracts/theHollowGame";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -39,7 +39,7 @@ export async function verifyPayment(
   }
 
   const client = createPublicClient({
-    chain: litvmTestnet,
+    chain: robinhoodChain,
     transport: http(process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL),
   });
 

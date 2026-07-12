@@ -278,18 +278,18 @@ export default function RaffleDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/admin">
-            <button className="p-2 bg-white/5 hover:bg-white/10 text-white rounded transition-all border border-white/10">
+            <button className="p-2 bg-white/5 hover:bg-white/10 text-[#ccff00] rounded transition-all border border-white/10">
               <span className="material-symbols-outlined">arrow_back</span>
             </button>
           </Link>
-          <h2 className="text-5xl font-header text-white">{raffle.title}</h2>
+          <h2 className="text-5xl font-header text-text-primary">{raffle.title}</h2>
         </div>
         <div className="flex items-center gap-3">
           {status === "pending" && (
             <button
               onClick={handleActivateRaffle}
               disabled={actionLoading.activate}
-              className="px-6 py-3 bg-emerald-500 hover:brightness-110 text-white font-bold rounded uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-emerald-500 hover:brightness-110 text-text-primary font-bold rounded uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {actionLoading.activate ? "Activating..." : "Activate Raffle"}
             </button>
@@ -298,7 +298,7 @@ export default function RaffleDetailPage() {
             <button
               onClick={handleEndRaffle}
               disabled={actionLoading.end}
-              className="px-6 py-3 bg-orange-500 hover:brightness-110 text-white font-bold rounded uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-orange-500 hover:brightness-110 text-text-primary font-bold rounded uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {actionLoading.end ? "Ending..." : "End Raffle"}
             </button>
@@ -322,38 +322,38 @@ export default function RaffleDetailPage() {
         </div>
         <div className="ui-container p-6 rounded">
           <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-2">Participants</p>
-          <p className="text-3xl font-display font-bold text-white">{entries.length}</p>
+          <p className="text-3xl font-display font-bold text-text-primary">{entries.length}</p>
         </div>
         <div className="ui-container p-6 rounded">
           <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-2">Prizes</p>
-          <p className="text-3xl font-display font-bold text-white">{prizes.length}</p>
+          <p className="text-3xl font-display font-bold text-text-primary">{prizes.length}</p>
         </div>
         <div className="ui-container p-6 rounded">
           <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-2">Winners</p>
-          <p className="text-3xl font-display font-bold text-white">{winners.length}</p>
+          <p className="text-3xl font-display font-bold text-text-primary">{winners.length}</p>
         </div>
       </div>
 
       {/* Description */}
       <div className="ui-container rounded p-6">
-        <h3 className="text-xl font-header text-white mb-4">Description</h3>
-        <p className="text-white/80">{raffle.description}</p>
+        <h3 className="text-xl font-header text-text-primary mb-4">Description</h3>
+        <p className="text-text-primary/80">{raffle.description}</p>
         <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
           <div>
             <span className="text-muted-blue">Start Date:</span>
-            <span className="text-white ml-2">{format(new Date(raffle.start_date), "MMM d, yyyy HH:mm")}</span>
+            <span className="text-text-primary ml-2">{format(new Date(raffle.start_date), "MMM d, yyyy HH:mm")}</span>
           </div>
           <div>
             <span className="text-muted-blue">End Date:</span>
-            <span className="text-white ml-2">{format(new Date(raffle.end_date), "MMM d, yyyy HH:mm")}</span>
+            <span className="text-text-primary ml-2">{format(new Date(raffle.end_date), "MMM d, yyyy HH:mm")}</span>
           </div>
           <div>
             <span className="text-muted-blue">Tokens Required:</span>
-            <span className="text-white ml-2">{raffle.tokens_required}</span>
+            <span className="text-text-primary ml-2">{raffle.tokens_required}</span>
           </div>
           <div>
             <span className="text-muted-blue">Max Entries Per User:</span>
-            <span className="text-white ml-2">{raffle.max_entries_per_user}</span>
+            <span className="text-text-primary ml-2">{raffle.max_entries_per_user}</span>
           </div>
         </div>
       </div>
@@ -361,7 +361,7 @@ export default function RaffleDetailPage() {
       {/* Prizes */}
       <div className="ui-container rounded overflow-hidden">
         <div className="px-6 py-4 border-b border-white/10">
-          <h3 className="text-xl font-header text-white">Prizes</h3>
+          <h3 className="text-xl font-header text-text-primary">Prizes</h3>
         </div>
         {prizes.length > 0 ? (
           <table className="w-full text-left border-collapse">
@@ -376,13 +376,13 @@ export default function RaffleDetailPage() {
               {prizes.map((prize) => (
                 <tr key={prize.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white uppercase">{prize.prize_type}</span>
+                    <span className="text-sm text-text-primary uppercase">{prize.prize_type}</span>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white font-mono">{prize.prize_token_address.slice(0, 10)}...{prize.prize_token_address.slice(-8)}</span>
+                    <span className="text-sm text-text-primary font-mono">{prize.prize_token_address.slice(0, 10)}...{prize.prize_token_address.slice(-8)}</span>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white">{prize.prize_amount || prize.prize_token_id || "N/A"}</span>
+                    <span className="text-sm text-text-primary">{prize.prize_amount || prize.prize_token_id || "N/A"}</span>
                   </td>
                 </tr>
               ))}
@@ -399,7 +399,7 @@ export default function RaffleDetailPage() {
       {winners.length > 0 && (
         <div className="ui-container rounded overflow-hidden">
           <div className="px-6 py-4 border-b border-white/10">
-            <h3 className="text-xl font-header text-white">Winners</h3>
+            <h3 className="text-xl font-header text-text-primary">Winners</h3>
           </div>
           <table className="w-full text-left border-collapse">
             <thead className="bg-white/5 border-b border-white/10">
@@ -412,10 +412,10 @@ export default function RaffleDetailPage() {
               {winners.map((winner) => (
                 <tr key={winner.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white font-mono">{winner.wallet_address}</span>
+                    <span className="text-sm text-text-primary font-mono">{winner.wallet_address}</span>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white">{format(new Date(winner.created_at), "MMM d, yyyy HH:mm")}</span>
+                    <span className="text-sm text-text-primary">{format(new Date(winner.created_at), "MMM d, yyyy HH:mm")}</span>
                   </td>
                 </tr>
               ))}
@@ -427,10 +427,10 @@ export default function RaffleDetailPage() {
       {/* Manual End Raffle */}
       <div className="ui-container rounded overflow-hidden">
         <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
-          <h3 className="text-xl font-header text-white">Manual End Raffle</h3>
+          <h3 className="text-xl font-header text-text-primary">Manual End Raffle</h3>
           <button
             onClick={() => setShowManualEnd((prev) => !prev)}
-            className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-bold rounded uppercase tracking-widest transition-all border border-white/10"
+            className="px-4 py-2 bg-white/5 hover:bg-white/10 text-text-primary text-sm font-bold rounded uppercase tracking-widest transition-all border border-white/10"
           >
             {showManualEnd ? "Hide" : "Configure"}
           </button>
@@ -451,7 +451,7 @@ export default function RaffleDetailPage() {
                     placeholder="0x... wallet address"
                     value={participant.address}
                     onChange={(e) => updateParticipant(index, "address", e.target.value)}
-                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm font-mono placeholder:text-white/20 focus:outline-none focus:border-white/30"
+                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded text-text-primary text-sm font-mono placeholder:text-text-primary/20 focus:outline-none focus:border-text-primary/30"
                   />
                   <input
                     type="number"
@@ -459,7 +459,7 @@ export default function RaffleDetailPage() {
                     placeholder="Tickets"
                     value={participant.tickets}
                     onChange={(e) => updateParticipant(index, "tickets", parseInt(e.target.value) || 0)}
-                    className="w-28 px-4 py-3 bg-white/5 border border-white/10 rounded text-white text-sm font-mono placeholder:text-white/20 focus:outline-none focus:border-white/30"
+                    className="w-28 px-4 py-3 bg-white/5 border border-white/10 rounded text-text-primary text-sm font-mono placeholder:text-text-primary/20 focus:outline-none focus:border-text-primary/30"
                   />
                   {manualParticipants.length > 1 && (
                     <button
@@ -477,7 +477,7 @@ export default function RaffleDetailPage() {
             <div className="flex items-center justify-between pt-2">
               <button
                 onClick={addParticipantRow}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-bold rounded uppercase tracking-widest transition-all border border-white/10"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-text-primary text-sm font-bold rounded uppercase tracking-widest transition-all border border-white/10"
               >
                 <span className="material-symbols-outlined text-lg">add</span>
                 Add Participant
@@ -486,7 +486,7 @@ export default function RaffleDetailPage() {
               <button
                 onClick={handleManualEndRaffle}
                 disabled={actionLoading.manualEnd}
-                className="px-6 py-3 bg-orange-500 hover:brightness-110 text-white font-bold rounded uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-orange-500 hover:brightness-110 text-text-primary font-bold rounded uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {actionLoading.manualEnd ? "Ending..." : "Manually End Raffle"}
               </button>
@@ -498,7 +498,7 @@ export default function RaffleDetailPage() {
       {/* Entries */}
       <div className="ui-container rounded overflow-hidden">
         <div className="px-6 py-4 border-b border-white/10">
-          <h3 className="text-xl font-header text-white">Entries ({entries.length})</h3>
+          <h3 className="text-xl font-header text-text-primary">Entries ({entries.length})</h3>
         </div>
         {entries.length > 0 ? (
           <table className="w-full text-left border-collapse">
@@ -513,13 +513,13 @@ export default function RaffleDetailPage() {
               {entries.map((entry) => (
                 <tr key={entry.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white font-mono">{entry.wallet_address}</span>
+                    <span className="text-sm text-text-primary font-mono">{entry.wallet_address}</span>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm font-display font-bold text-white">{entry.tokens_spent}</span>
+                    <span className="text-sm font-display font-bold text-text-primary">{entry.tokens_spent}</span>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm text-white">{format(new Date(entry.created_at), "MMM d, yyyy HH:mm")}</span>
+                    <span className="text-sm text-text-primary">{format(new Date(entry.created_at), "MMM d, yyyy HH:mm")}</span>
                   </td>
                 </tr>
               ))}

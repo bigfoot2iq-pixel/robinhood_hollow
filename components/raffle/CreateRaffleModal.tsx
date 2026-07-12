@@ -2,7 +2,7 @@
 
 import { Fragment, useState } from "react";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { contracts, KatanaRafflesABI } from "@/lib/contracts";
+import { contracts, RobinhoodRafflesABI } from "@/lib/contracts";
 import { ERC20_DECIMALS_ABI, toTokenUnits } from "@/lib/utils/erc20";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 
@@ -258,7 +258,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
         setStatus("creating");
         createHash = await writeContractAsync({
           address: contracts.raffles.address,
-          abi: KatanaRafflesABI,
+          abi: RobinhoodRafflesABI,
           functionName: "createRaffleByUser",
           args: [token, amountsWei, endTimeUnix],
         });
@@ -296,7 +296,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
         setStatus("creating");
         createHash = await writeContractAsync({
           address: contracts.raffles.address,
-          abi: KatanaRafflesABI,
+          abi: RobinhoodRafflesABI,
           functionName: "createRaffleByUserWithNFT",
           args: [PRIZE_TYPE_ERC721, token, idsBig, endTimeUnix],
         });
@@ -357,7 +357,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
   }
 
   const inputClass =
-    "w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-white placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#33C5D9]";
+    "w-full bg-dark-navy border border-white/10 rounded px-4 py-3 text-text-primary placeholder-muted-blue focus:outline-none focus:ring-1 focus:ring-[#ccff00]";
   const labelClass =
     "text-[10px] font-bold uppercase text-muted-blue tracking-widest block mb-2";
 
@@ -379,7 +379,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
       <div className="ui-container my-8 w-full max-w-2xl rounded">
         <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-6 py-4">
           <div>
-            <h3 className="text-lg font-header text-white">Create Your Raffle</h3>
+            <h3 className="text-lg font-header text-text-primary">Create Your Raffle</h3>
             {status !== "success" && (
               <p className="mt-0.5 text-xs text-muted-blue">
                 Step {step + 1} of {STEPS.length} · {STEPS[step].hint}
@@ -389,7 +389,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
           <button
             onClick={onClose}
             disabled={busy}
-            className="rounded p-1 text-muted-blue transition-colors hover:text-white disabled:opacity-50"
+            className="rounded p-1 text-muted-blue transition-colors hover:text-text-primary disabled:opacity-50"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
@@ -413,9 +413,9 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                     <span
                       className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold transition-all ${
                         done
-                          ? "border-transparent bg-[#33C5D9] text-dark-navy"
+                          ? "border-transparent bg-[#1a160d] text-[#ccff00]"
                           : active
-                            ? "border-[#33C5D9] bg-[#33C5D9]/10 text-[#33C5D9] ring-4 ring-[#33C5D9]/10"
+                            ? "border-[#ccff00] bg-[#ccff00]/10 text-[#ccff00] ring-4 ring-[#ccff00]/10"
                             : "border-white/10 bg-white/5 text-muted-blue"
                       }`}
                     >
@@ -427,7 +427,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                     </span>
                     <span
                       className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
-                        active ? "text-white" : done ? "text-muted-blue" : "text-muted-blue/50"
+                        active ? "text-text-primary" : done ? "text-muted-blue" : "text-muted-blue/50"
                       }`}
                     >
                       {st.label}
@@ -436,7 +436,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                   {i < LAST_STEP && (
                     <div
                       className={`mt-[18px] h-px flex-1 transition-colors ${
-                        i < step ? "bg-[#33C5D9]" : "bg-white/10"
+                        i < step ? "bg-[#ccff00]" : "bg-white/10"
                       }`}
                     />
                   )}
@@ -451,13 +451,13 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
             <span className="material-symbols-outlined mb-4 text-5xl text-emerald-500">
               check_circle
             </span>
-            <p className="mb-2 font-header text-xl text-white">Raffle Created!</p>
+            <p className="mb-2 font-header text-xl text-text-primary">Raffle Created!</p>
             <p className="mb-6 text-sm text-muted-blue">
               It will auto-close at your chosen time.
             </p>
             <button
               onClick={onClose}
-              className="rounded bg-[#33C5D9] px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-dark-navy transition-all hover:brightness-110"
+              className="rounded bg-[#1a160d] border border-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-text-primary transition-all hover:brightness-125"
             >
               Done
             </button>
@@ -565,8 +565,8 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                           onClick={() => setPrizeKind(kind)}
                           className={`rounded border px-4 py-3 text-xs font-bold uppercase tracking-widest transition-all ${
                             prizeKind === kind
-                              ? "border-[#33C5D9] bg-[#33C5D9]/10 text-white"
-                              : "border-white/10 bg-white/5 text-muted-blue hover:text-white"
+                              ? "border-[#ccff00] bg-[#ccff00]/10 text-text-primary"
+                              : "border-white/10 bg-white/5 text-muted-blue hover:text-text-primary"
                           }`}
                         >
                           {kind === "erc20" ? "ERC20 Token" : "NFT (ERC721)"}
@@ -646,7 +646,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                   type="button"
                   onClick={goBack}
                   disabled={busy}
-                  className="flex items-center gap-1.5 rounded border border-white/10 bg-white/5 px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted-blue transition-all hover:text-white disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded border border-white/10 bg-white/5 px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted-blue transition-all hover:text-text-primary disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                   Back
@@ -656,7 +656,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
               {step < LAST_STEP ? (
                 <button
                   type="submit"
-                  className="ml-auto flex items-center gap-1.5 rounded bg-[#33C5D9] px-6 py-3 text-xs font-bold uppercase tracking-widest text-dark-navy transition-all hover:brightness-110"
+                  className="ml-auto flex items-center gap-1.5 rounded bg-[#1a160d] border border-white/10 px-6 py-3 text-xs font-bold uppercase tracking-widest text-text-primary transition-all hover:brightness-125"
                 >
                   Continue
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -665,7 +665,7 @@ export function CreateRaffleModal({ onClose, onCreated }: CreateRaffleModalProps
                 <button
                   type="submit"
                   disabled={busy}
-                  className="ml-auto flex items-center justify-center gap-2 rounded bg-[#33C5D9] px-6 py-3 text-xs font-bold uppercase tracking-[0.15em] text-dark-navy shadow-[0_0_20px_rgba(51,197,217,0.15)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="ml-auto flex items-center justify-center gap-2 rounded bg-[#1a160d] border border-white/10 px-6 py-3 text-xs font-bold uppercase tracking-[0.15em] text-text-primary shadow-[0_0_20px_rgba(26,22,13,0.15)] transition-all hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {busy && (
                     <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">

@@ -1,5 +1,5 @@
 import { parseUnits, formatUnits, createPublicClient, http } from "viem";
-import { katanaNetwork } from "@/lib/contracts/config";
+import { robinhoodChain } from "@/lib/contracts/config";
 
 /**
  * Standard ERC20 ABI for decimals() function
@@ -80,7 +80,7 @@ export async function getTokenMetadata(
 ): Promise<{ name: string; symbol: string } | null> {
   try {
     const client = createPublicClient({
-      chain: katanaNetwork,
+      chain: robinhoodChain,
       transport: http(),
     });
 

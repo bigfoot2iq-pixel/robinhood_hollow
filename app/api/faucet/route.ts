@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPublicClient, createWalletClient, http, isAddress, parseEther, getAddress } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { litvmTestnet } from "@/lib/contracts";
+import { robinhoodChain } from "@/lib/contracts";
 import { createServiceClient } from "@/lib/supabase/server";
 
-// Native zkLTC drip faucet for the LiteForge testnet.
+// Native ETH drip faucet for Robinhood Chain.
 //
 // Funded by FAUCET_PRIVATE_KEY (falls back to the shared admin/watchdog wallet on
 // this testnet). The per-address 24h cooldown is enforced in Supabase via the
@@ -15,7 +15,7 @@ function getRpcUrl(): string {
   return (
     process.env.RPC_URL ||
     process.env.NEXT_PUBLIC_RPC_URL ||
-    "https://liteforge.rpc.caldera.xyz/http"
+    "https://rpc.mainnet.chain.robinhood.com"
   );
 }
 
@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
 
     const rpcUrl = getRpcUrl();
     const account = privateKeyToAccount(privateKey as `0x${string}`);
-    const publicClient = createPublicClient({ chain: litvmTestnet, transport: http(rpcUrl) });
-    const walletClient = createWalletClient({ chain: litvmTestnet, transport: http(rpcUrl), account });
+    const publicClient = createPublicClient({ chain: robinhoodChain, transport: http(rpcUrl) });
+    const walletClient = createWalletClient({ chain: robinhoodChain, transport: http(rpcUrl), account });
 
     // Make sure the faucet wallet can cover the drip before reserving a cooldown slot.
     const balance = await publicClient.getBalance({ address: account.address });

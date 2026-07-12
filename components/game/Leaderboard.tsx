@@ -114,8 +114,8 @@ export default function Leaderboard() {
           onClick={() => handleTabChange('hollow')}
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
             activeTab === 'hollow'
-              ? 'bg-[#33C5D9] text-dark-navy'
-              : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+              ? 'bg-[#1a160d] border border-white/10 text-text-primary'
+              : 'bg-white/5 text-text-primary hover:bg-white/10 border border-white/10'
           }`}
         >
           Hollow Token
@@ -124,8 +124,8 @@ export default function Leaderboard() {
           onClick={() => handleTabChange('game')}
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
             activeTab === 'game'
-              ? 'bg-[#33C5D9] text-dark-navy'
-              : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+              ? 'bg-[#1a160d] border border-white/10 text-text-primary'
+              : 'bg-white/5 text-text-primary hover:bg-white/10 border border-white/10'
           }`}
         >
           Game Score
@@ -141,7 +141,7 @@ export default function Leaderboard() {
         <button
           onClick={refresh}
           disabled={isRefreshing || isLoading}
-          className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white font-bold rounded uppercase tracking-widest text-xs transition-all border border-white/10 disabled:opacity-50"
+          className="px-4 py-2 bg-white/5 hover:bg-white/10 text-text-primary font-bold rounded uppercase tracking-widest text-xs transition-all border border-white/10 disabled:opacity-50"
         >
           {isRefreshing ? 'Refreshing...' : 'Refresh'}
         </button>
@@ -179,7 +179,7 @@ export default function Leaderboard() {
         {/* Loading State - Only show when no existing data */}
         {isLoading && (
           <div className="p-12 text-center">
-            <div className="inline-block w-8 h-8 border-4 border-[#33C5D9] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-[#ccff00] rounded-full animate-spin mb-4"></div>
             <p className="text-muted-blue">
               {activeTab === 'game' ? 'Loading warriors...' : 'Loading holders...'}
             </p>
@@ -190,7 +190,7 @@ export default function Leaderboard() {
         {error && (
           <div className="p-12 text-center">
             <span className="material-symbols-outlined text-red-500 text-5xl mb-4 block">error</span>
-            <p className="text-white">{error}</p>
+            <p className="text-text-primary">{error}</p>
           </div>
         )}
 
@@ -198,7 +198,7 @@ export default function Leaderboard() {
         {isEmpty && !isLoading && (
           <div className="p-12 text-center">
             <span className="material-symbols-outlined text-muted-blue text-6xl mb-4 block">emoji_events</span>
-            <p className="text-lg text-white mb-2">
+            <p className="text-lg text-text-primary mb-2">
               {activeTab === 'game' ? 'No warriors yet' : 'No holders yet'}
             </p>
             <p className="text-sm text-muted-blue">
@@ -220,7 +220,7 @@ export default function Leaderboard() {
                   <div
                     key={player.wallet_address}
                     className={`hover:bg-white/5 transition-colors ${
-                      isCurrentUser ? 'bg-[#33C5D9]/10 border-l-4 border-[#33C5D9]' : ''
+                      isCurrentUser ? 'bg-[#ccff00]/10 border-l-4 border-[#ccff00]' : ''
                     }`}
                   >
                     {/* Desktop Layout */}
@@ -246,7 +246,7 @@ export default function Leaderboard() {
 
                       {/* Score */}
                       <div className="col-span-3 flex items-center justify-end">
-                        <p className={`text-lg lg:text-xl font-display font-bold ${isCurrentUser ? 'text-[#33C5D9]' : 'text-white'}`}>
+                        <p className={`text-lg lg:text-xl font-display font-bold ${isCurrentUser ? 'text-[#ccff00]' : 'text-text-primary'}`}>
                           {player.game_score.toLocaleString()}
                         </p>
                       </div>
@@ -266,7 +266,7 @@ export default function Leaderboard() {
 
                       {/* Score */}
                       <div className="col-span-4 flex items-center justify-end">
-                        <p className={`text-base font-display font-bold ${isCurrentUser ? 'text-[#33C5D9]' : 'text-white'}`}>
+                        <p className={`text-base font-display font-bold ${isCurrentUser ? 'text-[#ccff00]' : 'text-text-primary'}`}>
                           {player.game_score.toLocaleString()}
                         </p>
                       </div>
@@ -307,17 +307,17 @@ export default function Leaderboard() {
 
                     {/* Quantity */}
                     <div className="col-span-2 flex items-center justify-end">
-                      <p className="text-lg lg:text-xl font-display font-bold text-white">
+                      <p className="text-lg lg:text-xl font-display font-bold text-text-primary">
                         {formatQuantity(holder.quantity)}
                       </p>
                     </div>
 
                     {/* Percentage */}
                     <div className="col-span-2 flex flex-col items-end justify-center pl-6">
-                      <p className="text-sm font-bold text-white mb-1">{holder.percentage}</p>
+                      <p className="text-sm font-bold text-text-primary mb-1">{holder.percentage}</p>
                       <div className="w-full h-1.5 bg-white/10 rounded overflow-hidden">
                         <div 
-                          className="h-full bg-[#33C5D9] rounded" 
+                          className="h-full bg-[#ccff00] rounded" 
                           style={{ width: holder.percentage }}
                         ></div>
                       </div>
@@ -338,7 +338,7 @@ export default function Leaderboard() {
 
                     {/* Quantity */}
                     <div className="col-span-4 flex items-center justify-end">
-                      <p className="text-base font-display font-bold text-white">
+                        <p className="text-base font-display font-bold text-text-primary">
                         {formatQuantity(holder.quantity)}
                       </p>
                     </div>
@@ -355,11 +355,11 @@ export default function Leaderboard() {
             <button
               onClick={loadMore}
               disabled={isLoadingMore}
-              className="px-6 lg:px-8 py-2.5 lg:py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded uppercase tracking-widest text-xs lg:text-sm transition-all border border-white/10 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="px-6 lg:px-8 py-2.5 lg:py-3 bg-white/5 hover:bg-white/10 text-text-primary font-bold rounded uppercase tracking-widest text-xs lg:text-sm transition-all border border-white/10 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isLoadingMore ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-text-primary/30 border-t-text-primary rounded-full animate-spin"></div>
                   Loading...
                 </>
               ) : (
@@ -375,7 +375,7 @@ export default function Leaderboard() {
         <p className="text-muted-blue text-sm lg:text-base mb-4">Ready to claim your place among the legends?</p>
         <button
           onClick={() => router.push('/game')}
-          className="px-6 lg:px-8 py-2.5 lg:py-3 bg-[#33C5D9] hover:bg-[#33C5D9]/90 text-dark-navy font-bold rounded uppercase tracking-widest text-xs lg:text-sm transition-all"
+          className="px-6 lg:px-8 py-2.5 lg:py-3 bg-[#1a160d] border border-white/10 hover:brightness-125 text-text-primary font-bold rounded uppercase tracking-widest text-xs lg:text-sm transition-all"
         >
           Play Now
         </button>

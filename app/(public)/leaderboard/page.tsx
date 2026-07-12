@@ -7,7 +7,7 @@ function LeaderboardLoading() {
   return (
     <div className="ui-container rounded overflow-hidden">
       <div className="p-12 text-center">
-        <div className="inline-block w-8 h-8 border-4 border-[#33C5D9] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-[#ccff00] rounded-full animate-spin mb-4"></div>
         <p className="text-muted-blue">Loading leaderboard...</p>
       </div>
     </div>
@@ -19,7 +19,7 @@ export default function LeaderboardPage() {
     <div className="space-y-6 lg:space-y-8">
       {/* Page Title */}
       <div className="mb-6 lg:mb-8">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-white mb-2">Leaderboard</h2>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-foreground mb-2">Leaderboard</h2>
         <p className="text-muted-blue text-xs sm:text-sm">Top warriors ranked by their highest scores</p>
       </div>
 

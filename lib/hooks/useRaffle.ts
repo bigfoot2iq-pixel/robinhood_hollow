@@ -1,12 +1,12 @@
 "use client";
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { contracts, KatanaRafflesABI } from "@/lib/contracts";
+import { contracts, RobinhoodRafflesABI } from "@/lib/contracts";
 
 export function useRaffleContract(raffleId: number) {
   return useReadContract({
     address: contracts.raffles.address,
-    abi: KatanaRafflesABI,
+    abi: RobinhoodRafflesABI,
     functionName: "raffles",
     args: [BigInt(raffleId)],
     query: {
@@ -25,7 +25,7 @@ export function useJoinRaffle() {
   const joinRaffle = async (raffleId: number, tokenAmount: bigint) => {
     writeContract({
       address: contracts.raffles.address,
-      abi: KatanaRafflesABI,
+      abi: RobinhoodRafflesABI,
       functionName: "joinRaffle",
       args: [BigInt(raffleId), tokenAmount],
     });
@@ -44,7 +44,7 @@ export function useJoinRaffle() {
 export function useRaffleCounter() {
   return useReadContract({
     address: contracts.raffles.address,
-    abi: KatanaRafflesABI,
+    abi: RobinhoodRafflesABI,
     functionName: "raffleCounter",
   });
 }

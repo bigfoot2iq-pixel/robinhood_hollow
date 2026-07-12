@@ -1,6 +1,6 @@
 # Raffle Management Scripts
 
-Scripts for debugging and managing raffles on the LitVM LiteForge testnet.
+Scripts for debugging and managing raffles on the Robinhood Chain.
 
 ## Prerequisites
 
@@ -10,7 +10,7 @@ All scripts require environment variables in `.env.local`:
 # Required for all scripts
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_RPC_URL=https://liteforge.rpc.caldera.xyz/http
+NEXT_PUBLIC_RPC_URL=https://rpc.mainnet.chain.robinhood.com
 
 # Required for activation script only
 WATCHDOG_PRIVATE_KEY=0x...

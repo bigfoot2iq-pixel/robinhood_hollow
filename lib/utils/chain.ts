@@ -1,5 +1,5 @@
 import { createPublicClient, http, type Abi } from "viem";
-import { contracts, litvmTestnet, KatanaRafflesABI } from "@/lib/contracts";
+import { contracts, robinhoodChain, RobinhoodRafflesABI } from "@/lib/contracts";
 import type { RaffleStatus } from "@/lib/supabase";
 
 // On-chain RaffleState enum: CREATED=0, ACTIVE=1, COMPLETED=2, CANCELLED=3
@@ -10,12 +10,12 @@ const CHAIN_STATE_MAP: Record<number, RaffleStatus> = {
   3: "ended",
 };
 
-const abi = KatanaRafflesABI as Abi;
+const abi = RobinhoodRafflesABI as Abi;
 
 function getPublicClient() {
-  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://liteforge.rpc.caldera.xyz/http";
+  const rpcUrl = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
   return createPublicClient({
-    chain: litvmTestnet,
+    chain: robinhoodChain,
     transport: http(rpcUrl),
   });
 }

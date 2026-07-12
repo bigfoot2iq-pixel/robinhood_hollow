@@ -5,7 +5,7 @@ import { createPublicClient } from "viem";
 import { contracts, HollowTokenABI } from "@/lib/contracts";
 
 const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "747474");
-const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.katana.network";
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
 
 export async function GET(request: NextRequest) {
   try {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     const publicClient = createPublicClient({
       chain: {
         id: chainId,
-        name: "Katana",
+        name: "Robinhood Chain",
         nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
         rpcUrls: { default: { http: [rpcUrl] } },
       },

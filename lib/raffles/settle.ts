@@ -1,12 +1,12 @@
 import { randomBytes } from "crypto";
 import { createPublicClient, createWalletClient, getAddress, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { KatanaRafflesABI, contracts, litvmTestnet } from "@/lib/contracts";
+import { RobinhoodRafflesABI, contracts, robinhoodChain } from "@/lib/contracts";
 import type { createServiceClient } from "@/lib/supabase/server";
 
 type ServiceClient = Awaited<ReturnType<typeof createServiceClient>>;
 
-// On-chain KatanaRaffles.RaffleState enum
+// On-chain RobinhoodRaffles.RaffleState enum
 const RAFFLE_STATE = { CREATED: 0, ACTIVE: 1, COMPLETED: 2, CANCELLED: 3 } as const;
 
 // Max raffles touched per invocation. Keeps each cron run short (single-EOA
@@ -35,12 +35,10 @@ function msg(err: unknown): string {
 }
 
 function getRpcUrl(): string {
-  // Prefer a server-only RPC_URL so the cron can target the correct chain even if
-  // the public NEXT_PUBLIC_RPC_URL still points at a legacy endpoint.
   return (
     process.env.RPC_URL ||
     process.env.NEXT_PUBLIC_RPC_URL ||
-    "https://liteforge.rpc.caldera.xyz/http"
+    "https://rpc.mainnet.chain.robinhood.com"
   );
 }
 
@@ -52,8 +50,8 @@ function getClients() {
 
   const rpcUrl = getRpcUrl();
   const account = privateKeyToAccount(privateKey as `0x${string}`);
-  const publicClient = createPublicClient({ chain: litvmTestnet, transport: http(rpcUrl) });
-  const walletClient = createWalletClient({ chain: litvmTestnet, transport: http(rpcUrl), account });
+  const publicClient = createPublicClient({ chain: robinhoodChain, transport: http(rpcUrl) });
+  const walletClient = createWalletClient({ chain: robinhoodChain, transport: http(rpcUrl), account });
   return { publicClient, walletClient, raffleContract };
 }
 
@@ -128,7 +126,7 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
     publicClient
       .readContract({
         address: raffleContract,
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         functionName: "getRaffleState",
         args: [BigInt(chainId)],
       })
@@ -154,7 +152,7 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
 
       const txHash = await walletClient.writeContract({
         address: raffleContract,
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         functionName: "activateRaffle",
         args: [BigInt(chainId)],
       });
@@ -216,7 +214,7 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
       const randomSeed = BigInt(`0x${randomBytes(32).toString("hex")}`);
       const txHash = await walletClient.writeContract({
         address: raffleContract,
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         functionName: "endRaffle",
         args: [BigInt(chainId), participants, ticketCounts, randomSeed],
       });
@@ -228,7 +226,7 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
 
       const winners = (await publicClient.readContract({
         address: raffleContract,
-        abi: KatanaRafflesABI,
+        abi: RobinhoodRafflesABI,
         functionName: "getWinners",
         args: [BigInt(chainId)],
       })) as string[];

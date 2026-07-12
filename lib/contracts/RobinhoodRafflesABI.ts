@@ -1,4 +1,4 @@
-export const KatanaRafflesABI = [
+export const RobinhoodRafflesABI = [
   {
     "inputs": [
       {
@@ -268,13 +268,13 @@ export const KatanaRafflesABI = [
       },
       {
         "indexed": false,
-        "internalType": "enum LitvmRaffles.RaffleState",
+        "internalType": "enum RobinhoodRaffles.RaffleState",
         "name": "oldState",
         "type": "uint8"
       },
       {
         "indexed": false,
-        "internalType": "enum LitvmRaffles.RaffleState",
+        "internalType": "enum RobinhoodRaffles.RaffleState",
         "name": "newState",
         "type": "uint8"
       }
@@ -374,7 +374,7 @@ export const KatanaRafflesABI = [
   {
     "inputs": [
       {
-        "internalType": "enum LitvmRaffles.PrizeType",
+        "internalType": "enum RobinhoodRaffles.PrizeType",
         "name": "prizeType_",
         "type": "uint8"
       },
@@ -456,7 +456,7 @@ export const KatanaRafflesABI = [
   {
     "inputs": [
       {
-        "internalType": "enum LitvmRaffles.PrizeType",
+        "internalType": "enum RobinhoodRaffles.PrizeType",
         "name": "prizeType_",
         "type": "uint8"
       },
@@ -490,7 +490,7 @@ export const KatanaRafflesABI = [
   {
     "inputs": [
       {
-        "internalType": "enum LitvmRaffles.PrizeType",
+        "internalType": "enum RobinhoodRaffles.PrizeType",
         "name": "prizeType_",
         "type": "uint8"
       },
@@ -635,7 +635,7 @@ export const KatanaRafflesABI = [
     "name": "getRaffleInfo",
     "outputs": [
       {
-        "internalType": "enum LitvmRaffles.PrizeType",
+        "internalType": "enum RobinhoodRaffles.PrizeType",
         "name": "prizeType",
         "type": "uint8"
       },
@@ -650,7 +650,7 @@ export const KatanaRafflesABI = [
         "type": "uint256"
       },
       {
-        "internalType": "enum LitvmRaffles.RaffleState",
+        "internalType": "enum RobinhoodRaffles.RaffleState",
         "name": "state",
         "type": "uint8"
       },
@@ -703,7 +703,7 @@ export const KatanaRafflesABI = [
     "name": "getRaffleState",
     "outputs": [
       {
-        "internalType": "enum LitvmRaffles.RaffleState",
+        "internalType": "enum RobinhoodRaffles.RaffleState",
         "name": "",
         "type": "uint8"
       }
@@ -856,7 +856,7 @@ export const KatanaRafflesABI = [
     "name": "raffles",
     "outputs": [
       {
-        "internalType": "enum LitvmRaffles.PrizeType",
+        "internalType": "enum RobinhoodRaffles.PrizeType",
         "name": "prizeType",
         "type": "uint8"
       },
@@ -866,7 +866,7 @@ export const KatanaRafflesABI = [
         "type": "address"
       },
       {
-        "internalType": "enum LitvmRaffles.RaffleState",
+        "internalType": "enum RobinhoodRaffles.RaffleState",
         "name": "state",
         "type": "uint8"
       },
