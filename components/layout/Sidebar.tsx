@@ -9,7 +9,6 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/faucet", label: "Faucet", icon: "water_drop" },
   { href: "/claim", label: "Claim token", icon: "redeem" },
   { href: "/game", label: "Game", icon: "sports_esports" },
   { href: "/raffles", label: "Raffles", icon: "confirmation_number" },

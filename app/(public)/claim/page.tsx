@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { formatEther } from "viem";
@@ -234,14 +233,7 @@ export default function ClaimPage() {
                 </ConnectButton.Custom>
               )}
 
-              {/* Faucet link */}
-              <Link
-                href="/faucet"
-                className="w-full flex items-center justify-center gap-2 py-3 border border-[#ccff00]/30 hover:border-[#ccff00]/60 hover:bg-[#ccff00]/5 text-[#ccff00] font-bold rounded uppercase tracking-[0.2em] text-xs sm:text-sm transition-all"
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>water_drop</span>
-                Need gas? Get tokens
-              </Link>
+
             </div>
 
             {/* Vertical Separator */}

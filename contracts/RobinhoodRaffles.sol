@@ -32,6 +32,7 @@ contract RobinhoodRaffles is Ownable, ReentrancyGuard, Pausable {
     IERC20 public raffleToken;
     address public watchdog;
     uint256 public raffleCounter;
+    uint256 public userRaffleFee;
 
     mapping(uint256 => Raffle) public raffles;
     mapping(uint256 => uint256[]) private rafflePrizeAmounts;
@@ -48,6 +49,7 @@ contract RobinhoodRaffles is Ownable, ReentrancyGuard, Pausable {
     event EmergencyWithdraw(uint256 indexed raffleId, address indexed recipient, address prizeToken);
     event WatchdogUpdated(address oldWatchdog, address newWatchdog);
     event RaffleTokenUpdated(address oldToken, address newToken);
+    event UserRaffleFeeUpdated(uint256 oldFee, uint256 newFee);
 
     modifier onlyOwnerOrWatchdog() {
         require(msg.sender == owner() || msg.sender == watchdog, "Not authorized");
@@ -84,6 +86,11 @@ contract RobinhoodRaffles is Ownable, ReentrancyGuard, Pausable {
         raffleToken = IERC20(newToken);
     }
 
+    function setUserRaffleFee(uint256 newFee) external onlyOwner {
+        emit UserRaffleFeeUpdated(userRaffleFee, newFee);
+        userRaffleFee = newFee;
+    }
+
     function createRaffleWithToken(
         address prizeToken_,
         uint256[] calldata prizeAmounts_
@@ -115,6 +122,8 @@ contract RobinhoodRaffles is Ownable, ReentrancyGuard, Pausable {
     ) external whenNotPaused nonReentrant returns (uint256) {
         require(endTime_ > block.timestamp, "End time must be in the future");
 
+        _collectUserFee();
+
         uint256 raffleId = _createTokenRaffle(prizeToken_, prizeAmounts_, RaffleState.ACTIVE);
 
         Raffle storage raffle = raffles[raffleId];
@@ -143,6 +152,8 @@ contract RobinhoodRaffles is Ownable, ReentrancyGuard, Pausable {
         uint256 endTime_
     ) external whenNotPaused nonReentrant returns (uint256) {
         require(endTime_ > block.timestamp, "End time must be in the future");
+
+        _collectUserFee();
 
         uint256 raffleId = _createNftRaffle(prizeType_, prizeToken_, prizeTokenIds_, RaffleState.ACTIVE);
 
@@ -411,6 +422,12 @@ contract RobinhoodRaffles is Ownable, ReentrancyGuard, Pausable {
 
     function unpause() external onlyOwnerOrWatchdog {
         _unpause();
+    }
+
+    function _collectUserFee() internal {
+        if (userRaffleFee > 0) {
+            raffleToken.safeTransferFrom(msg.sender, owner(), userRaffleFee);
+        }
     }
 
     function _createTokenRaffle(
