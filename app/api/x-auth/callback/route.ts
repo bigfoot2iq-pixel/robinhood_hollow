@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 const clientId = process.env.TWITTER_CLIENT_ID;
 const clientSecret = process.env.TWITTER_CLIENT_SECRET;
-const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || 'https://robinhood-raffles.vercel.app'}/api/x-auth/callback`;
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://robinhood-raffles.vercel.app';
+const appUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://robinhood-raffles.vercel.app').replace(/\/+$/, '');
+const redirectUri = `${appUrl}/api/x-auth/callback`;
 
 export async function GET(request: NextRequest) {
   if (!clientId || !clientSecret) {
