@@ -8,7 +8,7 @@ import { useConfig } from "@/lib/hooks/useConfig";
 import { formatTokenBalance } from "@/lib/hooks";
 
 const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
-const WAITLIST_OPEN_SOON = true;
+const WAITLIST_OPEN_SOON = false;
 const ONE_TOKEN = BigInt(1e18);
 const X_FOLLOW_USERNAME = "TheHollow_NFT";
 const X_POST_ID = "2021439605271335122";
@@ -560,7 +560,7 @@ export default function WaitlistPage() {
           <div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-white/5 via-transparent to-transparent rounded-full blur-xl"></div>
             <div className="relative">
-              <h1 className="text-3xl sm:text-4xl font-header mb-3">Join the Waitlist</h1>
+              <h1 className="text-3xl sm:text-4xl font-header mb-3 text-black">Join the Waitlist</h1>
             </div>
           </div>
           <p className="text-muted-blue text-sm mb-6">
@@ -622,14 +622,14 @@ export default function WaitlistPage() {
 
   return (
     <div className="flex justify-center py-8">
-      <div className="w-full max-w-[1000px] px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="md:col-span-2">
+      <div className="w-full max-w-[600px] px-4">
+        <div className="mb-8">
+          <div>
             <div className="mb-4">
               <div className="text-center mb-4">
                 <div className="relative inline-block">
                    <div className="absolute -inset-2 bg-gradient-to-r from-white/10 via-white/5 to-transparent rounded-full blur-xl"></div>
-                  <h2 className="relative text-2xl sm:text-3xl font-header text-text-primary mb-1">Join the Waitlist</h2>
+                  <h2 className="relative text-2xl sm:text-3xl font-header text-black mb-1">Join the Waitlist</h2>
                 </div>
                 <p className="text-muted-blue text-xs uppercase tracking-widest">Complete all tasks to secure your spot</p>
               </div>

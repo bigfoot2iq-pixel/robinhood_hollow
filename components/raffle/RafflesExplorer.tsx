@@ -114,8 +114,8 @@ export function RafflesExplorer({ scope, title, showCreate = false, emptyHint }:
             onClick={() => setFilter(status.value)}
             className={`pb-3 sm:pb-4 px-2 text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors whitespace-nowrap ${
               filter === status.value
-                ? "text-[#ccff00] border-b-2 border-[#ccff00]"
-                : "text-muted-blue hover:text-text-primary"
+                ? "text-foreground border-b-2 border-foreground"
+                : "text-foreground/60 hover:text-foreground"
             }`}
           >
             {status.label}
@@ -145,7 +145,7 @@ export function RafflesExplorer({ scope, title, showCreate = false, emptyHint }:
           </div>
           {total > raffles.length && (
             <div className="text-center mt-6 lg:mt-8">
-              <button className="px-5 sm:px-6 py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 text-text-primary font-bold rounded uppercase tracking-widest text-xs sm:text-sm transition-all border border-white/10">
+              <button className="px-5 sm:px-6 py-2.5 sm:py-3 bg-black/5 hover:bg-black/10 text-foreground font-bold rounded uppercase tracking-widest text-xs sm:text-sm transition-all border border-black/20">
                 Load More
               </button>
             </div>

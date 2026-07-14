@@ -115,7 +115,7 @@ export default function Leaderboard() {
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
             activeTab === 'hollow'
               ? 'bg-[#1a160d] border border-white/10 text-text-primary'
-              : 'bg-white/5 text-text-primary hover:bg-white/10 border border-white/10'
+              : 'bg-black/5 text-foreground hover:bg-black/10 border border-black/20'
           }`}
         >
           Hollow Token
@@ -125,7 +125,7 @@ export default function Leaderboard() {
           className={`px-4 py-2 font-bold text-xs uppercase tracking-widest rounded transition-all ${
             activeTab === 'game'
               ? 'bg-[#1a160d] border border-white/10 text-text-primary'
-              : 'bg-white/5 text-text-primary hover:bg-white/10 border border-white/10'
+              : 'bg-black/5 text-foreground hover:bg-black/10 border border-black/20'
           }`}
         >
           Game Score
@@ -141,7 +141,7 @@ export default function Leaderboard() {
         <button
           onClick={refresh}
           disabled={isRefreshing || isLoading}
-          className="px-4 py-2 bg-white/5 hover:bg-white/10 text-text-primary font-bold rounded uppercase tracking-widest text-xs transition-all border border-white/10 disabled:opacity-50"
+          className="px-4 py-2 bg-black/5 hover:bg-black/10 text-foreground font-bold rounded uppercase tracking-widest text-xs transition-all border border-black/20 disabled:opacity-50"
         >
           {isRefreshing ? 'Refreshing...' : 'Refresh'}
         </button>
