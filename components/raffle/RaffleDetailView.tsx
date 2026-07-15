@@ -239,11 +239,11 @@ export default function RaffleDetailView() {
     <div className="space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
-        <Link href={isCommunity ? "/community-raffles" : "/raffles"} className="text-muted-blue hover:text-[#ccff00] transition-colors">
+        <Link href={isCommunity ? "/community-raffles" : "/raffles"} className="text-black hover:opacity-70 transition-opacity">
           {isCommunity ? "Community Raffles" : "Raffles"}
         </Link>
-        <span className="text-muted-blue">/</span>
-        <span className="text-[#ccff00]">{raffle.title}</span>
+        <span className="text-black">/</span>
+        <span className="text-black">{raffle.title}</span>
       </div>
 
       {/* Main Content */}
