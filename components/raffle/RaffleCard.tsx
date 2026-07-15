@@ -20,6 +20,7 @@ interface RaffleCardProps {
     prizes: CardPrize[];
     participants_count: number;
   };
+  basePath?: string;
 }
 
 const prizeTypeLabels: Record<PrizeType, string> = {
@@ -47,7 +48,7 @@ function formatPrizeAmount(amount: string): string {
   return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
 }
 
-export function RaffleCard({ raffle }: RaffleCardProps) {
+export function RaffleCard({ raffle, basePath = "/raffles" }: RaffleCardProps) {
   const [tokenSymbol, setTokenSymbol] = useState<string>("HOLLOW");
   const [prizeLabel, setPrizeLabel] = useState<string>("");
 
@@ -108,7 +109,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
   const displayPrize = prizeLabel || (primaryPrize ? prizeTypeLabels[primaryPrize.prize_type] : "TBD");
 
   return (
-    <Link href={`/raffles/${raffle.slug || raffle.id}`}>
+    <Link href={`${basePath}/${raffle.slug || raffle.id}`}>
       <div className={`ui-container rounded overflow-hidden flex flex-col group transition-transform hover:translate-y-[-4px] ${isEnded || backupRafflesThatAreEnded ? "opacity-50" : ""}`}>
         {/* Image */}
         <div className={`h-72 overflow-hidden relative bg-dark-navy ${isNFT ? "" : "flex items-center justify-center border-b border-white/10"}`}>
