@@ -211,7 +211,7 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-5xl font-header text-text-primary">Admin Dashboard</h2>
+        <h2 className="text-5xl font-header text-foreground">Admin Dashboard</h2>
         <div className="flex items-center gap-3">
           <Link href="/admin/raffles/create">
             <button className="px-6 py-3 bg-[#1a160d] hover:brightness-110 text-text-primary font-bold rounded uppercase tracking-widest text-sm transition-all shadow-[0_0_20px_rgba(26,22,13,0.15)] border border-white/10 flex items-center gap-2">
@@ -254,8 +254,8 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-5 py-3 text-xs font-bold uppercase tracking-widest transition-all border-b-2 -mb-px ${
               activeTab === tab.id
-                ? "text-[#ccff00] border-[#ccff00]"
-                : "text-muted-blue border-transparent hover:text-[#ccff00]"
+                ? "text-foreground border-foreground"
+                : "text-foreground/60 border-transparent hover:text-foreground"
             }`}
           >
             {tab.label}
