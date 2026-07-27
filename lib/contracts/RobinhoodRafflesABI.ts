@@ -344,6 +344,25 @@ export const RobinhoodRafflesABI = [
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "oldFee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "UserRaffleFeeUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "oldWatchdog",
         "type": "address"
@@ -958,6 +977,19 @@ export const RobinhoodRafflesABI = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "newFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setUserRaffleFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -990,6 +1022,19 @@ export const RobinhoodRafflesABI = [
   },
   {
     "inputs": [],
+    "name": "userRaffleFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "watchdog",
     "outputs": [
       {
@@ -1002,4 +1047,3 @@ export const RobinhoodRafflesABI = [
     "type": "function"
   }
 ] as const;
-

@@ -685,11 +685,11 @@ function GameConfig() {
       <div className="p-6">
         <div className="space-y-3 max-w-md">
           <div>
-            <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Play Fee (ETH)</p>
+            <p className="text-muted-blue text-[10px] font-bold uppercase tracking-widest mb-1">Play Fee (HOLLOW)</p>
             <p className="text-sm text-text-primary/60">
-              Current: <span className="text-[#ccff00] font-bold">{currentFee !== undefined ? formatEther(currentFee as bigint) : "..."} ETH</span>
+              Current: <span className="text-[#ccff00] font-bold">{currentFee !== undefined ? formatEther(currentFee as bigint) : "..."} HOLLOW</span>
             </p>
-            <p className="text-[10px] text-muted-blue mt-1">Amount each player pays to play. Must be greater than 0.</p>
+            <p className="text-[10px] text-muted-blue mt-1">Amount of HOLLOW each player pays to play. Must be greater than 0.</p>
           </div>
           <div className="flex gap-2">
             <input

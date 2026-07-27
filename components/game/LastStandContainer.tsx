@@ -19,9 +19,11 @@ export default function LastStandContainer() {
   // Contract interaction
   const {
     playPriceFormatted,
-    playPriceUsd,
+    hasEnoughBalance,
+    needsApproval,
     isLoadingPrice,
     pay,
+    step,
     isPaying,
     isConfirming,
     txHash,
@@ -205,12 +207,28 @@ export default function LastStandContainer() {
                     </div>
                   )}
 
+                  {/* Play cost in HOLLOW */}
+                  <div className="ui-container p-4 rounded bg-white/5 border border-white/10">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-blue mb-1">Play Cost</p>
+                    <p className="text-lg font-display font-bold text-text-primary">
+                      {isLoadingPrice ? '...' : playPriceFormatted}
+                    </p>
+                    {!hasEnoughBalance && (
+                      <p className="text-[11px] text-red-400 mt-1">Not enough HOLLOW — claim tokens below.</p>
+                    )}
+                  </div>
+
                   <button
                     onClick={handlePayToPlay}
-                    disabled={isPaying || isConfirming || isCreatingSession || isLoadingPrice}
+                    disabled={isPaying || isConfirming || isCreatingSession || isLoadingPrice || step !== 'idle' || !hasEnoughBalance}
                     className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-[#1a160d] border border-white/10 hover:brightness-125 text-text-primary font-bold rounded uppercase tracking-widest text-xs sm:text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isPaying ? (
+                    {step === 'approving' ? (
+                      <>
+                        <span className="inline-block w-4 h-4 border-2 border-dark-navy border-t-transparent rounded-full animate-spin mr-2"></span>
+                        Approving HOLLOW...
+                      </>
+                    ) : isPaying ? (
                       <>
                         <span className="inline-block w-4 h-4 border-2 border-dark-navy border-t-transparent rounded-full animate-spin mr-2"></span>
                         Confirm in Wallet...
@@ -228,7 +246,7 @@ export default function LastStandContainer() {
                       ) : (
                         <>
                           <span className="material-symbols-outlined text-sm mr-2 inline-block">payments</span>
-                          {hasPlayedBefore ? 'Replay' : 'Pay To Play'}
+                          {needsApproval ? 'Approve & Pay' : hasPlayedBefore ? 'Replay' : 'Pay To Play'}
                         </>
                       )}
                   </button>
@@ -237,14 +255,23 @@ export default function LastStandContainer() {
                     One payment = one game round until you lose
                   </p>
 
-                  {/* Faucet link — paying costs gas */}
-                  <Link
-                    href="/faucet"
-                    className="flex items-center justify-center gap-2 text-xs font-bold text-[#ccff00] transition-opacity hover:opacity-80"
-                  >
-                    <span className="material-symbols-outlined" style={{ fontSize: 16 }}>water_drop</span>
-                    Need gas? Get testnet tokens
-                  </Link>
+                  {/* Get HOLLOW to pay, plus native gas for the tx */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                    <Link
+                      href="/claim"
+                      className="flex items-center justify-center gap-2 text-xs font-bold text-[#ccff00] transition-opacity hover:opacity-80"
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: 16 }}>redeem</span>
+                      Need HOLLOW? Claim tokens
+                    </Link>
+                    <Link
+                      href="/faucet"
+                      className="flex items-center justify-center gap-2 text-xs font-bold text-[#ccff00] transition-opacity hover:opacity-80"
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: 16 }}>water_drop</span>
+                      Need gas? Get ETH
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
