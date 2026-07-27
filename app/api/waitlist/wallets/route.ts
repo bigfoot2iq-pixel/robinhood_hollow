@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const supabase = await createServiceClient();
 
     const { count, error: countError } = await supabase
-      .from("litvm_raffle_users")
+      .from("robinhood_hollow_users")
       .select("*", { count: "exact", head: true })
       .eq("id_waitlisted", true);
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const to = from + PAGE_SIZE - 1;
 
     const { data, error } = await supabase
-      .from("litvm_raffle_users")
+      .from("robinhood_hollow_users")
       .select("wallet_address")
       .eq("id_waitlisted", true)
       .order("created_at", { ascending: false })

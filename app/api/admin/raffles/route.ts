@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get("offset") || "0");
 
     const { data, error } = await supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get stats
-    const { data: stats } = await supabase.rpc("litvm_raffle_get_admin_stats");
+    const { data: stats } = await supabase.rpc("robinhood_hollow_get_admin_stats");
 
     // Read on-chain meta (state + creator) for every deployed raffle, then partition by scope.
     const chainMeta = await getOnChainRaffleMeta(
@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
 
     if (raffleIds.length > 0) {
       const { data: entries, error: entriesError } = await supabase
-        .from("litvm_raffle_entries")
+        .from("robinhood_hollow_entries")
         .select("raffle_id")
         .in("raffle_id", raffleIds);
 
@@ -172,7 +172,7 @@ export async function GET(request: NextRequest) {
 
     if (raffleIds.length > 0) {
       const { data: prizes, error: prizesError } = await supabase
-        .from("litvm_raffle_prizes")
+        .from("robinhood_hollow_prizes")
         .select("raffle_id, prize_type")
         .in("raffle_id", raffleIds);
 

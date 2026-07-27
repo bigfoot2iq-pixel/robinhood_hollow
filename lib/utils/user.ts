@@ -77,7 +77,7 @@ const compressImage = async (file: File, maxSize: number = 200, quality: number 
 export const getUserByWallet = async (walletAddress: string, walletType?: WalletType): Promise<TheHollowUser | null> => {
   try {
     let query = supabase
-      .from('litvm_raffle_game_users')
+      .from('robinhood_hollow_game_users')
       .select('*')
       .eq('wallet_address', walletAddress);
     
@@ -106,7 +106,7 @@ export const getUserByWallet = async (walletAddress: string, walletType?: Wallet
 export const upsertUser = async (walletAddress: string, walletType: WalletType): Promise<TheHollowUser | null> => {
   try {
     const { data, error } = await supabase
-      .rpc('upsert_litvm_raffle_game_user', { 
+      .rpc('robinhood_hollow_upsert_game_user', { 
         wallet: walletAddress, 
         wallet_type: walletType 
       });
@@ -179,7 +179,7 @@ export const updateUserRegistration = async (
     
     // Update user record
     const { data, error } = await supabase
-      .from('litvm_raffle_game_users')
+      .from('robinhood_hollow_game_users')
       .update(updateData)
       .eq('wallet_address', walletAddress)
       .select()

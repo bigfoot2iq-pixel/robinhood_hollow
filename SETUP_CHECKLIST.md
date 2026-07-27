@@ -18,17 +18,18 @@ Use this checklist to ensure everything is properly configured.
 
 ### Step 1: Database Setup
 - [ ] Open Supabase SQL Editor
-- [ ] Run `supabase/migrations/20241223_add_game_score.sql`
-- [ ] Run `supabase/migrations/20241226_add_game_sessions.sql`
+- [ ] Run `supabase/migrations/00000000000000_robinhood_hollow_schema.sql`
+- [ ] Optional: run `supabase/migrations/00000000000001_robinhood_hollow_cron_settle_raffles.sql`
+      after filling in its `<CRON_SECRET>` placeholder
 - [ ] Verify tables created:
-  - [ ] `litvm_raffle_users` has `game_score` column
-  - [ ] `litvm_raffle_game_sessions` table exists
+  - [ ] `robinhood_hollow_game_users` has `game_score` column
+  - [ ] `robinhood_hollow_game_sessions` table exists
 - [ ] Verify functions created:
-  - [ ] `update_game_score()`
-  - [ ] `get_leaderboard()`
-  - [ ] `create_game_session()`
-  - [ ] `complete_game_session()`
-  - [ ] `get_active_session()`
+  - [ ] `robinhood_hollow_update_game_score()`
+  - [ ] `robinhood_hollow_get_leaderboard()`
+  - [ ] `robinhood_hollow_create_game_session()`
+  - [ ] `robinhood_hollow_complete_game_session()`
+  - [ ] `robinhood_hollow_get_active_session()`
 
 ### Step 2: Smart Contract Deployment
 - [ ] Compile contracts: `npx hardhat compile`
@@ -101,9 +102,9 @@ Visit http://localhost:3000/leaderboard
 
 ### Step 9: Verify Database
 Check Supabase Table Editor:
-- [ ] `litvm_raffle_users` table has entries
+- [ ] `robinhood_hollow_game_users` table has entries
 - [ ] `game_score` column populated
-- [ ] `litvm_raffle_game_sessions` table has entries
+- [ ] `robinhood_hollow_game_sessions` table has entries
 - [ ] Session status updates correctly
 
 ### Step 10: Test Pay-to-Play Flow
@@ -133,7 +134,7 @@ Check Supabase Table Editor:
 ### Issue: Database errors
 **Solution:**
 - Ensure migrations are run
-- Check table name is `litvm_raffle_users`
+- Check the game reads `robinhood_hollow_game_users`
 - Verify RLS policies exist
 
 ### Issue: Contract errors

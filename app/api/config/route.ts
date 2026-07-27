@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServiceClient();
     const { data, error } = await supabase
-      .from("litvm_raffle_config")
+      .from("robinhood_hollow_config")
       .select("value")
       .eq("key", key)
       .maybeSingle();
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createServiceClient();
     const { data, error } = await supabase
-      .from("litvm_raffle_config")
+      .from("robinhood_hollow_config")
       .upsert(
         { key, value: String(value), updated_at: new Date().toISOString() },
         { onConflict: "key" }

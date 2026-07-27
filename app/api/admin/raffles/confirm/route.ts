@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     // Check if this chain_raffle_id already exists
     const { data: existingRaffle } = await supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .select("id, chain_raffle_id, tx_hash")
       .eq("chain_raffle_id", chainRaffleId)
       .single();
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     const prizeTokenAddress = getAddress(raffleData.prizes[0].prize_token_address.toLowerCase() as `0x${string}`);
 
     const { data: raffle, error } = await supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .insert({
         title: raffleData.title,
         description: raffleData.description,
@@ -156,18 +156,18 @@ export async function POST(request: NextRequest) {
     }));
 
     const { error: prizeError } = await supabase
-      .from("litvm_raffle_prizes")
+      .from("robinhood_hollow_prizes")
       .insert(prizeInserts);
 
     if (prizeError) {
       console.error("Error creating prizes:", prizeError);
-      await supabase.from("litvm_raffle_raffles").delete().eq("id", raffle.id);
+      await supabase.from("robinhood_hollow_raffles").delete().eq("id", raffle.id);
       return NextResponse.json({ error: "Failed to create prizes" }, { status: 500 });
     }
 
     // Log admin action
     const adminWallet = request.headers.get("x-admin-wallet") || "unknown";
-    await supabase.from("litvm_raffle_admin_logs").insert({
+    await supabase.from("robinhood_hollow_admin_logs").insert({
       admin_wallet: adminWallet,
       action: "create_raffle",
       details: { raffle_id: raffle.id, title: raffle.title },

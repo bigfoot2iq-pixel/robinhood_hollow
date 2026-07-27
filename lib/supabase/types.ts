@@ -31,17 +31,17 @@ export interface PrizeRow {
 export interface Database {
   public: {
     Tables: {
-      litvm_raffle_raffles: {
+      robinhood_hollow_raffles: {
         Row: RaffleRow;
         Insert: Omit<RaffleRow, "id" | "created_at" | "updated_at">;
         Update: Partial<Omit<RaffleRow, "id" | "created_at" | "updated_at">>;
       };
-      litvm_raffle_prizes: {
+      robinhood_hollow_prizes: {
         Row: PrizeRow;
         Insert: Omit<PrizeRow, "id" | "created_at">;
         Update: Partial<Omit<PrizeRow, "id" | "created_at">>;
       };
-      litvm_raffle_entries: {
+      robinhood_hollow_entries: {
         Row: {
           id: string;
           raffle_id: string;
@@ -51,10 +51,10 @@ export interface Database {
           tx_hash: string;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["litvm_raffle_entries"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["litvm_raffle_entries"]["Insert"]>;
+        Insert: Omit<Database["public"]["Tables"]["robinhood_hollow_entries"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["robinhood_hollow_entries"]["Insert"]>;
       };
-      litvm_raffle_winners: {
+      robinhood_hollow_winners: {
         Row: {
           id: string;
           raffle_id: string;
@@ -64,10 +64,10 @@ export interface Database {
           distribution_tx_hash: string | null;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["litvm_raffle_winners"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["litvm_raffle_winners"]["Insert"]>;
+        Insert: Omit<Database["public"]["Tables"]["robinhood_hollow_winners"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["robinhood_hollow_winners"]["Insert"]>;
       };
-      litvm_raffle_users: {
+      robinhood_hollow_users: {
         Row: {
           id: string;
           wallet_address: string;
@@ -79,12 +79,12 @@ export interface Database {
           updated_at: string;
         };
         Insert: Omit<
-          Database["public"]["Tables"]["litvm_raffle_users"]["Row"],
+          Database["public"]["Tables"]["robinhood_hollow_users"]["Row"],
           "id" | "created_at" | "updated_at" | "total_entries" | "total_wins"
         >;
-        Update: Partial<Database["public"]["Tables"]["litvm_raffle_users"]["Insert"]>;
+        Update: Partial<Database["public"]["Tables"]["robinhood_hollow_users"]["Insert"]>;
       };
-      litvm_raffle_transactions: {
+      robinhood_hollow_transactions: {
         Row: {
           id: string;
           wallet_address: string;
@@ -94,10 +94,10 @@ export interface Database {
           raffle_id: string | null;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["litvm_raffle_transactions"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["litvm_raffle_transactions"]["Insert"]>;
+        Insert: Omit<Database["public"]["Tables"]["robinhood_hollow_transactions"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["robinhood_hollow_transactions"]["Insert"]>;
       };
-      litvm_raffle_admin_logs: {
+      robinhood_hollow_admin_logs: {
         Row: {
           id: string;
           admin_wallet: string;
@@ -105,28 +105,28 @@ export interface Database {
           details: Record<string, unknown>;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["litvm_raffle_admin_logs"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["litvm_raffle_admin_logs"]["Insert"]>;
+        Insert: Omit<Database["public"]["Tables"]["robinhood_hollow_admin_logs"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["robinhood_hollow_admin_logs"]["Insert"]>;
       };
-      litvm_raffle_admin: {
+      robinhood_hollow_admin: {
         Row: {
           wallet_address: string;
         };
-        Insert: Database["public"]["Tables"]["litvm_raffle_admin"]["Row"];
-        Update: Partial<Database["public"]["Tables"]["litvm_raffle_admin"]["Row"]>;
+        Insert: Database["public"]["Tables"]["robinhood_hollow_admin"]["Row"];
+        Update: Partial<Database["public"]["Tables"]["robinhood_hollow_admin"]["Row"]>;
       };
     };
   };
 }
 
-export type Raffle = Database["public"]["Tables"]["litvm_raffle_raffles"]["Row"];
-export type Entry = Database["public"]["Tables"]["litvm_raffle_entries"]["Row"];
-export type Winner = Database["public"]["Tables"]["litvm_raffle_winners"]["Row"];
-export type User = Database["public"]["Tables"]["litvm_raffle_users"]["Row"];
-export type Transaction = Database["public"]["Tables"]["litvm_raffle_transactions"]["Row"];
-export type AdminLog = Database["public"]["Tables"]["litvm_raffle_admin_logs"]["Row"];
-export type AdminWallet = Database["public"]["Tables"]["litvm_raffle_admin"]["Row"];
-export type Prize = Database["public"]["Tables"]["litvm_raffle_prizes"]["Row"];
+export type Raffle = Database["public"]["Tables"]["robinhood_hollow_raffles"]["Row"];
+export type Entry = Database["public"]["Tables"]["robinhood_hollow_entries"]["Row"];
+export type Winner = Database["public"]["Tables"]["robinhood_hollow_winners"]["Row"];
+export type User = Database["public"]["Tables"]["robinhood_hollow_users"]["Row"];
+export type Transaction = Database["public"]["Tables"]["robinhood_hollow_transactions"]["Row"];
+export type AdminLog = Database["public"]["Tables"]["robinhood_hollow_admin_logs"]["Row"];
+export type AdminWallet = Database["public"]["Tables"]["robinhood_hollow_admin"]["Row"];
+export type Prize = Database["public"]["Tables"]["robinhood_hollow_prizes"]["Row"];
 
 // Game-related types
 export type WalletType = 'evm';

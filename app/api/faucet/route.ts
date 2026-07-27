@@ -8,7 +8,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 //
 // Funded by FAUCET_PRIVATE_KEY (falls back to the shared admin/watchdog wallet on
 // this testnet). The per-address 24h cooldown is enforced in Supabase via the
-// atomic litvm_faucet_try_claim() guard, so it survives redeploys and is shared
+// atomic robinhood_hollow_faucet_try_claim() guard, so it survives redeploys and is shared
 // across every serverless instance.
 
 function getRpcUrl(): string {
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     // Atomic reserve: succeeds only if this wallet's cooldown has elapsed. Race-safe,
     // so concurrent requests for the same wallet can't both drip.
-    const { data, error } = await supabase.rpc("litvm_faucet_try_claim", {
+    const { data, error } = await supabase.rpc("robinhood_hollow_faucet_try_claim", {
       p_wallet: walletKey,
       p_cooldown_seconds: cooldownSeconds,
     });
@@ -99,13 +99,13 @@ export async function POST(request: NextRequest) {
       const txHash = await walletClient.sendTransaction({ to: address, value });
       // Record the tx for auditing (the cooldown timestamp was set by the guard).
       await supabase
-        .from("litvm_faucet_claims")
+        .from("robinhood_hollow_faucet_claims")
         .update({ tx_hash: txHash, amount: dripAmount })
         .eq("wallet_address", walletKey);
       return NextResponse.json({ success: true, txHash, amount: dripAmount });
     } catch (err) {
       // Release the reservation so a failed send doesn't lock the user out 24h.
-      await supabase.rpc("litvm_faucet_release", { p_wallet: walletKey });
+      await supabase.rpc("robinhood_hollow_faucet_release", { p_wallet: walletKey });
       throw err;
     }
   } catch (error) {

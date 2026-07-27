@@ -37,7 +37,7 @@ export async function GET(
 
     // Verify raffle exists first
     let raffleQuery = supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .select("id");
 
     if (isUuid) {
@@ -54,7 +54,7 @@ export async function GET(
 
     // Build query with optional wallet filter
     let query = supabase
-      .from("litvm_raffle_entries")
+      .from("robinhood_hollow_entries")
       .select("wallet_address, entry_count, tx_hash, created_at", { count: "exact" })
       .eq("raffle_id", raffle.id);
     

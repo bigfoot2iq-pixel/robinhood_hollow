@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Plausibility: reject scores impossible for the session's elapsed time.
     // Reads the immutable created_at of THIS session (not client-supplied).
     const { data: sessionRow, error: sessionErr } = await supabase
-      .from('litvm_raffle_game_sessions')
+      .from('robinhood_hollow_game_sessions')
       .select('created_at')
       .eq('id', sessionId)
       .single();
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Complete session and update score atomically
-    const { data, error } = await supabase.rpc('litvm_raffle_complete_game_session', {
+    const { data, error } = await supabase.rpc('robinhood_hollow_complete_game_session', {
       p_session_id: sessionId,
       p_user_wallet: walletAddress,
       p_final_score: score

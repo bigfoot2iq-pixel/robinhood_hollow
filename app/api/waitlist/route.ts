@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServiceClient();
     const { data: user } = await supabase
-      .from("litvm_raffle_users")
+      .from("robinhood_hollow_users")
       .select("id_waitlisted")
       .eq("wallet_address", wallet.toLowerCase())
       .single();
@@ -87,14 +87,14 @@ export async function POST(request: NextRequest) {
     const walletLower = wallet_address.toLowerCase();
 
     let { data: user } = await supabase
-      .from("litvm_raffle_users")
+      .from("robinhood_hollow_users")
       .select("*")
       .eq("wallet_address", walletLower)
       .single();
 
     if (!user) {
       const { data: newUser, error: createError } = await supabase
-        .from("litvm_raffle_users")
+        .from("robinhood_hollow_users")
         .insert({ wallet_address: walletLower })
         .select()
         .single();
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { error: updateError } = await supabase
-      .from("litvm_raffle_users")
+      .from("robinhood_hollow_users")
       .update({ id_waitlisted: true })
       .eq("wallet_address", walletLower);
 

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     // Fetch every row matching the status filter (no DB range): scope filtering needs the
     // on-chain creator, which isn't a DB column, so pagination is applied after partitioning.
     let query = supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
     const prizesByRaffle = new Map<string, CardPrize[]>();
     if (raffleIds.length > 0) {
       const { data: prizes, error: prizesError } = await supabase
-        .from("litvm_raffle_prizes")
+        .from("robinhood_hollow_prizes")
         .select("raffle_id, prize_type, prize_token_address, prize_amount, prize_token_id")
         .in("raffle_id", raffleIds);
 
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
       const counts = await Promise.all(
         raffleIds.map(async (id) => {
           const { count, error: countError } = await supabase
-            .from("litvm_raffle_entries")
+            .from("robinhood_hollow_entries")
             .select("*", { count: "exact", head: true })
             .eq("raffle_id", id);
           if (countError) {

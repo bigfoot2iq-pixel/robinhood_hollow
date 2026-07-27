@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
 
     // Idempotency: a raffle for this chain id may already be registered (retry-safe).
     const { data: existingRaffle } = await supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .select("id, chain_raffle_id, tx_hash")
       .eq("chain_raffle_id", chainRaffleId)
       .single();
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: raffle, error } = await supabase
-      .from("litvm_raffle_raffles")
+      .from("robinhood_hollow_raffles")
       .insert({
         title: raffleData.title,
         slug: slugify(raffleData.title, chainRaffleId),
@@ -207,12 +207,12 @@ export async function POST(request: NextRequest) {
     }));
 
     const { error: prizeError } = await supabase
-      .from("litvm_raffle_prizes")
+      .from("robinhood_hollow_prizes")
       .insert(prizeInserts);
 
     if (prizeError) {
       console.error("Error creating prizes:", prizeError);
-      await supabase.from("litvm_raffle_raffles").delete().eq("id", raffle.id);
+      await supabase.from("robinhood_hollow_raffles").delete().eq("id", raffle.id);
       return NextResponse.json({ error: "Failed to create prizes" }, { status: 500 });
     }
 

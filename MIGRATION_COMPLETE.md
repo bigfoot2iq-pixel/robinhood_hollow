@@ -39,9 +39,8 @@ All necessary files have been successfully migrated from `the-hollow` to `katana
 - ✅ `contracts/Ownable.sol`
 - ✅ `lib/contracts/theHollowGame.ts`
 
-### Database (2 migrations)
-- ✅ `supabase/migrations/20241223_add_game_score.sql`
-- ✅ `supabase/migrations/20241226_add_game_sessions.sql`
+### Database (1 consolidated migration)
+- ✅ `supabase/migrations/00000000000000_robinhood_hollow_schema.sql`
 
 ### Utilities (3 files)
 - ✅ `lib/utils/user.ts`
@@ -62,9 +61,8 @@ All necessary files have been successfully migrated from `the-hollow` to `katana
 ### 1. Run Database Migrations
 ```bash
 # Go to your Supabase project SQL Editor
-# Run these migrations in order:
-# 1. supabase/migrations/20241223_add_game_score.sql
-# 2. supabase/migrations/20241226_add_game_sessions.sql
+# Run:
+# 1. supabase/migrations/00000000000000_robinhood_hollow_schema.sql
 ```
 
 ### 2. Deploy Game Contract
@@ -134,7 +132,7 @@ npm install
 
 ### If database errors occur:
 - Ensure migrations are run in Supabase
-- Check table name is `litvm_raffle_users` (not `litvm_raffle_game_users`)
+- Check the game reads `robinhood_hollow_game_users` (not the raffle table `robinhood_hollow_users`)
 - Verify RLS policies are created
 
 ### If contract errors occur:

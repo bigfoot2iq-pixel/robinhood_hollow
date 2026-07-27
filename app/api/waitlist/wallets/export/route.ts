@@ -6,7 +6,7 @@ export async function GET() {
     const supabase = await createServiceClient();
 
     const { data, error } = await supabase
-      .from("litvm_raffle_users")
+      .from("robinhood_hollow_users")
       .select("wallet_address")
       .eq("id_waitlisted", true)
       .order("created_at", { ascending: false });

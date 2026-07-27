@@ -39,12 +39,16 @@ cp .env.example .env.local
 
 ### Database Setup
 
-Run the SQL migrations in your Supabase project:
+Run the SQL migrations in your Supabase project, in order:
 
-1. `supabase/migrations/001_initial_schema.sql`
-2. `supabase/migrations/002_functions.sql`
-3. `supabase/migrations/003_admins.sql`
-4. `supabase/migrations/004_prizes.sql`
+1. `supabase/migrations/00000000000000_robinhood_hollow_schema.sql` — every table,
+   type, function, trigger, index and RLS policy. All objects are prefixed
+   `robinhood_hollow_*`.
+2. `supabase/migrations/00000000000001_robinhood_hollow_cron_settle_raffles.sql` —
+   optional. Schedules the raffle-settlement cron job. Fill in the `<CRON_SECRET>`
+   placeholder before running; do not commit the real secret. The job name is
+   prefixed because `cron.job` is shared with other apps on this Postgres instance
+   and `cron.schedule()` replaces any job of the same name.
 
 ### Smart Contract Deployment
 
@@ -129,7 +133,7 @@ NEXT_PUBLIC_RAFFLE_TOKEN_ADDRESS=0x...
 NEXT_PUBLIC_RAFFLES_CONTRACT_ADDRESS=0x...
 
 # Admin
-# Admin wallets are stored in the litvm_raffle_admin table (case-insensitive)
+# Admin wallets are stored in the robinhood_hollow_admin table (case-insensitive)
 
 # Watchdog
 WATCHDOG_PRIVATE_KEY=

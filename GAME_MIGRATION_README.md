@@ -40,8 +40,8 @@ All necessary files have been migrated from the-hollow project to katana-raffles
 - ✅ `lib/contracts/theHollowGame.ts` - Contract ABI and config
 
 ### 7. Database Migrations (`supabase/migrations/`)
-- ✅ `20241223_add_game_score.sql` - Game score tracking
-- ✅ `20241226_add_game_sessions.sql` - Pay-to-play sessions
+- ✅ `00000000000000_robinhood_hollow_schema.sql` - consolidated schema, includes
+  game score tracking and pay-to-play sessions
 
 ### 8. Utilities (`lib/utils/`)
 - ✅ `user.ts` - User management functions
@@ -65,8 +65,7 @@ The project already has the necessary dependencies (framer-motion, wagmi, viem, 
 Run these SQL migrations in your Supabase project:
 ```bash
 # In Supabase SQL Editor, run:
-# 1. supabase/migrations/20241223_add_game_score.sql
-# 2. supabase/migrations/20241226_add_game_sessions.sql
+# 1. supabase/migrations/00000000000000_robinhood_hollow_schema.sql
 ```
 
 ### 3. Deploy Game Contract
@@ -119,15 +118,16 @@ Visit:
 The migrations add these tables/functions:
 
 ### Tables
-- `litvm_raffle_users` - Extended with `game_score` column
-- `litvm_raffle_game_sessions` - Pay-to-play session tracking
+- `robinhood_hollow_game_users` - Game/leaderboard profiles, carries `game_score`
+- `robinhood_hollow_game_sessions` - Pay-to-play session tracking
 
 ### Functions
-- `update_game_score(user_wallet, new_score)` - Updates high score
-- `get_leaderboard(limit_count, offset_count)` - Fetches leaderboard
-- `create_game_session(user_wallet, payment_tx_hash)` - Creates session
-- `complete_game_session(session_id, user_wallet, final_score)` - Completes session
-- `get_active_session(user_wallet)` - Checks for active session
+- `robinhood_hollow_upsert_game_user(wallet, wallet_type)` - Upserts a profile on connect
+- `robinhood_hollow_update_game_score(user_wallet, new_score)` - Updates high score
+- `robinhood_hollow_get_leaderboard(limit_count, offset_count)` - Fetches leaderboard
+- `robinhood_hollow_create_game_session(user_wallet, payment_tx_hash)` - Creates session
+- `robinhood_hollow_complete_game_session(p_session_id, p_user_wallet, p_final_score)` - Completes session
+- `robinhood_hollow_get_active_session(p_user_wallet)` - Checks for active session
 
 ## How It Works
 
@@ -147,8 +147,9 @@ The migrations add these tables/functions:
 ## Notes
 
 - The game uses the same Supabase database as the raffles
-- User table is shared: `litvm_raffle_users`
-- Game sessions are separate: `litvm_raffle_game_sessions`
+- Game profiles live in their own table: `robinhood_hollow_game_users`
+  (distinct from the raffle/waitlist table `robinhood_hollow_users`)
+- Game sessions are separate: `robinhood_hollow_game_sessions`
 - All imports have been updated to use the correct paths
 - The game is fully integrated with the existing wallet connection system
 
@@ -164,7 +165,7 @@ The migrations add these tables/functions:
 
 ### Database errors
 - Ensure migrations are run in Supabase
-- Check that table names match (litvm_raffle_users vs litvm_raffle_game_users)
+- Check that table names match (robinhood_hollow_users vs robinhood_hollow_game_users)
 
 ### Contract errors
 - Deploy the game contract first

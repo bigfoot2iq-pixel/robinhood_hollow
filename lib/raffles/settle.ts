@@ -57,7 +57,7 @@ function getClients() {
 
 async function countRows(
   supabase: ServiceClient,
-  table: "litvm_raffle_entries" | "litvm_raffle_prizes",
+  table: "robinhood_hollow_entries" | "robinhood_hollow_prizes",
   raffleId: string
 ): Promise<number> {
   const { count, error } = await supabase
@@ -80,7 +80,7 @@ async function persistWinners(
   if (winners.length === 0) return;
 
   const { data: prizes } = await supabase
-    .from("litvm_raffle_prizes")
+    .from("robinhood_hollow_prizes")
     .select("prize_amount, prize_token_id")
     .eq("raffle_id", raffleId)
     .order("created_at", { ascending: true });
@@ -93,14 +93,14 @@ async function persistWinners(
     distribution_tx_hash: txHash,
   }));
 
-  const { error } = await supabase.from("litvm_raffle_winners").insert(rows);
+  const { error } = await supabase.from("robinhood_hollow_winners").insert(rows);
   if (error) {
     console.error(`Error inserting winners for raffle ${raffleId}:`, error);
     return;
   }
 
   for (const wallet of winners) {
-    const { error: incErr } = await supabase.rpc("litvm_raffle_increment_user_wins", {
+    const { error: incErr } = await supabase.rpc("robinhood_hollow_increment_user_wins", {
       p_wallet: wallet.toLowerCase(),
     });
     if (incErr) console.error(`Error incrementing wins for ${wallet}:`, incErr);
@@ -134,7 +134,7 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
 
   // ---- Activate raffles whose window has opened but are still CREATED on-chain ----
   const { data: toStart, error: startErr } = await supabase
-    .from("litvm_raffle_raffles")
+    .from("robinhood_hollow_raffles")
     .select("id, chain_raffle_id, title")
     .lte("start_date", nowIso)
     .gt("end_date", nowIso)
@@ -169,7 +169,7 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
 
   // ---- End raffles past end_date (or full) that are still ACTIVE on-chain ----
   const { data: started, error: endErr } = await supabase
-    .from("litvm_raffle_raffles")
+    .from("robinhood_hollow_raffles")
     .select("id, chain_raffle_id, title, end_date, max_participants")
     .lte("start_date", nowIso)
     .not("chain_raffle_id", "is", null)
@@ -184,19 +184,19 @@ export async function processExpiredRaffles(supabase: ServiceClient): Promise<Se
     try {
       if ((await readState(chainId)) !== RAFFLE_STATE.ACTIVE) continue;
 
-      const participantCount = await countRows(supabase, "litvm_raffle_entries", raffle.id);
+      const participantCount = await countRows(supabase, "robinhood_hollow_entries", raffle.id);
       const isPastEnd = new Date() >= new Date(raffle.end_date);
       const isFull = participantCount >= raffle.max_participants;
       if (!isPastEnd && !isFull) continue; // not time to end yet
 
-      const prizeCount = await countRows(supabase, "litvm_raffle_prizes", raffle.id);
+      const prizeCount = await countRows(supabase, "robinhood_hollow_prizes", raffle.id);
       if (prizeCount === 0) {
         summary.skipped.push({ raffleId: raffle.id, chainRaffleId: chainId, title: raffle.title, reason: "no prizes configured" });
         continue;
       }
 
       const { data: entries } = await supabase
-        .from("litvm_raffle_entries")
+        .from("robinhood_hollow_entries")
         .select("wallet_address, entry_count")
         .eq("raffle_id", raffle.id)
         .order("created_at", { ascending: true });
