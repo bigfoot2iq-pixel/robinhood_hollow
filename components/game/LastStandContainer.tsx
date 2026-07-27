@@ -255,7 +255,7 @@ export default function LastStandContainer() {
                     One payment = one game round until you lose
                   </p>
 
-                  {/* Get HOLLOW to pay, plus native gas for the tx */}
+                  {/* Get HOLLOW to pay */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                     <Link
                       href="/claim"
@@ -263,13 +263,6 @@ export default function LastStandContainer() {
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: 16 }}>redeem</span>
                       Need HOLLOW? Claim tokens
-                    </Link>
-                    <Link
-                      href="/faucet"
-                      className="flex items-center justify-center gap-2 text-xs font-bold text-[#ccff00] transition-opacity hover:opacity-80"
-                    >
-                      <span className="material-symbols-outlined" style={{ fontSize: 16 }}>water_drop</span>
-                      Need gas? Get ETH
                     </Link>
                   </div>
                 </div>

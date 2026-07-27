@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
-import { formatEther, maxUint256 } from 'viem'
+import { formatEther } from 'viem'
 import { THE_HOLLOW_GAME_ADDRESS, THE_HOLLOW_GAME_ABI } from '@/lib/contracts/theHollowGame'
 import { contracts, HollowTokenABI } from '@/lib/contracts'
 
@@ -115,7 +115,7 @@ export function usePayToPlay(): UsePayToPlayReturn {
   const needsApproval =
     playPrice !== undefined && allowance !== undefined ? allowance < playPrice : false
 
-  // Approve (once, infinite) if needed, then payToPlay.
+  // Approve the exact play price if needed, then payToPlay.
   const pay = useCallback(async (): Promise<`0x${string}` | null> => {
     if (!address) {
       setError('Wallet not connected')
@@ -133,8 +133,8 @@ export function usePayToPlay(): UsePayToPlayReturn {
     setError(null)
 
     try {
-      // 1. Ensure the game contract can pull HOLLOW. Approve max once so future
-      //    plays are a single tx.
+      // 1. Ensure the game contract can pull HOLLOW. Approve exactly one play
+      //    price — no standing allowance left behind after the game pulls it.
       const currentAllowance = (allowance as bigint | undefined) ?? 0n
       if (currentAllowance < playPrice) {
         setStep('approving')
@@ -142,7 +142,7 @@ export function usePayToPlay(): UsePayToPlayReturn {
           address: contracts.hollowToken.address,
           abi: HollowTokenABI,
           functionName: 'approve',
-          args: [THE_HOLLOW_GAME_ADDRESS, maxUint256],
+          args: [THE_HOLLOW_GAME_ADDRESS, playPrice],
         })
         await publicClient?.waitForTransactionReceipt({ hash: approveHash })
         await refetchAllowance()
