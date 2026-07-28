@@ -267,12 +267,12 @@ export default function RaffleDetailView() {
                 </div>
               ) : (
                 <Image
-                  alt="LITVM"
-                  width={153}
-                  height={96}
+                  alt="The Hollow"
+                  width={128}
+                  height={128}
                   unoptimized
-                  className="object-contain"
-                  src="/litvm/logo-letter.svg"
+                  className="rounded-2xl object-contain"
+                  src="/logo.jpg"
                 />
               )}
               <div className="absolute top-4 left-4 flex gap-2">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAccount } from "wagmi";
 import { useTokenBalance, formatTokenBalance } from "@/lib/hooks";
+import { BrandBanner } from "@/components/ui/BrandBanner";
 
 export default function DashboardPage() {
   const { address, isConnected } = useAccount();
@@ -10,6 +11,8 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 lg:space-y-8">
+      <BrandBanner eyebrow="The Hollow · Robinhood Chain" priority />
+
       {/* Page Title */}
       <h2 className="text-3xl sm:text-4xl lg:text-5xl font-header text-foreground mb-4 lg:mb-8">Profile Overview</h2>
 

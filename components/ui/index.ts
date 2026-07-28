@@ -3,3 +3,5 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 export { Input, type InputProps } from "./input";
 export { Label } from "./label";
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
+export { XIcon } from "./XIcon";
+export { BrandBanner } from "./BrandBanner";

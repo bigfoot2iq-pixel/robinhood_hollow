@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useTokenBalance, formatTokenBalance } from "@/lib/hooks";
+import { XIcon } from "@/components/ui/XIcon";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 export function Header() {
   const pathname = usePathname();
@@ -39,6 +41,17 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-2 lg:gap-4">
+        <a
+          className="p-2 rounded-full text-muted-blue hover:text-[#ccff00] hover:bg-[#ccff00]/10 transition-colors"
+          href={SOCIAL_LINKS.x}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Follow The Hollow on X"
+          title="Follow us on X"
+        >
+          <XIcon className="w-4 h-4" />
+        </a>
+
         {isConnected && balance !== undefined && (
           <div className="px-2 lg:px-4 py-2 bg-[#ccff00]/30 border border-[#ccff00]/20 rounded-full flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[#ccff00] animate-pulse"></div>

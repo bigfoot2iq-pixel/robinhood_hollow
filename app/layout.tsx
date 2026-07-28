@@ -29,11 +29,31 @@ const materialSymbols = localFont({
   weight: "100 700",
 });
 
+const SITE_TITLE = "The Hollow - Win Crypto Prizes";
+const SITE_DESCRIPTION =
+  "Decentralized raffles platform on Robinhood Chain. Enter raffles, win prizes!";
+
 export const metadata: Metadata = {
-  title: "Robinhood Raffles - Win Crypto Prizes",
-  description: "Decentralized raffles platform on Robinhood Chain. Enter raffles, win prizes!",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   icons: {
-    icon: "/litvm/logo-letter.svg",
+    icon: "/logo.jpg",
+    shortcut: "/logo.jpg",
+    apple: "/logo.jpg",
+  },
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    siteName: "The Hollow",
+    images: [{ url: "/banner.jpg", width: 1500, height: 500, alt: "The Hollow" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    site: "@TheHollow_NFT",
+    images: ["/banner.jpg"],
   },
 };
 

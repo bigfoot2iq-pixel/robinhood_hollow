@@ -127,12 +127,12 @@ export function RaffleCard({ raffle, basePath = "/raffles" }: RaffleCardProps) {
             </div>
           ) : (
             <Image
-              alt="RH"
-              width={90}
-              height={56}
+              alt="The Hollow"
+              width={72}
+              height={72}
               unoptimized
-              className="object-contain group-hover:scale-110 transition-transform duration-700"
-              src="/litvm/logo-letter.svg"
+              className="rounded-xl object-contain group-hover:scale-110 transition-transform duration-700"
+              src="/logo.jpg"
             />
           )}
           <div className="absolute top-3 left-3 flex gap-1.5">

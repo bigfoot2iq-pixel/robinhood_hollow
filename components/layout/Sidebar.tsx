@@ -1,19 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAdminStatus } from "@/lib/hooks";
 import { useState } from "react";
+import { XIcon } from "@/components/ui/XIcon";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/claim", label: "Claim token", icon: "redeem" },
-  { href: "/game", label: "Game", icon: "sports_esports" },
   { href: "/raffles", label: "Raffles", icon: "confirmation_number" },
   { href: "/community-raffles", label: "Community Raffles", icon: "groups" },
   { href: "/leaderboard", label: "Leaderboard", icon: "emoji_events" },
+  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
+  { href: "/game", label: "Game", icon: "sports_esports" },
   { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
   { href: "/checker", label: "Checker", icon: "fact_check" },
 ];
@@ -53,8 +56,16 @@ export function Sidebar() {
       `}>
       <div className="flex flex-col gap-8">
         {/* Logo */}
-        <Link href="/claim" className="flex items-center">
-          <img src="/litvm_hollow_logo.png" alt="Robinhood Hollow" className="w-full h-12 object-cover rounded-lg" />
+        <Link href="/claim" className="flex items-center gap-3">
+          <Image
+            src="/logo.jpg"
+            alt="The Hollow"
+            width={400}
+            height={400}
+            priority
+            className="h-12 w-12 rounded-lg object-contain"
+          />
+          <span className="font-header text-lg tracking-wide text-text-primary">The Hollow</span>
         </Link>
 
         {/* Navigation */}
@@ -103,6 +114,16 @@ export function Sidebar() {
 
       {/* User section with RainbowKit */}
       <div className="flex flex-col gap-4">
+        <a
+          href={SOCIAL_LINKS.x}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-4 py-3 rounded text-muted-blue hover:bg-[#1a160d]/30 hover:text-text-primary transition-all"
+        >
+          <XIcon className="w-5 h-5" />
+          <p className="text-sm font-medium">Follow on X</p>
+        </a>
+
         <ConnectButton.Custom>
           {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
             const ready = mounted;

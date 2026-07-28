@@ -16,6 +16,9 @@ import {
   useCategoryName,
   formatTokenBalance
 } from "@/lib/hooks";
+import { XIcon } from "@/components/ui/XIcon";
+import { BrandBanner } from "@/components/ui/BrandBanner";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 function formatCooldownLabel(seconds: number): string {
   if (seconds >= 86400) {
@@ -171,6 +174,8 @@ export default function ClaimPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 lg:gap-8 px-4 py-6 lg:py-8">
       <div className="w-full max-w-5xl">
+        <BrandBanner eyebrow="The Hollow · Robinhood Chain" priority className="mb-6" />
+
         <div className="ui-container p-6 sm:p-8 lg:p-12 rounded w-full">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Left Side - Category Selection */}
@@ -280,6 +285,16 @@ export default function ClaimPage() {
             </div>
           </div>
         </div>
+
+        <a
+          href={SOCIAL_LINKS.x}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 mx-auto flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-xs text-muted-blue transition-all hover:border-[#ccff00]/40 hover:bg-[#ccff00]/10 hover:text-[#ccff00]"
+        >
+          <XIcon className="w-3.5 h-3.5" />
+          <span className="font-bold uppercase tracking-widest">Follow @TheHollow_NFT</span>
+        </a>
       </div>
     </div>
   );

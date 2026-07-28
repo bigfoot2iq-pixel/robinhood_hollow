@@ -6,6 +6,8 @@ import { useHollowBalance } from "@/lib/hooks/useHollow";
 import { useAdminStatus } from "@/lib/hooks/useAdmin";
 import { useConfig } from "@/lib/hooks/useConfig";
 import { formatTokenBalance } from "@/lib/hooks";
+import { XIcon } from "@/components/ui/XIcon";
+import { BrandBanner } from "@/components/ui/BrandBanner";
 
 const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
 const WAITLIST_OPEN_SOON = false;
@@ -606,9 +608,7 @@ export default function WaitlistPage() {
                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a160d] border border-white/10 text-text-primary font-bold rounded hover:bg-[#E6EB00] transition-colors"
                 >
                   Share on
-                  <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
+                  <XIcon className="ml-2 w-5 h-5" />
                 </a>
               </div>
             </div>
@@ -623,6 +623,7 @@ export default function WaitlistPage() {
   return (
     <div className="flex justify-center py-8">
       <div className="w-full max-w-[600px] px-4">
+        <BrandBanner eyebrow="Mint Waitlist" priority className="mb-6" />
         <div className="mb-8">
           <div>
             <div className="mb-4">
@@ -648,9 +649,7 @@ export default function WaitlistPage() {
             <div className="space-y-3">
               <TaskCard
                 icon={
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
+                  <XIcon className="w-5 h-5" />
                 }
                 title="Connect X Account"
                 subtitle={xUser ? `@${xUser.username}` : "Authenticate with X to continue"}
@@ -663,9 +662,7 @@ export default function WaitlistPage() {
 
               <TaskCard
                 icon={
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
+                  <XIcon className="w-5 h-5" />
                 }
                 title="Follow @TheHollow_NFT"
                 subtitle="Follow our X account"
