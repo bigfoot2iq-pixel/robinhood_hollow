@@ -7,7 +7,6 @@ import { useAdminStatus } from "@/lib/hooks/useAdmin";
 import { useConfig } from "@/lib/hooks/useConfig";
 import { formatTokenBalance } from "@/lib/hooks";
 import { XIcon } from "@/components/ui/XIcon";
-import { BrandBanner } from "@/components/ui/BrandBanner";
 
 const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
 const WAITLIST_OPEN_SOON = false;
@@ -623,7 +622,6 @@ export default function WaitlistPage() {
   return (
     <div className="flex justify-center py-8">
       <div className="w-full max-w-[600px] px-4">
-        <BrandBanner eyebrow="Mint Waitlist" priority className="mb-6" />
         <div className="mb-8">
           <div>
             <div className="mb-4">

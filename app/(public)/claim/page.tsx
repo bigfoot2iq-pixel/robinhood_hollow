@@ -17,7 +17,6 @@ import {
   formatTokenBalance
 } from "@/lib/hooks";
 import { XIcon } from "@/components/ui/XIcon";
-import { BrandBanner } from "@/components/ui/BrandBanner";
 import { SOCIAL_LINKS } from "@/lib/social";
 
 function formatCooldownLabel(seconds: number): string {
@@ -174,8 +173,6 @@ export default function ClaimPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 lg:gap-8 px-4 py-6 lg:py-8">
       <div className="w-full max-w-5xl">
-        <BrandBanner eyebrow="The Hollow · Robinhood Chain" priority className="mb-6" />
-
         <div className="ui-container p-6 sm:p-8 lg:p-12 rounded w-full">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Left Side - Category Selection */}
