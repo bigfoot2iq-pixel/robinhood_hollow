@@ -11,11 +11,11 @@ import { XIcon } from "@/components/ui/XIcon";
 import { SOCIAL_LINKS } from "@/lib/social";
 
 const navItems = [
+  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/claim", label: "Claim token", icon: "redeem" },
   { href: "/raffles", label: "Raffles", icon: "confirmation_number" },
   { href: "/community-raffles", label: "Community Raffles", icon: "groups" },
   { href: "/leaderboard", label: "Leaderboard", icon: "emoji_events" },
-  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/game", label: "Game", icon: "sports_esports" },
   { href: "/waitlist", label: "Waitlist", icon: "playlist_add" },
   { href: "/checker", label: "Checker", icon: "fact_check" },
