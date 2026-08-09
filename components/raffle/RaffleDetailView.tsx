@@ -8,7 +8,9 @@ import { format } from "date-fns";
 import { RaffleEntryForm } from "@/components/raffle";
 import type { Prize, PrizeType, Raffle, RaffleStatus, Winner } from "@/lib/supabase";
 import { getTokenMetadataCached, fromTokenUnits } from "@/lib/utils/erc20";
-import { contracts } from "@/lib/contracts/config";
+import { contracts, robinhoodChain } from "@/lib/contracts/config";
+
+const EXPLORER_URL = robinhoodChain.blockExplorers.default.url;
 
 const prizeTypeLabels: Record<PrizeType, string> = {
   erc20: "Token",
@@ -402,7 +404,7 @@ export default function RaffleDetailView() {
                       {entries.map((entry, index) => (
                         <li key={`${entry.tx_hash}-${index}`}>
                           <Link
-                            href={`https://katanascan.com/tx/${entry.tx_hash}`}
+                            href={`${EXPLORER_URL}/tx/${entry.tx_hash}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-between p-4 bg-white/5 rounded border border-white/10 hover:bg-white/10 hover:border-[#ccff00]/30 transition-all group"
@@ -476,7 +478,7 @@ export default function RaffleDetailView() {
                       {winners.map((winner, index) => (
                         <li key={winner.id}>
                           <Link
-                            href={winner.distribution_tx_hash ? `https://katanascan.com/tx/${winner.distribution_tx_hash}` : "#"}
+                            href={winner.distribution_tx_hash ? `${EXPLORER_URL}/tx/${winner.distribution_tx_hash}` : "#"}
                             target={winner.distribution_tx_hash ? "_blank" : undefined}
                             rel={winner.distribution_tx_hash ? "noopener noreferrer" : undefined}
                             className={`flex items-center justify-between p-4 bg-white/5 rounded border border-white/10 ${winner.distribution_tx_hash
