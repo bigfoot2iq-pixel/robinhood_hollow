@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   addMonths,
   eachDayOfInterval,
@@ -28,6 +29,19 @@ interface DateTimePickerProps {
 
 const FMT = "yyyy-MM-dd'T'HH:mm";
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+// Gap between the trigger and the popover, and the minimum breathing room we
+// keep against the viewport edges.
+const GAP = 8;
+// Used before the popover has been measured, so the first paint lands close.
+const ESTIMATED_POPOVER_HEIGHT = 380;
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+interface Coords {
+  top: number;
+  left: number;
+  width: number;
+}
 
 export function DateTimePicker({
   value,
@@ -40,19 +54,75 @@ export function DateTimePicker({
 
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<Date>(sel ?? new Date());
+  const [coords, setCoords] = useState<Coords | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const popRef = useRef<HTMLDivElement>(null);
 
   const time = sel ? format(sel, "HH:mm") : "12:00";
   const today = startOfDay(new Date());
 
-  // Close on outside click.
+  // The popover is portalled to <body> so it can't be clipped by an ancestor's
+  // `overflow-hidden` or trapped under a sibling's stacking context (cards use
+  // `backdrop-filter`, which creates one). That means positioning it by hand.
+  const updatePosition = useCallback(() => {
+    const anchor = ref.current;
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const height = popRef.current?.offsetHeight ?? ESTIMATED_POPOVER_HEIGHT;
+
+    // Prefer opening upward; drop below when there isn't room above.
+    const above = rect.top - GAP - height;
+    const top =
+      above >= GAP ? above : Math.min(rect.bottom + GAP, window.innerHeight - height - GAP);
+
+    const width = popRef.current?.offsetWidth ?? rect.width;
+    const left = Math.max(GAP, Math.min(rect.left, window.innerWidth - width - GAP));
+
+    const next = { top: Math.max(GAP, top), left, width: rect.width };
+    setCoords((prev) =>
+      prev && prev.top === next.top && prev.left === next.left && prev.width === next.width
+        ? prev
+        : next
+    );
+  }, []);
+
+  // Unconditional so it also re-runs once the popover has mounted and its real
+  // height is known; `setCoords` bails out when nothing moved.
+  useIsomorphicLayoutEffect(() => {
+    if (open) updatePosition();
+  });
+
+  useEffect(() => {
+    if (!open) {
+      setCoords(null);
+      return;
+    }
+    // Capture phase so scrolling any ancestor (e.g. a modal body) is tracked.
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open, updatePosition]);
+
+  // Close on outside click or Escape.
   useEffect(() => {
     if (!open) return;
     function onDoc(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (ref.current?.contains(target) || popRef.current?.contains(target)) return;
+      setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
     }
     document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
   const days = useMemo(() => {
@@ -89,8 +159,17 @@ export function DateTimePicker({
         />
       </button>
 
-      {open && (
-        <div className="absolute bottom-full left-0 z-20 mb-2 w-full rounded border border-[#1a160d]/10 bg-[#1a160d] p-3 shadow-2xl animate-step">
+      {open && createPortal(
+        <div
+          ref={popRef}
+          style={{
+            top: coords?.top ?? 0,
+            left: coords?.left ?? 0,
+            width: coords?.width,
+            visibility: coords ? "visible" : "hidden",
+          }}
+          className="fixed z-[100] min-w-[17rem] rounded border border-[#1a160d]/10 bg-[#1a160d] p-3 shadow-2xl animate-step"
+        >
           {/* Month navigation */}
           <div className="mb-2 flex items-center justify-between">
             <button
@@ -166,7 +245,8 @@ export function DateTimePicker({
               Done
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
