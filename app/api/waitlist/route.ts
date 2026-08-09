@@ -4,7 +4,7 @@ import { http } from "viem";
 import { createPublicClient } from "viem";
 import { contracts, HollowTokenABI } from "@/lib/contracts";
 
-const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "747474");
+const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "4663");
 const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
 
 export async function GET(request: NextRequest) {

@@ -98,7 +98,7 @@ export default function DashboardPage() {
               1
             </div>
             <h4 className="text-text-primary font-bold mb-2 text-sm lg:text-base">Connect Wallet</h4>
-            <p className="text-muted-blue text-xs lg:text-sm">Connect your wallet to the Katana Network</p>
+            <p className="text-muted-blue text-xs lg:text-sm">Connect your wallet to the Robinhood Network</p>
           </div>
           <div className="flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-full bg-[#1a160d] border border-white/10 flex items-center justify-center text-[#ccff00] font-bold text-lg mb-4">
