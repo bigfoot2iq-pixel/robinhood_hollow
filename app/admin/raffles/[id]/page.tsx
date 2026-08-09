@@ -65,7 +65,7 @@ export default function RaffleDetailPage() {
     }
 
     const timestamp = now.toString();
-    const message = `Katana Raffles Admin\nTimestamp: ${timestamp}`;
+    const message = `Robinhood Raffles Admin\nTimestamp: ${timestamp}`;
 
     authPromiseRef.current = signMessageAsync({ message })
       .then((signature) => {
