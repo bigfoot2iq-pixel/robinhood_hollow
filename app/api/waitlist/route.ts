@@ -33,29 +33,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { wallet_address, x_username, x_user_id, x_auth_session } = body;
+    const { wallet_address } = body;
 
     if (!wallet_address || !/^0x[a-fA-F0-9]{40}$/.test(wallet_address)) {
       return NextResponse.json({ error: "Invalid wallet address" }, { status: 400 });
-    }
-
-    if (!x_username || !x_user_id) {
-      return NextResponse.json({ error: "X authentication required" }, { status: 400 });
-    }
-
-    if (!x_auth_session) {
-      return NextResponse.json({ error: "X session verification failed" }, { status: 400 });
-    }
-
-    let sessionData: { username: string; id: string } | null = null;
-    try {
-      sessionData = JSON.parse(Buffer.from(x_auth_session, 'base64').toString());
-    } catch {
-      return NextResponse.json({ error: "Invalid X session format" }, { status: 400 });
-    }
-
-    if (!sessionData || sessionData.username !== x_username || sessionData.id !== x_user_id) {
-      return NextResponse.json({ error: "X session mismatch - please re-authenticate" }, { status: 400 });
     }
 
     const publicClient = createPublicClient({

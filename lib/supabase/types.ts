@@ -166,42 +166,6 @@ export interface WhitelistResponse {
   user?: TheHollowUser;
 }
 
-// X OAuth User Data
-export interface XUserData {
-  id: string;
-  username: string;
-  name: string;
-  profile_image_url: string;
-  verified?: boolean;
-}
-
-// X OAuth Session Storage
-export interface XAuthSession {
-  user: XUserData;
-  authenticated: boolean;
-  timestamp: number;
-}
-
-// X OAuth API Response
-export interface XOAuthTokenResponse {
-  access_token: string;
-  token_type: string;
-  expires_in?: number;
-  refresh_token?: string;
-  scope?: string;
-}
-
-// X OAuth User API Response
-export interface XUserApiResponse {
-  data: {
-    id: string;
-    username: string;
-    name: string;
-    profile_image_url?: string;
-    verified?: boolean;
-  };
-}
-
 // Leaderboard Types
 export interface LeaderboardEntry {
   rank: number;

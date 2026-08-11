@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAccount } from 'wagmi';
 import { TheHollowUser, UserRegistrationData } from '@/lib/supabase/types';
 import { getUserByWallet, upsertUser, updateUserRegistration } from '@/lib/utils/user';
-import { clearXAuthSession } from '@/lib/utils/x-auth';
 
 interface UseMultiUserReturn {
   user: TheHollowUser | null;
@@ -25,8 +24,6 @@ export const useMultiUser = (): UseMultiUserReturn => {
     if (!address || !isConnected) {
       setUser(null);
       setError(null);
-      // Clear X auth session when wallet is disconnected
-      clearXAuthSession();
       return;
     }
 

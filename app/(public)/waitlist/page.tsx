@@ -11,7 +11,6 @@ const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
 const WAITLIST_OPEN_SOON = false;
 const ONE_TOKEN = BigInt(1e18);
 const X_FOLLOW_USERNAME = "TheHollow_NFT";
-const X_POST_ID = "2021439605271335122";
 
 function getTimeLeft() {
   const now = Date.now();
@@ -30,14 +29,6 @@ function getTimeLeft() {
   };
 }
 
-interface XUserData {
-  id: string;
-  username: string;
-  name: string;
-  profile_image_url: string;
-  verified: boolean;
-}
-
 type TaskStatus = "idle" | "loading" | "completed" | "error";
 
 interface TaskState {
@@ -48,21 +39,9 @@ interface TaskState {
 
 interface TasksState {
   tokens: TaskState;
-  xAuth: TaskState;
   follow: TaskState;
   like: TaskState;
   retweet: TaskState;
-}
-
-function storeOAuthState(state: string) {
-  sessionStorage.setItem("x_oauth_state", state);
-}
-
-function verifyOAuthState(state: string): boolean {
-  const stored = sessionStorage.getItem("x_oauth_state");
-  if (!stored || stored !== state) return false;
-  sessionStorage.removeItem("x_oauth_state");
-  return true;
 }
 
 function formatBalance(balance: bigint): string {
@@ -75,7 +54,6 @@ function formatBalance(balance: bigint): string {
 
 const initialTasks: TasksState = {
   tokens: { status: "idle" },
-  xAuth: { status: "idle" },
   follow: { status: "idle" },
   like: { status: "idle" },
   retweet: { status: "idle" },
@@ -90,7 +68,6 @@ function TaskCard({
   onClick,
   showTimer = false,
   isEnabled = true,
-  xUser,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -100,7 +77,6 @@ function TaskCard({
   onClick?: () => void;
   showTimer?: boolean;
   isEnabled?: boolean;
-  xUser?: XUserData | null;
 }) {
   const isCompleted = state.status === "completed";
   const isLoading = state.status === "loading";
@@ -144,13 +120,6 @@ function TaskCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-bold text-text-primary truncate text-sm">{title}</h3>
-            {xUser && (
-              <img
-                src={xUser.profile_image_url}
-                alt={xUser.username}
-                className="w-5 h-5 rounded-full"
-              />
-            )}
           </div>
           {subtitle && <p className="text-xs text-muted-blue truncate">{subtitle}</p>}
           {isError && state.message && (
@@ -196,7 +165,6 @@ export default function WaitlistPage() {
   const [tasks, setTasks] = useState<TasksState>(initialTasks);
   const [submitStep, setSubmitStep] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [xUser, setXUser] = useState<XUserData | null>(null);
   const [isAlreadyJoined, setIsAlreadyJoined] = useState<boolean | null>(null);
   const [checkingStatus, setCheckingStatus] = useState(true);
 
@@ -237,78 +205,6 @@ export default function WaitlistPage() {
     checkWaitlistStatus();
   }, [isConnected, address]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const success = params.get("x_auth_success");
-    const userDataEncoded = params.get("x_user_data");
-    const state = params.get("x_state");
-    const authError = params.get("x_auth_error");
-
-    if (authError) {
-      setErrorMessage(getAuthErrorMessage(authError));
-      setTasks((prev) => ({
-        ...prev,
-        xAuth: { status: "error", message: getAuthErrorMessage(authError) },
-      }));
-      window.history.replaceState({}, "", "/waitlist");
-      return;
-    }
-
-    if (success === "true" && userDataEncoded && state) {
-      if (!verifyOAuthState(state)) {
-        setTasks((prev) => ({
-          ...prev,
-          xAuth: { status: "error", message: "Invalid OAuth state. Please try again." },
-        }));
-        window.history.replaceState({}, "", "/waitlist");
-        return;
-      }
-
-      try {
-        const userData = JSON.parse(atob(userDataEncoded)) as XUserData;
-
-        if (!userData.id || !userData.username) {
-          setTasks((prev) => ({
-            ...prev,
-            xAuth: { status: "error", message: "Invalid user data received." },
-          }));
-          window.history.replaceState({}, "", "/waitlist");
-          return;
-        }
-
-        localStorage.setItem("x_auth_session", JSON.stringify({
-          userData,
-          expiresAt: Date.now() + 24 * 60 * 60 * 1000,
-        }));
-        setXUser(userData);
-        setTasks((prev) => ({ ...prev, xAuth: { status: "completed" } }));
-      } catch {
-        setTasks((prev) => ({
-          ...prev,
-          xAuth: { status: "error", message: "Failed to parse user data." },
-        }));
-      }
-      window.history.replaceState({}, "", "/waitlist");
-    }
-  }, []);
-
-  const getAuthErrorMessage = (error: string): string => {
-    switch (error) {
-      case "access_denied":
-        return "Authorization was denied. Please authorize to continue.";
-      case "token_exchange_failed":
-        return "Failed to complete X authentication. Please try again.";
-      case "user_fetch_failed":
-        return "Failed to fetch X user data. Please try again.";
-      case "not_configured":
-        return "X authentication is not configured.";
-      case "server_error":
-        return "An error occurred. Please try again.";
-      default:
-        return "Authentication failed. Please try again.";
-    }
-  };
-
   const handleVerifyTokens = useCallback(async () => {
     if (!address) return;
     setTasks((prev) => ({ ...prev, tokens: { status: "loading" } }));
@@ -334,27 +230,6 @@ export default function WaitlistPage() {
       }));
     }
   }, [address, refetchBalance, balance]);
-
-  const handleXAuth = useCallback(async () => {
-    setTasks((prev) => ({ ...prev, xAuth: { status: "loading" } }));
-    try {
-      const response = await fetch("/api/x-auth/login");
-      const data = await response.json();
-
-      if (data.error) {
-        setTasks((prev) => ({ ...prev, xAuth: { status: "error", message: data.error } }));
-        return;
-      }
-
-      storeOAuthState(data.state);
-      window.location.href = data.authUrl;
-    } catch {
-      setTasks((prev) => ({
-        ...prev,
-        xAuth: { status: "error", message: "Failed to start X authentication." },
-      }));
-    }
-  }, []);
 
   const startXTaskTimer = (taskKey: keyof Pick<TasksState, "follow" | "like" | "retweet">) => {
     setTasks((prev) => ({
@@ -397,29 +272,20 @@ export default function WaitlistPage() {
 
   const allTasksCompleted =
     tasks.tokens.status === "completed" &&
-    tasks.xAuth.status === "completed" &&
     tasks.follow.status === "completed" &&
     tasks.like.status === "completed" &&
     tasks.retweet.status === "completed";
 
   const canVerifyTokens = tasks.retweet.status === "completed" && isConnected && !!address;
-  const canConnectX = isConnected && !!address;
-  const canFollow = tasks.xAuth.status === "completed";
+  const canFollow = isConnected && !!address;
   const canLike = tasks.follow.status === "completed";
   const canRetweet = tasks.like.status === "completed";
 
   const submitToWaitlist = async () => {
-    if (!address || !xUser) return;
+    if (!address) return;
 
     setSubmitStep("submitting");
     setErrorMessage("");
-
-    const sessionPayload = Buffer.from(
-      JSON.stringify({
-        username: xUser.username,
-        id: xUser.id,
-      })
-    ).toString("base64");
 
     try {
       const response = await fetch("/api/waitlist", {
@@ -427,9 +293,6 @@ export default function WaitlistPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           wallet_address: address,
-          x_username: xUser.username,
-          x_user_id: xUser.id,
-          x_auth_session: sessionPayload,
         }),
       });
 
@@ -618,7 +481,7 @@ export default function WaitlistPage() {
     );
   }
 
-  const completedCount = [tasks.tokens, tasks.xAuth, tasks.follow, tasks.like, tasks.retweet].filter(t => t.status === "completed").length;
+  const completedCount = [tasks.tokens, tasks.follow, tasks.like, tasks.retweet].filter(t => t.status === "completed").length;
 
   return (
     <div className="flex justify-center py-8">
@@ -635,32 +498,17 @@ export default function WaitlistPage() {
               </div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-blue">Progress</span>
-                <span className="text-[10px] font-bold text-[#ccff00]">{completedCount}/5</span>
+                <span className="text-[10px] font-bold text-[#ccff00]">{completedCount}/4</span>
               </div>
                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[#ccff00] to-[#CCDD00] transition-all duration-500"
-                  style={{ width: `${(completedCount / 5) * 100}%` }}
+                  style={{ width: `${(completedCount / 4) * 100}%` }}
                 />
               </div>
             </div>
 
             <div className="space-y-3">
-              <TaskCard
-                icon={
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                }
-                title="Connect X Account"
-                subtitle={xUser ? `@${xUser.username}` : "Authenticate with X to continue"}
-                state={tasks.xAuth}
-                buttonText={xUser ? "Connected" : "Connect X"}
-                onClick={xUser ? undefined : handleXAuth}
-                isEnabled={canConnectX}
-                xUser={xUser}
-              />
-
               <TaskCard
                 icon={
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
