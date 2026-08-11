@@ -11,6 +11,7 @@ const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
 const WAITLIST_OPEN_SOON = false;
 const ONE_TOKEN = BigInt(1e18);
 const X_FOLLOW_USERNAME = "TheHollow_NFT";
+const X_POST_ID = "2087183775067259293";
 
 function getTimeLeft() {
   const now = Date.now();
@@ -261,12 +262,12 @@ export default function WaitlistPage() {
   }, []);
 
   const handleLike = useCallback(() => {
-    window.open(`https://x.com/intent/like?tweet_id=2022416496664940889`, "_blank");
+    window.open(`https://x.com/intent/like?tweet_id=${X_POST_ID}`, "_blank");
     startXTaskTimer("like");
   }, []);
 
   const handleRetweet = useCallback(() => {
-    window.open(`https://x.com/intent/retweet?tweet_id=2022416496664940889`, "_blank");
+    window.open(`https://x.com/intent/retweet?tweet_id=${X_POST_ID}`, "_blank");
     startXTaskTimer("retweet");
   }, []);
 

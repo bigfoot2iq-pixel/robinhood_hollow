@@ -1,0 +1,5 @@
+# One target wallet address per line. Lines starting with # are ignored.
+# The NFT is minted TO each address. These need only be addresses — no keys, no gas.
+# Example:
+# 0x1111111111111111111111111111111111111111
+# 0x2222222222222222222222222222222222222222

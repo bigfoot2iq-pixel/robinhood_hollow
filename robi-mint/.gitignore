@@ -1,0 +1,4 @@
+# never commit secrets or your real target list
+.env
+*.env
+wallets.local.txt
