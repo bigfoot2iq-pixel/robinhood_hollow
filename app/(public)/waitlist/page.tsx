@@ -43,6 +43,7 @@ interface TasksState {
   follow: TaskState;
   like: TaskState;
   retweet: TaskState;
+  comment: TaskState;
 }
 
 function formatBalance(balance: bigint): string {
@@ -58,6 +59,7 @@ const initialTasks: TasksState = {
   follow: { status: "idle" },
   like: { status: "idle" },
   retweet: { status: "idle" },
+  comment: { status: "idle" },
 };
 
 function TaskCard({
@@ -232,7 +234,7 @@ export default function WaitlistPage() {
     }
   }, [address, refetchBalance, balance]);
 
-  const startXTaskTimer = (taskKey: keyof Pick<TasksState, "follow" | "like" | "retweet">) => {
+  const startXTaskTimer = (taskKey: keyof Pick<TasksState, "follow" | "like" | "retweet" | "comment">) => {
     setTasks((prev) => ({
       ...prev,
       [taskKey]: { status: "loading", timer: 20 },
@@ -271,16 +273,27 @@ export default function WaitlistPage() {
     startXTaskTimer("retweet");
   }, []);
 
+  const handleComment = useCallback(() => {
+    if (!address) return;
+    window.open(
+      `https://x.com/intent/tweet?in_reply_to=${X_POST_ID}&text=${encodeURIComponent(address)}`,
+      "_blank"
+    );
+    startXTaskTimer("comment");
+  }, [address]);
+
   const allTasksCompleted =
     tasks.tokens.status === "completed" &&
     tasks.follow.status === "completed" &&
     tasks.like.status === "completed" &&
-    tasks.retweet.status === "completed";
+    tasks.retweet.status === "completed" &&
+    tasks.comment.status === "completed";
 
-  const canVerifyTokens = tasks.retweet.status === "completed" && isConnected && !!address;
+  const canVerifyTokens = tasks.comment.status === "completed" && isConnected && !!address;
   const canFollow = isConnected && !!address;
   const canLike = tasks.follow.status === "completed";
   const canRetweet = tasks.like.status === "completed";
+  const canComment = tasks.retweet.status === "completed" && isConnected && !!address;
 
   const submitToWaitlist = async () => {
     if (!address) return;
@@ -482,7 +495,7 @@ export default function WaitlistPage() {
     );
   }
 
-  const completedCount = [tasks.tokens, tasks.follow, tasks.like, tasks.retweet].filter(t => t.status === "completed").length;
+  const completedCount = [tasks.tokens, tasks.follow, tasks.like, tasks.retweet, tasks.comment].filter(t => t.status === "completed").length;
 
   return (
     <div className="flex justify-center py-8">
@@ -499,12 +512,12 @@ export default function WaitlistPage() {
               </div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-blue">Progress</span>
-                <span className="text-[10px] font-bold text-[#ccff00]">{completedCount}/4</span>
+                <span className="text-[10px] font-bold text-[#ccff00]">{completedCount}/5</span>
               </div>
                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[#ccff00] to-[#CCDD00] transition-all duration-500"
-                  style={{ width: `${(completedCount / 4) * 100}%` }}
+                  style={{ width: `${(completedCount / 5) * 100}%` }}
                 />
               </div>
             </div>
@@ -553,6 +566,21 @@ export default function WaitlistPage() {
                 onClick={tasks.retweet.status === "completed" ? undefined : handleRetweet}
                 showTimer
                 isEnabled={canRetweet}
+              />
+
+              <TaskCard
+                icon={
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                }
+                title="Comment Your Wallet"
+                subtitle="Reply to our post with your connected wallet"
+                state={tasks.comment}
+                buttonText={tasks.comment.status === "completed" ? "Done" : "Comment"}
+                onClick={tasks.comment.status === "completed" ? undefined : handleComment}
+                showTimer
+                isEnabled={canComment}
               />
 
               <TaskCard
