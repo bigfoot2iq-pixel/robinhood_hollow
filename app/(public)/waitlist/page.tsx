@@ -464,7 +464,7 @@ export default function WaitlistPage() {
               </p>
               <div className="flex justify-center">
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("LFG! You're officially on the list! 📝\n\nYou just secured a WL spot for the upcoming @TheHollow_NFT mint on @katana. You saw the vision early, and now you're part of the inner circle.\n\nDon't fade the silence. Stay active and stay engaged. 🌑⚔️")}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("LFG! You're officially on the list! 📝\n\nYou just secured a WL spot for the upcoming @TheHollow_NFT mint on Robinhood. You saw the vision early, and now you're part of the inner circle.\n\nDon't fade the silence. Stay active and stay engaged. 🌑⚔️")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a160d] border border-white/10 text-text-primary font-bold rounded hover:bg-[#E6EB00] transition-colors"
