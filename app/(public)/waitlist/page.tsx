@@ -2,14 +2,11 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAccount } from "wagmi";
-import { useHollowBalance } from "@/lib/hooks/useHollow";
 import { useAdminStatus } from "@/lib/hooks/useAdmin";
 import { useConfig } from "@/lib/hooks/useConfig";
-import { formatTokenBalance } from "@/lib/hooks";
 
 const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
 const WAITLIST_OPEN_SOON = false;
-const ONE_TOKEN = BigInt(1e18);
 const X_FOLLOW_USERNAME = "TheHollow_NFT";
 const X_POST_ID = "2087183775067259293";
 
@@ -39,23 +36,13 @@ interface TaskState {
 }
 
 interface TasksState {
-  tokens: TaskState;
   follow: TaskState;
   like: TaskState;
   retweet: TaskState;
   comment: TaskState;
 }
 
-function formatBalance(balance: bigint): string {
-  const formatted = formatTokenBalance(balance);
-  const num = parseFloat(formatted);
-  if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
-  if (num >= 1000) return (num / 1000).toFixed(2) + "K";
-  return num.toFixed(2);
-}
-
 const initialTasks: TasksState = {
-  tokens: { status: "idle" },
   follow: { status: "idle" },
   like: { status: "idle" },
   retweet: { status: "idle" },
@@ -172,7 +159,6 @@ export default function WaitlistPage() {
   const [checkingStatus, setCheckingStatus] = useState(true);
 
   const { address, isConnected } = useAccount();
-  const { data: balance, isLoading: balanceLoading, refetch: refetchBalance } = useHollowBalance(address);
   const { isAdmin } = useAdminStatus(address);
   const { value: participantCount, setValue, fetchConfig, updateConfig, isLoading: configLoading } = useConfig("waitlist_participants", "0");
 
@@ -207,32 +193,6 @@ export default function WaitlistPage() {
     }
     checkWaitlistStatus();
   }, [isConnected, address]);
-
-  const handleVerifyTokens = useCallback(async () => {
-    if (!address) return;
-    setTasks((prev) => ({ ...prev, tokens: { status: "loading" } }));
-    try {
-      await refetchBalance();
-      if (balance !== undefined) {
-        if (balance >= ONE_TOKEN) {
-          setTasks((prev) => ({
-            ...prev,
-            tokens: { status: "completed", message: `${formatBalance(balance)} HOLLOW` },
-          }));
-        } else {
-          setTasks((prev) => ({
-            ...prev,
-            tokens: { status: "error", message: "Need at least 1 HOLLOW token" },
-          }));
-        }
-      }
-    } catch {
-      setTasks((prev) => ({
-        ...prev,
-        tokens: { status: "error", message: "Failed to verify balance" },
-      }));
-    }
-  }, [address, refetchBalance, balance]);
 
   const startXTaskTimer = (taskKey: keyof Pick<TasksState, "follow" | "like" | "retweet" | "comment">) => {
     setTasks((prev) => ({
@@ -283,13 +243,11 @@ export default function WaitlistPage() {
   }, [address]);
 
   const allTasksCompleted =
-    tasks.tokens.status === "completed" &&
     tasks.follow.status === "completed" &&
     tasks.like.status === "completed" &&
     tasks.retweet.status === "completed" &&
     tasks.comment.status === "completed";
 
-  const canVerifyTokens = tasks.comment.status === "completed" && isConnected && !!address;
   const canFollow = isConnected && !!address;
   const canLike = tasks.follow.status === "completed";
   const canRetweet = tasks.like.status === "completed";
@@ -495,7 +453,7 @@ export default function WaitlistPage() {
     );
   }
 
-  const completedCount = [tasks.tokens, tasks.follow, tasks.like, tasks.retweet, tasks.comment].filter(t => t.status === "completed").length;
+  const completedCount = [tasks.follow, tasks.like, tasks.retweet, tasks.comment].filter(t => t.status === "completed").length;
 
   return (
     <div className="flex justify-center py-8">
@@ -512,12 +470,12 @@ export default function WaitlistPage() {
               </div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-blue">Progress</span>
-                <span className="text-[10px] font-bold text-[#ccff00]">{completedCount}/5</span>
+                <span className="text-[10px] font-bold text-[#ccff00]">{completedCount}/4</span>
               </div>
                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[#ccff00] to-[#CCDD00] transition-all duration-500"
-                  style={{ width: `${(completedCount / 5) * 100}%` }}
+                  style={{ width: `${(completedCount / 4) * 100}%` }}
                 />
               </div>
             </div>
@@ -581,20 +539,6 @@ export default function WaitlistPage() {
                 onClick={tasks.comment.status === "completed" ? undefined : handleComment}
                 showTimer
                 isEnabled={canComment}
-              />
-
-              <TaskCard
-                icon={
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                }
-                title="Verify HOLLOW Balance"
-                subtitle={balance !== undefined && tasks.tokens.status === "completed" ? `${formatBalance(balance)} HOLLOW` : "Hold at least 1 HOLLOW Token"}
-                state={tasks.tokens}
-                buttonText={tasks.tokens.status === "completed" ? "Verified" : "Verify"}
-                onClick={tasks.tokens.status === "completed" ? undefined : handleVerifyTokens}
-                isEnabled={canVerifyTokens}
               />
             </div>
 
