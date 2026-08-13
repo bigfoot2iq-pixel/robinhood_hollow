@@ -8,7 +8,7 @@ import { useConfig } from "@/lib/hooks/useConfig";
 const TARGET_DATE = new Date("2026-03-17T06:00:00Z").getTime();
 const WAITLIST_OPEN_SOON = false;
 const X_FOLLOW_USERNAME = "TheHollow_NFT";
-const X_POST_ID = "2087183775067259293";
+const X_POST_ID = "2087829215353651357";
 
 function getTimeLeft() {
   const now = Date.now();
@@ -141,7 +141,7 @@ function TaskCard({
 
       {isLoading && showTimer && (
         <div className="h-1 bg-[#ccff00] transition-all duration-1000 ease-linear"
-          style={{ width: `${((20 - (state.timer || 0)) / 20) * 100}%` }}
+          style={{ width: `${((10 - (state.timer || 0)) / 10) * 100}%` }}
         />
       )}
     </div>
@@ -197,10 +197,10 @@ export default function WaitlistPage() {
   const startXTaskTimer = (taskKey: keyof Pick<TasksState, "follow" | "like" | "retweet" | "comment">) => {
     setTasks((prev) => ({
       ...prev,
-      [taskKey]: { status: "loading", timer: 20 },
+      [taskKey]: { status: "loading", timer: 10 },
     }));
 
-    let remaining = 20;
+    let remaining = 10;
     const interval = setInterval(() => {
       remaining -= 1;
       if (remaining <= 0) {
