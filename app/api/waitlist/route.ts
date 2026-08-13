@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { http } from "viem";
-import { createPublicClient } from "viem";
-import { contracts, HollowTokenABI } from "@/lib/contracts";
-
-const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "4663");
-const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.mainnet.chain.robinhood.com";
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,65 +33,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid wallet address" }, { status: 400 });
     }
 
-    const publicClient = createPublicClient({
-      chain: {
-        id: chainId,
-        name: "Robinhood Chain",
-        nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-        rpcUrls: { default: { http: [rpcUrl] } },
-      },
-      transport: http(rpcUrl),
-    });
-
-    const balance = await publicClient.readContract({
-      address: contracts.hollowToken.address,
-      abi: HollowTokenABI,
-      functionName: "balanceOf",
-      args: [wallet_address as `0x${string}`],
-    });
-
-    const oneToken = BigInt(1e18);
-    if (balance < oneToken) {
-      return NextResponse.json(
-        { error: "Wallet must hold at least 1 HOLLOW token" },
-        { status: 400 }
-      );
-    }
-
     const supabase = await createServiceClient();
     const walletLower = wallet_address.toLowerCase();
 
-    let { data: user } = await supabase
+    const { data: existing } = await supabase
       .from("robinhood_hollow_users")
-      .select("*")
+      .select("id_waitlisted")
       .eq("wallet_address", walletLower)
-      .single();
+      .maybeSingle();
 
-    if (!user) {
-      const { data: newUser, error: createError } = await supabase
-        .from("robinhood_hollow_users")
-        .insert({ wallet_address: walletLower })
-        .select()
-        .single();
-
-      if (createError) {
-        console.error("Error creating user:", createError);
-        return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
-      }
-      user = newUser;
-    }
-
-    if (user?.id_waitlisted) {
+    if (existing?.id_waitlisted) {
       return NextResponse.json({ success: true, alreadyJoined: true });
     }
 
-    const { error: updateError } = await supabase
+    // Race-safe: create the row if missing, mark waitlisted either way.
+    const { error: upsertError } = await supabase
       .from("robinhood_hollow_users")
-      .update({ id_waitlisted: true })
-      .eq("wallet_address", walletLower);
+      .upsert(
+        { wallet_address: walletLower, id_waitlisted: true },
+        { onConflict: "wallet_address" }
+      );
 
-    if (updateError) {
-      console.error("Error updating waitlist status:", updateError);
+    if (upsertError) {
+      console.error("Error joining waitlist:", upsertError);
       return NextResponse.json({ error: "Failed to join waitlist" }, { status: 500 });
     }
 
